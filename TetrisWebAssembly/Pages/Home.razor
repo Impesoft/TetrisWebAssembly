@@ -1,0 +1,63 @@
+@page "/"
+@namespace TetrisWebAssembly.Pages
+@page "/tetris"
+
+<!-- Main container for the Tetris game -->
+<div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @ref="TetrisContainer">
+    @if (IsGameOver)
+    {
+        <div class="game-over-message">
+            <h2>Game Over!</h2>
+            <button @onclick="StartGame">Restart</button>
+        </div>
+    }
+    <!-- Tetris game board -->
+    <svg class="tetris-board" xmlns="http://www.w3.org/2000/svg"
+         width="@SvgWidth" height="@SvgHeight" viewBox="0 0 @SvgWidth @SvgHeight">
+        <!-- Render locked blocks -->
+        @foreach (var block in Blocks)
+        {
+            <rect x="@block.X" y="@block.Y" width="@BlockSize" height="@BlockSize"
+                  style="fill:@block.Color; stroke:#000000; stroke-width:1;" />
+        }
+
+        <!-- Render the current falling tetromino -->
+        @if (CurrentTetromino != null)
+        {
+            @foreach (var block in CurrentTetromino.Blocks)
+            {
+                <rect x="@block.X" y="@block.Y" width="@BlockSize" height="@BlockSize"
+                      style="fill:@CurrentTetromino.Color; stroke:#000000; stroke-width:1;" />
+            }
+        }
+    </svg>
+    <!-- Preview container for the next tetromino -->
+    <div class="preview-container">
+        <p>Next Tetromino:</p>
+        <svg class="preview-board" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 @(4 * BlockSize) @(4 * BlockSize)" width="120" height="120">
+            @if (NextTetromino != null)
+            {
+                @foreach (var block in NextTetromino.Blocks)
+                {
+                    <rect x="@(block.X % (4 * BlockSize))" y="@(block.Y % (4 * BlockSize))"
+                          width="@BlockSize" height="@BlockSize"
+                          style="fill:@NextTetromino.Color; stroke:#000000; stroke-width:1;" />
+                }
+            }
+        </svg>
+    </div>
+
+    <!-- Game stats -->
+    <div class="stats-container">
+        <p>Score: @Score</p>
+        <p>Timer Speed: @dropInterval ms</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button @onclick="StartGame">Start</button>
+        <button @onclick="PauseGame">Pause</button>
+    </div>
+</div>
+
