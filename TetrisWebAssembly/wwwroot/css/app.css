@@ -128,6 +128,8 @@ body {
 .preview-container {
     margin-top: 10px;
     text-align: center;
+    display: flex;
+    margin-bottom: 20px;
 }
 
 .preview-board {
@@ -143,8 +145,12 @@ body {
 .stats-container {
     margin-top: 10px;
     text-align: center;
-    font-size: 1rem;
-    color: #333;
+    font-size: 3rem;
+    font-family: monospace;
+    font-weight: bold;
+    /* Text Shadow Property */
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
+    color: lightgrey;
 }
 
 .controls {
@@ -180,6 +186,42 @@ button {
         font-size: 16px;
         cursor: pointer;
     }
-/*
-    Tetris related CSS ends  here
-*/
+
+
+ /*
+ breakout css starts here
+ */
+.controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #444444;
+    height: 80vh; /* Adjust to ensure good spacing */
+}
+
+.game-field {
+    background-color: black;
+    border: 2px solid white;
+    width: 600px; /* Fixed width matching the playfield */
+    height: 900px; /* Fixed height matching the playfield */
+    aspect-ratio: 2 / 3;
+}
+.breakout-stats {
+    float: left;
+    top: 10px;
+    left: 10px;
+    width: 300px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 3rem;
+    font-family: monospace;
+    font-weight: bold;
+    /* Text Shadow Property */
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
+    color: lightgrey;
+}

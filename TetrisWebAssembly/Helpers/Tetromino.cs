@@ -5,12 +5,12 @@ public class Tetromino
 {
     private static readonly Random Random = new();
 
-    public Tetromino(List<Block> blocks, string color)
+    public Tetromino(List<TetrisBlock> blocks, string color)
     {
         Blocks = blocks;
         Color = color;
     }
-    public List<Block> Blocks { get; private set; } = new();
+    public List<TetrisBlock> Blocks { get; private set; } = new();
     public string Color { get; private set; } = "#FFFFFF"; // Default color
     private static readonly Dictionary<string, (List<(int x, int y)> shape, string color)> TetrominoDefinitions = new()
     {
@@ -29,12 +29,12 @@ public class Tetromino
         var color = selected.Value.color;
 
         var blocks = shapeOffsets.Select(offset =>
-            new Block(offset.x * blockSize, offset.y * blockSize, color)
+            new TetrisBlock(offset.x * blockSize, offset.y * blockSize, color)
         ).ToList();
 
         return new Tetromino(blocks, color);
     }
-    public bool CanMove(List<Block> existingBlocks, int width, int height, int dx, int dy, int blockSize)
+    public bool CanMove(List<TetrisBlock> existingBlocks, int width, int height, int dx, int dy, int blockSize)
     {
         return Blocks.All(block =>
             block.X + dx * blockSize >= 0 &&
@@ -51,7 +51,7 @@ public class Tetromino
             b.Y += dy * blockSize;
         });
     }
-    public void RotateClockwise(List<Block> existingBlocks, int width, int height, int blockSize)
+    public void RotateClockwise(List<TetrisBlock> existingBlocks, int width, int height, int blockSize)
     {
         var pivot = Blocks[0];
 
@@ -64,7 +64,7 @@ public class Tetromino
             int rotatedX = -relativeY + pivot.X;
             int rotatedY = relativeX + pivot.Y;
 
-            return new Block(rotatedX, rotatedY, block.Color);
+            return new TetrisBlock(rotatedX, rotatedY, block.Color);
         }).ToList();
 
         if (rotatedBlocks.All(b =>

@@ -3,22 +3,22 @@ using TetrisWebAssembly.Models;
 
 namespace TetrisWebAssembly.GameLogic;
 
-public class Game
+public class TetrisGame
 {
     public const int BoardWidth = 10; // Width of the playfield (in blocks)
     public const int BoardHeight = 20; // Height of the playfield (in blocks)
     private int BlockSize;
 
-    public List<Block> Blocks { get; private set; } = new(); // Locked blocks on the playfield
+    public List<TetrisBlock> Blocks { get; private set; } = new(); // Locked blocks on the playfield
     public Tetromino CurrentTetromino { get; private set; } // Currently falling tetromino
     public Tetromino NextTetromino { get; private set; } // Preview of the next tetromino
     public bool IsGameOver { get; private set; } = false; // Flag to track if the game is over
     public int Score { get; private set; } = 0; // Current game score
-
+    public bool IsRunning { get; private set; } = false; // Flag to track if the game is running
     private static readonly int MinDropInterval = 200; // Minimum drop interval (faster speed)
     private int dropInterval = 1000; // Current drop interval (in milliseconds)
 
-    public Game(int blockSize)
+    public TetrisGame(int blockSize)
     {
         BlockSize = blockSize;
         CurrentTetromino = Tetromino.GenerateRandom(BlockSize);
@@ -35,6 +35,7 @@ public class Game
         Score = 0;
         IsGameOver = false;
         dropInterval = 1000;
+        IsRunning = true;
     }
 
     /// <summary>
@@ -62,6 +63,7 @@ public class Game
             if (!CurrentTetromino.CanMove(Blocks, BoardWidth, BoardHeight, 0, 0, BlockSize))
             {
                 IsGameOver = true;
+                IsRunning = false;
             }
         }
     }
@@ -152,7 +154,7 @@ public class Game
     /// <summary>
     /// Returns the full playfield representation, including locked blocks and the current tetromino.
     /// </summary>
-    public IEnumerable<Block> GetPlayfield()
+    public IEnumerable<TetrisBlock> GetPlayfield()
     {
         // Combine locked blocks and current tetromino blocks for rendering
         if (CurrentTetromino != null)

@@ -1,0 +1,39 @@
+﻿@page "/Breakout"
+<h3>Breakout</h3>
+
+
+        <div class="breakout-stats">
+            <p>Score: @Score</p>
+            <p>Lives: @Lives</p>
+            @if (IsDemo)
+            {
+                <span>Demo</span>
+            } else
+            {
+                <span>X @relativeX</span>
+            }
+        </div>
+<div class="game-container">
+    <div class="controls">
+        @if (IsPaused)
+        {
+            <button @onclick="StartGame">Start</button>
+        } else
+        {
+            <button @onclick="PauseGame" disabled="@(IsPaused)">Pause</button>            
+        }
+    </div>
+    <svg class="game-field" xmlns="http://www.w3.org/2000/svg" @onmousemove="MovePaddle">
+        <!-- Blocks -->
+        @foreach (var block in Blocks)
+        {
+            <rect x="@block.X" y="@block.Y" width="50" height="20" fill="@block.Color" />
+        }
+
+        <!-- Paddle -->
+        <rect x="@PaddleX" y="@PaddleYPosition" width="@PaddleWidth" height="20" fill="grey" />
+
+        <!-- Ball -->
+        <circle cx="@BallX" cy="@BallY" r="10" fill="white" />
+    </svg>
+</div>
