@@ -22,8 +22,13 @@ jobs:
     - name: Build Project
       run: dotnet publish -c Release -o build/wwwroot
 
+    - name: Flatten wwwroot Directory
+      run: |
+        mv build/wwwroot/wwwroot/* build/
+        mv build/wwwroot/wwwroot/.* build/ || true
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/wwwroot
+        publish_dir: build
