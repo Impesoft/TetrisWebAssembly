@@ -2,38 +2,49 @@
 
 @namespace TetrisWebAssembly.Pages
 @page "/tetris"
-
 <!-- Main container for the Tetris game -->
 <div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @ref="TetrisContainer">
+    <div class="controls">
+        @if (GameTimer == null)
+        {
+            <button @onclick="StartGame">Start</button>
+        }
+        else
+        {
+            <button @onclick="PauseGame">Pause</button>
+        })
+        <div class="stats-container">
+            <span>Score: @GameInstance.Score</span>
+            <div class="preview-container">
+                <div>Next block:</div>
+                <svg class="preview-board" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 @(4 * BlockSize) @(4 * BlockSize)" width="120" height="120">
+                    <defs>
+                        <linearGradient id="block-border" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="yellow" /> <!-- Top-left corner -->
+                            <stop offset="50%" stop-color="yellow" /> <!-- Top and right sides -->
+                            <stop offset="50%" stop-color="blue" /> <!-- Bottom-left corner -->
+                            <stop offset="100%" stop-color="blue" /> <!-- Bottom and left sides -->
+                        </linearGradient>
+                    </defs>
+                    @if (GameInstance.NextTetromino != null)
+                    {
+                        @foreach (var block in GameInstance.NextTetromino.Blocks)
+                        {
+                            <rect x="@(block.X % (4 * BlockSize))" y="@(block.Y % (4 * BlockSize))"
+                                  width="@BlockSize" height="@BlockSize"
+                                  style="fill:@GameInstance.NextTetromino.Color; stroke:url(#block-border); stroke-width:1;" />
+                        }
+                    }
+                </svg>
+            </div>
+        </div>
+    </div>
+    <video autoplay muted loop id="bg">
+        <source src="./css/BGTunnel.mp4" type="video/mp4" />
+    </video>        <!-- Blocks -->
     <!-- Game stats -->
-    <div class="stats-container">
-        <p>Score: @GameInstance.Score</p>
-    </div>
-
     <!-- Preview container for the next tetromino -->
-    <div class="preview-container">
-        <p class="stats-container">Next block:</p>
-        <svg class="preview-board" xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 0 @(4 * BlockSize) @(4 * BlockSize)" width="120" height="120">
-            <defs>
-                <linearGradient id="block-border" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="white" /> <!-- Top-left corner -->
-                    <stop offset="50%" stop-color="white" /> <!-- Top and right sides -->
-                    <stop offset="50%" stop-color="black" /> <!-- Bottom-left corner -->
-                    <stop offset="100%" stop-color="black" /> <!-- Bottom and left sides -->
-                </linearGradient>
-            </defs>
-            @if (GameInstance.NextTetromino != null)
-            {
-                @foreach (var block in GameInstance.NextTetromino.Blocks)
-                {
-                    <rect x="@(block.X % (4 * BlockSize))" y="@(block.Y % (4 * BlockSize))"
-                          width="@BlockSize" height="@BlockSize"
-                          style="fill:@GameInstance.NextTetromino.Color; stroke:url(#block-border); stroke-width:1;" />
-                }
-            }
-        </svg>
-    </div>
     @if (GameInstance.IsGameOver)
     {
         <div class="game-over-message">
@@ -49,7 +60,7 @@
         @foreach (var block in GameInstance.Blocks)
         {
             <rect x="@block.X" y="@block.Y" width="@BlockSize" height="@BlockSize"
-                      style="fill:@block.Color; stroke:url(#block-border); stroke-width:1;" />
+                  style="fill:@block.Color; stroke:url(#block-border); stroke-width:1;" />
         }
 
         <!-- Render the current falling tetromino -->
@@ -65,15 +76,5 @@
 
 
     <!-- Controls -->
-    <div class="controls">
-        @if (GameTimer == null)
-        {
-            <button @onclick="StartGame">Start</button>
-        }
-        else
-        {
-            <button @onclick="PauseGame">Pause</button>
-        })
-    </div>
 </div>
 

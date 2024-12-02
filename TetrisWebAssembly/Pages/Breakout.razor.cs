@@ -18,7 +18,7 @@ public partial class Breakout : ComponentBase
     public bool IsDemo { get; private set; }
 
     private double PaddleX = 250;
-    private double BallX = 300, BallY = 560;
+    private double BallX = 300, BallY = 760;
     private double BallSpeedX = 3, BallSpeedY = -3;
     //private double MouseLastX = 0, MouseSpeed = 0;
     private int Score = 0;

@@ -5,8 +5,8 @@ namespace TetrisWebAssembly.GameLogic;
 
 public class TetrisGame
 {
-    public const int BoardWidth = 10; // Width of the playfield (in blocks)
-    public const int BoardHeight = 20; // Height of the playfield (in blocks)
+    public int BoardWidth; // Width of the playfield (in blocks)
+    public int BoardHeight; // Height of the playfield (in blocks)
     private int BlockSize;
 
     public List<TetrisBlock> Blocks { get; private set; } = new(); // Locked blocks on the playfield
@@ -18,9 +18,11 @@ public class TetrisGame
     private static readonly int MinDropInterval = 200; // Minimum drop interval (faster speed)
     private int dropInterval = 1000; // Current drop interval (in milliseconds)
 
-    public TetrisGame(int blockSize)
+    public TetrisGame(int blockSize, int boardWidth, int boardHeight)
     {
         BlockSize = blockSize;
+        BoardWidth = boardWidth;
+        BoardHeight = boardHeight;
         CurrentTetromino = Tetromino.GenerateRandom(BlockSize);
         NextTetromino = Tetromino.GenerateRandom(BlockSize);
         StartNewGame();

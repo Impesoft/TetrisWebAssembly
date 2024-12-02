@@ -7,10 +7,10 @@ public partial class Tetris
 {
     private const int BoardWidth = 10;
     private const int BoardHeight = 20;
-    private const int BlockSize = 30;
+    private const int BlockSize = 50;
 
     private ElementReference TetrisContainer; // Reference for key input
-    private TetrisGame GameInstance = new TetrisGame(BlockSize); // The game instance
+    private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight); // The game instance
     private PeriodicTimer? GameTimer;
     private CancellationTokenSource? Cts;
 
@@ -20,7 +20,7 @@ public partial class Tetris
     protected override void OnInitialized()
     {
         // Initialize the game instance
-        GameInstance = new TetrisGame(BlockSize);
+        GameInstance = new TetrisGame(BlockSize,BoardWidth,BoardHeight);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
