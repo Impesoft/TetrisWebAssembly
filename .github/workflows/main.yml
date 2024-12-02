@@ -3,7 +3,8 @@ name: Deploy Blazor WebAssembly to GitHub Pages
 on:
   push:
     branches:
-      - main # Replace with your default branch if not `main`
+      - master # Replace with your default branch if not `main`
+  workflow_dispatch: # Add this to enable manual triggering
 
 jobs:
   build-and-deploy:
@@ -16,7 +17,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0' # Adjust to match your project's target framework
+        dotnet-version: '9.0' # Adjust to match your project's target framework
 
     - name: Build Project
       run: dotnet publish -c Release -o build/wwwroot
