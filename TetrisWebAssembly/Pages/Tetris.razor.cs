@@ -33,6 +33,7 @@ public partial class Tetris
 
     private async Task StartGame()
     {
+        await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
         if (GameInstance.IsGameOver)
         {
             GameInstance.StartNewGame(); // Reset the game if it's over

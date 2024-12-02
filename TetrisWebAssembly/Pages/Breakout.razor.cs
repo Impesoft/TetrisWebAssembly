@@ -14,7 +14,7 @@ public partial class Breakout : ComponentBase
     private IJSRuntime JSRuntime { get; set; } = default!;
     private const int FieldWidth = 600;
     private const int FieldHeight = 900;
-
+    private ElementReference BreakoutContainer;
     public bool IsDemo { get; private set; }
 
     private double PaddleX = 250;
@@ -80,7 +80,7 @@ public partial class Breakout : ComponentBase
             {
                 Blocks.Add(new BreakoutBlock
                 {
-                    X = col * 60,
+                    X = col * 60 + 5,
                     Y = row * 30,
                     Color = colors[row % colors.Length],
                     HitsRemaining = hits[row % hits.Length]
@@ -122,21 +122,38 @@ public partial class Breakout : ComponentBase
         {
             BallSpeedX = Math.Abs(BallSpeedX);
             Score += 10;
+            if (Math.Abs(BallSpeedY) > 1)
+            {
+                BallSpeedY *= 0.99; // Slow down ball
+            }
         }
         if (BallX + BallRadius >= FieldWidth)
         {
             BallSpeedX = Math.Abs(BallSpeedX) * -1;
             Score += 10;
+            if (Math.Abs(BallSpeedY) > 1)
+            {
+                BallSpeedY *= 0.99; // Slow down ball
+            }
         }
         if (BallY - BallRadius <= 0)
         {
             BallSpeedY = Math.Abs(BallSpeedY);
             Score += 10;
+            if (Math.Abs(BallSpeedY) > 1)
+            {
+                BallSpeedY *= 0.99; // Slow down ball
+            }
         }
         // Ensure minimum horizontal speed
         if (Math.Abs(BallSpeedX) < MinHorizontalSpeed)
         {
             BallSpeedX = BallSpeedX < 0 ? -MinHorizontalSpeed : MinHorizontalSpeed;
+            if (Math.Abs(BallSpeedY) < MaxBallSpeed)
+            {
+                BallSpeedY *= 1.2; // Slow down ball
+            }
+
         }
         // Bounce off paddle
         if (BallY + BallRadius >= PaddleYPosition && BallX >= PaddleX && BallX <= PaddleX + 100)
@@ -146,13 +163,10 @@ public partial class Breakout : ComponentBase
             BallSpeedX = Math.Clamp(BallSpeedX, -MaxBallSpeed, MaxBallSpeed); // Limit speed
             Score += 10;
         }
-        if (Math.Abs(BallSpeedX) > 3)
+
+        if (Math.Abs(BallSpeedX) > 1)
         {
             BallSpeedX *= 0.99; // Slow down ball
-        }
-        if (Math.Abs(BallSpeedY) > 3)
-        {
-            BallSpeedY *= 0.99; // Slow down ball
         }
         // Check collision with blocks
         CheckBlockCollision();
@@ -201,10 +215,20 @@ public partial class Breakout : ComponentBase
                 if (isAbove)
                 {
                     BallSpeedY = Math.Abs(BallSpeedY) * -1; // Bounce vertically
+                    if (Math.Abs(BallSpeedY) < MaxBallSpeed)
+                    {
+                        BallSpeedY *= 1.2; // Slow down ball
+                    }
+
                 }
                 else
                 {
                     BallSpeedY = Math.Abs(BallSpeedY); // Bounce vertically
+                    if (Math.Abs(BallSpeedY) < MaxBallSpeed)
+                    {
+                        BallSpeedY *= 1.2; // Slow down ball
+                    }
+
                 }
                 if (isLeft)
                 {
@@ -263,8 +287,9 @@ public partial class Breakout : ComponentBase
         };
     }
 
-    private void StartGame()
+    private async Task StartGame()
     {
+        await BreakoutContainer.FocusAsync();
         IsPaused = false;
         GameLoopTimer.Start();
     }
