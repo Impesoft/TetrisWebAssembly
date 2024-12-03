@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using TetrisWebAssembly.GameLogic;
@@ -8,6 +9,8 @@ public partial class Tetris
     private const int BoardWidth = 10;
     private const int BoardHeight = 20;
     private const int BlockSize = 50;
+
+    [Inject] private IJSRuntime JSRuntime { get; set; }
 
     private ElementReference TetrisContainer; // Reference for key input
     private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight); // The game instance
@@ -20,7 +23,7 @@ public partial class Tetris
     protected override void OnInitialized()
     {
         // Initialize the game instance
-        GameInstance = new TetrisGame(BlockSize,BoardWidth,BoardHeight);
+        GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -38,6 +41,10 @@ public partial class Tetris
         {
             GameInstance.StartNewGame(); // Reset the game if it's over
         }
+        // Start the background video
+        // BackgroundVideo is an ElementReference to the video element
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
+
 
         // Start the game loop
         Cts = new CancellationTokenSource();
@@ -60,6 +67,7 @@ public partial class Tetris
         catch (OperationCanceledException)
         {
             // Timer canceled when the game is paused or stopped
+            await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').pause()");
             GameTimer?.Dispose();
             GameTimer = null;
         }
@@ -67,6 +75,7 @@ public partial class Tetris
 
     private async Task PauseGame()
     {
+
         if (GameInstance.IsRunning && Cts?.Token is not null)
         {
             Cts?.Cancel(); // Cancel the game loop
