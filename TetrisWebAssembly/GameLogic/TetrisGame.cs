@@ -1,4 +1,5 @@
-﻿using TetrisWebAssembly.Helpers;
+﻿using System.Threading;
+using TetrisWebAssembly.Helpers;
 using TetrisWebAssembly.Models;
 
 namespace TetrisWebAssembly.GameLogic;
@@ -17,14 +18,15 @@ public class TetrisGame
     public bool IsRunning { get; private set; } = false; // Flag to track if the game is running
     private static readonly int MinDropInterval = 200; // Minimum drop interval (faster speed)
     private int dropInterval = 1000; // Current drop interval (in milliseconds)
-
-    public TetrisGame(int blockSize, int boardWidth, int boardHeight)
+    private CancellationTokenSource Cts = new CancellationTokenSource();
+    public TetrisGame(int blockSize, int boardWidth, int boardHeight, CancellationTokenSource cts)
     {
         BlockSize = blockSize;
         BoardWidth = boardWidth;
         BoardHeight = boardHeight;
         CurrentTetromino = Tetromino.GenerateRandom(BlockSize);
         NextTetromino = Tetromino.GenerateRandom(BlockSize);
+        Cts = cts;
         StartNewGame();
     }
 
@@ -38,6 +40,7 @@ public class TetrisGame
         IsGameOver = false;
         dropInterval = 1000;
         IsRunning = true;
+        Cts = new CancellationTokenSource();
     }
 
     /// <summary>
@@ -66,6 +69,7 @@ public class TetrisGame
             {
                 IsGameOver = true;
                 IsRunning = false;
+                Cts.Cancel();
             }
         }
     }

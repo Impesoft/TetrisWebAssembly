@@ -13,9 +13,9 @@ public partial class Tetris
     [Inject] private IJSRuntime JSRuntime { get; set; }
 
     private ElementReference TetrisContainer; // Reference for key input
-    private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight); // The game instance
+    private static CancellationTokenSource? Cts = new CancellationTokenSource();
+    private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts); // The game instance
     private PeriodicTimer? GameTimer;
-    private CancellationTokenSource? Cts;
 
     private int SvgWidth => BoardWidth * BlockSize;
     private int SvgHeight => BoardHeight * BlockSize;
@@ -23,7 +23,7 @@ public partial class Tetris
     protected override void OnInitialized()
     {
         // Initialize the game instance
-        GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight);
+        GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -36,6 +36,7 @@ public partial class Tetris
 
     private async Task StartGame()
     {
+        Cts = Cts ?? new CancellationTokenSource();
         await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
         if (GameInstance.IsGameOver)
         {
@@ -47,7 +48,6 @@ public partial class Tetris
 
 
         // Start the game loop
-        Cts = new CancellationTokenSource();
         GameTimer = new PeriodicTimer(TimeSpan.FromMilliseconds(GameInstance.GetDropInterval()));
 
         try
