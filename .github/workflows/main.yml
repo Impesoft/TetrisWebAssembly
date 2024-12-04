@@ -20,15 +20,10 @@ jobs:
         dotnet-version: '9.0' # Adjust to match your project's target framework
 
     - name: Build Project
-      run: dotnet publish -c Release -o build/wwwroot
-
-    - name: Flatten wwwroot Directory
-      run: |
-        mv build/wwwroot/wwwroot/* build/
-        mv build/wwwroot/wwwroot/.* build/ || true
+      run: dotnet publish -c Release -o build/publish
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build
+        publish_dir: build/publish/wwwroot
