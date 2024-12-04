@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using TetrisWebAssembly.GameLogic;
 
 namespace TetrisWebAssembly.Pages;
 public partial class SudokuGrid

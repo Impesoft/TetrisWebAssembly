@@ -1,7 +1,6 @@
 ﻿@page "/Sudoku"
+@using TetrisWebAssembly.GameLogic
 @using TetrisWebAssembly.Helpers
-
-<h3>Sudoku Solver</h3>
 <select @bind="difficulty" @bind:after="OnDifficultyChanged" class="form-select">
     <option value="" disabled selected>-- Select Difficulty --</option>
     @foreach (var difficulty in Enum.GetValues<Difficulty>())

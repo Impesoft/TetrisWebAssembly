@@ -31,7 +31,11 @@ public partial class Tetris
     private async Task<int> CalculateBlockSize()
     {
         int viewportWidth = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
-        return Math.Min(viewportWidth / (BoardWidth + 10), 50); 
+        int viewportHeight = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight"));
+        var maxBlockWidth = Math.Min(viewportWidth / (BoardWidth + 10), 50);
+        var maxBlockHeight = (int)Math.Min((viewportHeight / BoardHeight)*.8, 50);
+        var blockSize = Math.Min(Math.Min(maxBlockWidth, maxBlockHeight), 50);
+        return blockSize;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -50,7 +54,7 @@ public partial class Tetris
 
     private async Task StartGame()
     {
-        Cts = Cts ?? new CancellationTokenSource();
+        Cts ??= new CancellationTokenSource();
         await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
         if (GameInstance.IsGameOver)
         {
@@ -94,9 +98,11 @@ public partial class Tetris
         {
             Cts?.Cancel(); // Cancel the game loop
             Cts?.Dispose();
+            Cts = null;
         }
         else
         {
+            Cts ??= new CancellationTokenSource();
             await StartGame();
         }
     }
@@ -139,6 +145,14 @@ public partial class Tetris
         else
         {
             GameInstance.MoveTetrominoRight();
+        }
+        if (e.ClientY > SvgHeight / 2)
+        {
+            GameInstance.MoveTetrominoDown();
+        }
+        else
+        {
+            GameInstance.RotateTetromino();
         }
         await TetrisContainer.FocusAsync(); // Refocus on the container for key input
         StateHasChanged(); // Update the UI

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TetrisWebAssembly.Pages;
+namespace TetrisWebAssembly.GameLogic;
 
 public class SudokuSolver
 {
@@ -34,7 +34,7 @@ public class SudokuSolver
     {
         var sudokuGrid = puzzle
             .Select(row => row
-                .Select(cell => (cell.Trim() != "" && int.TryParse(cell, out int n) && n >= 1 && n <= 9) ? cell : "")
+                .Select(cell => cell.Trim() != "" && int.TryParse(cell, out int n) && n >= 1 && n <= 9 ? cell : "")
                 .ToList())
             .ToList();
 
@@ -111,8 +111,8 @@ public class SudokuSolver
         if (grid[row].Contains(num) || grid.Select(r => r[col]).Contains(num)) return false;
 
         // Check 3x3 subgrid
-        int startRow = (row / 3) * 3;
-        int startCol = (col / 3) * 3;
+        int startRow = row / 3 * 3;
+        int startCol = col / 3 * 3;
         var subgrid = GetSubgrid(grid, startRow, startCol);
         return !subgrid.Contains(num);
     }
