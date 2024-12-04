@@ -1,4 +1,5 @@
 ﻿using Bunit;
+using TetrisWebAssembly.GameLogic;
 using TetrisWebAssembly.Helpers;
 using TetrisWebAssembly.Pages;
 
