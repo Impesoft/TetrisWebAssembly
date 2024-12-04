@@ -124,8 +124,8 @@ body {
     background-color: rgba(0,0,0,.5);
     border: 2px solid #444;
     aspect-ratio: 1 / 1; /* Force a square aspect ratio */
-    width: 120px;
-    height: 120px;
+    width: fit-content;
+    height: fit-content;
     display: block;
     margin: 0 auto;
 }
@@ -208,18 +208,17 @@ button {
 .game-field {
     background-color: rgba(0,0,0,.75);
     border: 2px solid white;
-    width: 600px; /* Fixed width matching the playfield */
-    height: 900px; /* Fixed height matching the playfield */
+    width: min(60vw, 600px);
     aspect-ratio: 2 / 3;
 }
 .breakout-stats {
     float: left;
-    top: 10px;
-    left: 10px;
-    width: 300px;
+    display: flex;
+    flex-direction: column;
+    width: 10vw;
     overflow: hidden;
     text-align: center;
-    font-size: 3rem;
+    font-size: 2vw;
     font-family: monospace;
     font-weight: bold;
     /* Text Shadow Property */
@@ -244,3 +243,13 @@ button {
 
 /*sudoku*/
 
+.invalid-cell {
+    background-color: red;
+    color: darkred;
+    border: 5px solid red;
+}
+
+.sudoku-cell {
+    background-color: rebeccapurple;
+    color: aqua;
+}
