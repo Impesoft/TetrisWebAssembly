@@ -8,6 +8,7 @@
 <div class="game-selection">
     <button @onclick="() => GameNr = 1">Tetris</button>
     <button @onclick="() => GameNr = 2">Breakout</button>
+    <button @onclick="() => GameNr = 3">Sudoku</button>
 </div>
 @if (GameNr == 1)
 {
@@ -16,4 +17,8 @@
 @if (GameNr == 2)
 {
     <Breakout />
+}
+@if (GameNr == 3)
+{
+    <SudokuGrid />
 }

@@ -1,0 +1,40 @@
+﻿@page "/Sudoku"
+@using TetrisWebAssembly.Helpers
+<video autoplay muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<h3>Sudoku Solver</h3>
+@if (Grid != null && Grid.Count > 0)
+{
+    <div class="sudoku-grid">
+        @for (int row = 0; row < Grid.Count; row++)
+        {
+            <div class="sudoku-row">
+                @for (int col = 0; col < Grid[row].Count; col++)
+                {
+                    var x = row;
+                    var y = col;
+                    <input type="text"
+                           maxlength="1"
+                           class="sudoku-cell"
+                           value="@(Grid[row][col] == "0" ? "" : Grid[row][col].ToString())"
+                           @oninput="(e) => SetGridValue(x,y,e)"
+                           min="0" max="9" />
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+})
+@if (Grid is not null && SudokuUtils.IsSolved(Grid))
+{
+    <p class="sudoku-solved">Sudoku solved!</p>
+}
+else
+{
+    <p class="sudoku-unsolved">Sudoku unsolved</p>
+    <button @onclick="SolvePuzzle">Solve</button>
+})
