@@ -1,147 +1,63 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace TetrisWebAssembly.Pages;
 public partial class SudokuGrid
 {
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
     public List<List<string>> Grid = [];
+    private SudokuSolver sudokuSolver = new SudokuSolver();
+    private Difficulty difficulty = Difficulty.UnSelected;
+    private bool[][] IsValid; // Add this as a field in your class
 
     private void SolvePuzzle()
     {
-        var solver = new SudokuSolver();
-        Grid = solver.Solve(Grid);
+        Grid = sudokuSolver.Solve(Grid);
+
     }
     protected override void OnInitialized()
     {
         // Initialize the grid with test data
-        Grid = new List<List<string>>
-                {
-                    new List<string> { "5", "3", "", "", "7", "", "", "", "" },
-                    new List<string> { "6", "", "", "1", "9", "5", "", "", "" },
-                    new List<string> { "", "9", "8", "", "", "", "", "6", "" },
-                    new List<string> { "8", "", "", "", "6", "", "", "", "3" },
-                    new List<string> { "4", "", "", "8", "", "3", "", "", "1" },
-                    new List<string> { "7", "", "", "", "2", "", "", "", "6" },
-                    new List<string> { "", "6", "", "", "", "", "2", "8", "" },
-                    new List<string> { "", "", "", "4", "1", "9", "", "", "5" },
-                    new List<string> { "", "", "", "", "8", "", "", "7", "9" }
-                };
-    }
-    private void SetGridValue(int row, int col, ChangeEventArgs args) 
-    {
-        // Set the value of the cell at position (x, y)
-        Grid[row][col] = args.Value?.ToString() ?? "";
-    }
-}
 
-public class SudokuSolver
-{
-    public List<List<string>> Solve(List<List<string>> puzzle)
+        Grid = Enumerable.Range(0, 9)
+                     .Select(_ => Enumerable.Repeat("", 9).ToList())
+                     .ToList();
+        InitializeValidationGrid();
+        //sudokuSolver.GenerateSudokuGrid(difficulty);
+    }
+    private void InitializeValidationGrid()
     {
-        var sudokuGrid = puzzle
-            .Select(row => row
-                .Select(cell => (cell.Trim() != "" && int.TryParse(cell, out int n) && n >= 1 && n <= 9) ? cell : " ")
-                .ToList())
-            .ToList();
-
-        if (SolveSudoku(sudokuGrid))
+        IsValid = new bool[Grid.Count][];
+        for (int row = 0; row < Grid.Count; row++)
         {
-            return sudokuGrid;
-        }
-
-        throw new Exception("Sudoku puzzle cannot be solved.");
-    }
-    private bool SolveSudoku(List<List<string>> puzzle)
-    {
-        for (int row = 0; row < 9; row++)
-        {
-            for (int col = 0; col < 9; col++)
+            IsValid[row] = new bool[Grid[row].Count];
+            for (int col = 0; col < Grid[row].Count; col++)
             {
-                if (puzzle[row][col] == " ")
-                {
-                    for (int num = 1; num <= 9; num++)
-                    {
-                        string numStr = num.ToString();
-                        if (IsValidPlacement(puzzle, row, col, numStr))
-                        {
-                            puzzle[row][col] = numStr;
-
-                            // Recurse to solve the next cell
-                            if (SolveSudoku(puzzle))
-                            {
-                                return true;
-                            }
-
-                            // Backtrack
-                            puzzle[row][col] = " ";
-                        }
-                    }
-
-                    // If no valid number is found, return false
-                    return false;
-                }
+                IsValid[row][col] = true; // Initially, all cells are valid
             }
         }
-
-        // If no empty cells are left, the puzzle is solved
-        return true;
     }
-    bool IsValidPlacement(List<List<string>> grid, int row, int col, string num)
+    private async Task OnDifficultyChanged()
     {
-        // Check row and column
-        if (grid[row].Contains(num) || grid.Select(r => r[col]).Contains(num)) return false;
-
-        // Check 3x3 subgrid
-        int startRow = (row / 3) * 3;
-        int startCol = (col / 3) * 3;
-        var subgrid = GetSubgrid(grid, startRow, startCol);
-        return !subgrid.Contains(num);
+        // Perform some action when the selection changes
+        Grid = sudokuSolver.GenerateSudokuGrid(difficulty);
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
     }
-    bool IsValidSudoku(List<List<string>> grid)
+
+    private void SetGridValue(int row, int col, ChangeEventArgs args)
     {
-        // Validate rows
-        foreach (var row in grid)
+        var value = args.Value?.ToString() ?? "";
+        Grid[row][col] = value;
+
+        // Validate the placement
+        var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
+        this.IsValid[row][col] = isValid;
+        if (!isValid)
         {
-            if (!HasUniqueValues(row)) return false;
+            // Optionally, display an error message
         }
 
-        // Validate columns
-        for (int col = 0; col < 9; col++)
-        {
-            var column = grid.Select(row => row[col]).ToList();
-            if (!HasUniqueValues(column)) return false;
-        }
-
-        // Validate 3x3 subgrids
-        for (int row = 0; row < 9; row += 3)
-        {
-            for (int col = 0; col < 9; col += 3)
-            {
-                var subgrid = GetSubgrid(grid, row, col);
-                if (!HasUniqueValues(subgrid)) return false;
-            }
-        }
-
-        return true;
+        // Optionally, trigger a re-render if needed
+        StateHasChanged();
     }
-
-    bool HasUniqueValues(List<string> cells)
-    {
-        var numbers = cells.Where(cell => cell != " ").ToList();
-        return numbers.Count == numbers.Distinct().Count();
-    }
-
-    List<string> GetSubgrid(List<List<string>> grid, int startRow, int startCol)
-    {
-        var subgrid = new List<string>();
-        for (int row = startRow; row < startRow + 3; row++)
-        {
-            for (int col = startCol; col < startCol + 3; col++)
-            {
-                subgrid.Add(grid[row][col]);
-            }
-        }
-        return subgrid;
-    }
-
-
 }

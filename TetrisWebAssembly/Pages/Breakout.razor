@@ -2,7 +2,7 @@
 <h3>Breakout</h3>
 
 
-<div class="breakout-container" @ref="BreakoutContainer">
+<div class="breakout-container" @ref="BreakoutContainer" @onmousemove="MovePaddle">
     <div class="controls">
         @if (IsPaused)
         {
@@ -14,8 +14,8 @@
         }
         <div class="breakout-stats">
             <p>Score: @Score</p>
-            <p>@BallSpeedX</p>
-            <p>Lives: @Lives</p>
+@*             <p>@BallSpeedX</p>
+ *@            <p>Lives: @Lives</p>
             @if (IsDemo)
             {
                 <span>Demo</span>
@@ -26,20 +26,16 @@
             }
         </div>
     </div>
-    <video autoplay muted loop id="bg">
-        <source src="./css/BGTunnel.mp4" type="video/mp4" />
-    </video>        <!-- Blocks -->
-
-    <svg class="game-field" xmlns="http://www.w3.org/2000/svg" @onmousemove="MovePaddle">
+    <svg class="game-field" xmlns="http://www.w3.org/2000/svg">
         @foreach (var block in Blocks)
         {
-            <rect x="@block.X" y="@block.Y" width="50" height="20" fill="@block.Color" />
+            <rect x="@(block.X * ScaleX)" y="@(block.Y * ScaleY)" width="@(50 * ScaleX)" height="@(20 * ScaleY)" fill="@block.Color" />
         }
 
         <!-- Paddle -->
-        <rect x="@PaddleX" y="@PaddleYPosition" width="@PaddleWidth" height="20" fill="grey" />
+        <rect x="@(PaddleX * ScaleX)" y="@(PaddleYPosition * ScaleY)" width="@(PaddleWidth * ScaleX)" height="@(20 * ScaleY)" fill="grey" />
 
         <!-- Ball -->
-        <circle cx="@BallX" cy="@BallY" r="10" fill="white" />
+        <circle cx="@(BallX * ScaleX)" cy="@(BallY * ScaleY)" r="@(BallRadius * ScaleX)" fill="white" />
     </svg>
 </div>

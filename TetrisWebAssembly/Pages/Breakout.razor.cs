@@ -10,13 +10,14 @@ using TetrisWebAssembly.Models;
 
 public partial class Breakout : ComponentBase
 {
-    [Inject]
-    private IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+
     private const int FieldWidth = 600;
     private const int FieldHeight = 900;
     private ElementReference BreakoutContainer;
-    public bool IsDemo { get; private set; }
-
+    public bool IsDemo { get; private set; } = true;
+    private double ScaleX = 1.0;
+    private double ScaleY = 1.0;
     private double PaddleX = 250;
     private double BallX = 300, BallY = 760;
     private double BallSpeedX = 3, BallSpeedY = -3;
@@ -63,6 +64,8 @@ public partial class Breakout : ComponentBase
             if (rect != null)
             {
                 PlayfieldOffsetLeft = rect.Left;
+                ScaleX = rect.Width / FieldWidth;
+                ScaleY = rect.Height / FieldHeight;
             }
         }
     }
@@ -96,7 +99,7 @@ public partial class Breakout : ComponentBase
         relativeX = e.ClientX - PlayfieldOffsetLeft;
 
         // Check if the pointer is outside the playfield
-        if (relativeX < PaddleWidth / 2 || relativeX > FieldWidth)
+        if (relativeX < -(PaddleWidth * ScaleX) / 2 || relativeX > FieldWidth * ScaleX)
         {
             IsDemo = true;
             return;
@@ -105,8 +108,8 @@ public partial class Breakout : ComponentBase
         IsDemo = false;
 
         // Center paddle around the mouse position and constrain it within bounds
-        PaddleX = relativeX - PaddleWidth / 2 - BallRadius / 2; // Center the paddle 
-        PaddleX = Math.Clamp(PaddleX, 0, FieldWidth - PaddleWidth); // Prevent paddle from leaving the playfield
+        PaddleX = relativeX; // Center the paddle
+        PaddleX = Math.Clamp(PaddleX, 0, (FieldWidth * ScaleX)); // Prevent paddle from leaving the playfield
     }
     private void UpdateBall()
     {
@@ -289,14 +292,17 @@ public partial class Breakout : ComponentBase
 
     private async Task StartGame()
     {
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
         await BreakoutContainer.FocusAsync();
         IsPaused = false;
         GameLoopTimer.Start();
     }
 
-    private void PauseGame()
+    private async Task PauseGame()
     {
         IsPaused = true;
+        await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').pause()");
+
     }
 
     private void ResetGame()

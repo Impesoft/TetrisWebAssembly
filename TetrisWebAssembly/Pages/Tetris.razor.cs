@@ -6,9 +6,11 @@ using TetrisWebAssembly.GameLogic;
 namespace TetrisWebAssembly.Pages;
 public partial class Tetris
 {
-    private const int BoardWidth = 10;
-    private const int BoardHeight = 20;
-    private const int BlockSize = 50;
+    private static int PreviewBoardWidth = 4;
+    private static int BoardWidth = 10;
+    private static int PreviewBoardHeight = 4;
+    private static int BoardHeight = 20;
+    private static int BlockSize = 50;
 
     [Inject] private IJSRuntime JSRuntime { get; set; }
 
@@ -17,19 +19,31 @@ public partial class Tetris
     private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts); // The game instance
     private PeriodicTimer? GameTimer;
 
-    private int SvgWidth => BoardWidth * BlockSize;
-    private int SvgHeight => BoardHeight * BlockSize;
+    private int SvgWidth;
+    private int PreviewSvgWidth;
+    private int SvgHeight;
+    private int PreviewSvgHeight;
 
     protected override void OnInitialized()
     {
         // Initialize the game instance
-        GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts);
     }
-
+    private async Task<int> CalculateBlockSize()
+    {
+        int viewportWidth = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
+        return Math.Min(viewportWidth / (BoardWidth + 10), 50); 
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            BlockSize = await CalculateBlockSize();
+            SvgWidth = BoardWidth * BlockSize;
+            SvgHeight = BoardHeight * BlockSize;
+            PreviewSvgWidth = PreviewBoardWidth * BlockSize;
+            PreviewSvgHeight = PreviewBoardHeight * BlockSize;
+            GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts);
+            StateHasChanged();
             await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
         }
     }
@@ -114,5 +128,19 @@ public partial class Tetris
         await TetrisContainer.FocusAsync(); // Refocus on the container for key input
         StateHasChanged(); // Update the UI
     }
-
+    private async Task HandlePointerDown(PointerEventArgs e)
+    {
+        if (GameInstance.IsGameOver)
+            return;
+        if (e.ClientX < SvgWidth / 2)
+        {
+            GameInstance.MoveTetrominoLeft();
+        }
+        else
+        {
+            GameInstance.MoveTetrominoRight();
+        }
+        await TetrisContainer.FocusAsync(); // Refocus on the container for key input
+        StateHasChanged(); // Update the UI
+    }
 }

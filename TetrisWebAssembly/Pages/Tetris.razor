@@ -3,7 +3,7 @@
 @namespace TetrisWebAssembly.Pages
 @page "/tetris"
 <!-- Main container for the Tetris game -->
-<div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @ref="TetrisContainer">
+<div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @onpointerdown="HandlePointerDown" @ref="TetrisContainer">
     <div class="controls">
         @if (GameTimer == null)
         {
@@ -18,7 +18,7 @@
             <div class="preview-container">
                 <div>Next block:</div>
                 <svg class="preview-board" xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 @(4 * BlockSize) @(4 * BlockSize)" width="120" height="120">
+                     viewBox="0 0 @PreviewSvgWidth @PreviewBoardHeight" width="@PreviewSvgWidth" height="@PreviewSvgHeight">
                     <defs>
                         <linearGradient id="block-border" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="yellow" /> <!-- Top-left corner -->
@@ -40,9 +40,6 @@
             </div>
         </div>
     </div>
-    <video muted loop id="bg">
-        <source src="./css/BGTunnel.mp4" type="video/mp4"/>
-    </video>        <!-- Blocks -->
     <!-- Game stats -->
     <!-- Preview container for the next tetromino -->
     @if (GameInstance.IsGameOver)
