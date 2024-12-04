@@ -82,3 +82,17 @@ button[b-7hdqyx0vr8] {
     background-color: green;
     color: darkgreen;
 }
+form-select[b-7hdqyx0vr8] {
+    margin: 1rem;
+    padding: .5rem 1rem;
+    font-size: .75rem;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: .2rem;
+    cursor: pointer;
+}
+
+    form-select:hover[b-7hdqyx0vr8] {
+        background-color: #555;
+    }

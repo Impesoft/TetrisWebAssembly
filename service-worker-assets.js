@@ -1,17 +1,17 @@
 self.assetsManifest = {
-  "version": "nMshRWYG",
+  "version": "PRLG6/vR",
   "assets": [
     {
       "hash": "sha256-G/xRpCaRZR+Pe80dkMPhDxRHstDTGoRABwBV32I7vYQ=",
       "url": "CNAME"
     },
     {
-      "hash": "sha256-l21FmE25cwE9FWCshYYf8dAZqt3XZ2wITj2E+76svbw=",
+      "hash": "sha256-/PU9g57gTBrIBwyWMlzX1cXm8vLIsBEG964SfWVimf8=",
       "url": "TetrisWebAssembly.styles.css"
     },
     {
-      "hash": "sha256-TmO/qtM3k8P/eyIbc7VNtPzTrJ1wiJ4GiBxAtHFVIPA=",
-      "url": "_framework/Microsoft.AspNetCore.Components.Web.a2eihd8syv.wasm"
+      "hash": "sha256-NUVy9Y8Wieu6oprNb4d6FX1K8NeSbE+f0Ms/DRBvl60=",
+      "url": "_framework/Microsoft.AspNetCore.Components.Web.ff2ac164p7.wasm"
     },
     {
       "hash": "sha256-lNeqJIV883lh0UuxhQkzSEQf9OqQJAtWL21CZbuKa9E=",
@@ -158,11 +158,11 @@ self.assetsManifest = {
       "url": "_framework/System.Text.RegularExpressions.gl65p7jdfx.wasm"
     },
     {
-      "hash": "sha256-nGOTdsJept/jxV62kbadS1KHphx+hd/rXc68oesQ3Kk=",
-      "url": "_framework/TetrisWebAssembly.8b1v0dbqgh.wasm"
+      "hash": "sha256-2eQg9AHb4vMMXyp93gxmCHKSnqeocJ4EunThIrbTzMw=",
+      "url": "_framework/TetrisWebAssembly.xuow3rv2ib.wasm"
     },
     {
-      "hash": "sha256-wEXyLk8Cpyi7bVkaZui0MWdfvsMmRnLD+/49x3fzMQ0=",
+      "hash": "sha256-gnvjkQ7RXZ/+gMGgaS0hTdXGaCciyi/cPvT/Qu6VlDY=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -198,7 +198,7 @@ self.assetsManifest = {
       "url": "_framework/icudt_no_CJK.lfu7j35m59.dat"
     },
     {
-      "hash": "sha256-pET1nCsnvWWHaXmRA16KsoVsBx5sikhgg1nvyMtyoA4=",
+      "hash": "sha256-msfrOZhBW2/ZbaAAhTZC/G9kNgnDNS0pfeD8k7PbEfs=",
       "url": "css/app.css"
     },
     {

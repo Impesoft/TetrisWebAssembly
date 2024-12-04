@@ -210,6 +210,7 @@ button {
     border: 2px solid white;
     width: min(60vw, 600px);
     aspect-ratio: 2 / 3;
+    max-height: 80vh; /* Limit height relative to the viewport */
 }
 .breakout-stats {
     float: left;

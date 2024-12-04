@@ -1,10 +1,10 @@
 {
   "mainAssemblyName": "TetrisWebAssembly",
   "resources": {
-    "hash": "sha256-aFqf8wP3SZtF4oYzMfHUpo7qmRaeCA07WY5DSNcoJQU=",
+    "hash": "sha256-ckOcKX7zL8HKD7x3ubUh9LFIH06zleK9xqo8Fd29xtA=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.f19wdw0doa.wasm": "Microsoft.AspNetCore.Components.wasm",
-      "Microsoft.AspNetCore.Components.Web.a2eihd8syv.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
+      "Microsoft.AspNetCore.Components.Web.ff2ac164p7.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.0ler9vd42a.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
       "Microsoft.Extensions.Configuration.Abstractions.wq6jn0bf20.wasm": "Microsoft.Extensions.Configuration.Abstractions.wasm",
       "Microsoft.Extensions.Configuration.Json.l4cyqta4uk.wasm": "Microsoft.Extensions.Configuration.Json.wasm",
@@ -40,7 +40,7 @@
       "System.Text.Json.8tcm1uqsin.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.gl65p7jdfx.wasm": "System.Text.RegularExpressions.wasm",
       "System.6bp5k9v1ih.wasm": "System.wasm",
-      "TetrisWebAssembly.8b1v0dbqgh.wasm": "TetrisWebAssembly.wasm",
+      "TetrisWebAssembly.xuow3rv2ib.wasm": "TetrisWebAssembly.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.hmanx9razn.js": "dotnet.native.js",
       "dotnet.native.p4lwlf2bu1.wasm": "dotnet.native.wasm",
@@ -69,7 +69,7 @@
     },
     "assembly": {
       "Microsoft.AspNetCore.Components.f19wdw0doa.wasm": "sha256-PR1eQdpzujvyUZ20hUuqrZB2mtv2CZtvj+EpXqLdzcw=",
-      "Microsoft.AspNetCore.Components.Web.a2eihd8syv.wasm": "sha256-TmO/qtM3k8P/eyIbc7VNtPzTrJ1wiJ4GiBxAtHFVIPA=",
+      "Microsoft.AspNetCore.Components.Web.ff2ac164p7.wasm": "sha256-NUVy9Y8Wieu6oprNb4d6FX1K8NeSbE+f0Ms/DRBvl60=",
       "Microsoft.AspNetCore.Components.WebAssembly.0ler9vd42a.wasm": "sha256-lNeqJIV883lh0UuxhQkzSEQf9OqQJAtWL21CZbuKa9E=",
       "Microsoft.Extensions.Configuration.Abstractions.wq6jn0bf20.wasm": "sha256-GHD3PoxF3n+Cmylqax0M1LwXK1HAWlJhMom7gTRF0cg=",
       "Microsoft.Extensions.Configuration.Json.l4cyqta4uk.wasm": "sha256-5f/kRCFVRpFyWz4ZM53EWNQiMJvCGloKw/OIk5qah0o=",
@@ -103,7 +103,7 @@
       "System.Text.Json.8tcm1uqsin.wasm": "sha256-XGNtyDR4z9xhkzrftM1kM+fxO6JmK9zZX9vk/JImDdE=",
       "System.Text.RegularExpressions.gl65p7jdfx.wasm": "sha256-XKqW+TrmS4TjaNifmwb+yfc9w2BWkr3dUjq0xmJYmEw=",
       "System.6bp5k9v1ih.wasm": "sha256-nmhUPBjB8ZbEN0U5j2acgnW4fkbSYlov7U3e30Lsp8A=",
-      "TetrisWebAssembly.8b1v0dbqgh.wasm": "sha256-nGOTdsJept/jxV62kbadS1KHphx+hd/rXc68oesQ3Kk="
+      "TetrisWebAssembly.xuow3rv2ib.wasm": "sha256-2eQg9AHb4vMMXyp93gxmCHKSnqeocJ4EunThIrbTzMw="
     }
   },
   "cacheBootResources": true,
