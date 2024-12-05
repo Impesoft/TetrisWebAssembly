@@ -27,9 +27,11 @@
                     var y = col;
                     <input type="text"
                            maxlength="1"
+                           pattern="[0-9]{1,5}"
                            class="sudoku-cell @(IsValid[row][col] ? "green" : "invalid-cell")"
                            value="@(Grid[row][col] == "0" ? "" : Grid[row][col].ToString())"
                            @oninput="(e) => SetGridValue(x,y,e)"
+                           disabled=@IsPrefilled[row][col]
                            min="1" max="9" />
                 }
             </div>

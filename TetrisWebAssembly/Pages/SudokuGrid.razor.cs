@@ -10,6 +10,7 @@ public partial class SudokuGrid
     private SudokuSolver sudokuSolver = new SudokuSolver();
     private Difficulty difficulty = Difficulty.UnSelected;
     private bool[][] IsValid; // Add this as a field in your class
+    private bool[][] IsPrefilled;
 
     private void SolvePuzzle()
     {
@@ -24,6 +25,8 @@ public partial class SudokuGrid
                      .Select(_ => Enumerable.Repeat("", 9).ToList())
                      .ToList();
         InitializeValidationGrid();
+        InitializePrefilledGrid();
+
         //sudokuSolver.GenerateSudokuGrid(difficulty);
     }
     private void InitializeValidationGrid()
@@ -38,10 +41,24 @@ public partial class SudokuGrid
             }
         }
     }
+    private void InitializePrefilledGrid()
+    {
+        IsPrefilled = new bool[9][];
+        for (int row = 0; row < 9; row++)
+        {
+            IsPrefilled[row] = new bool[9];
+            for (int col = 0; col < Grid[row].Count; col++)
+            {
+                IsPrefilled[row][col] = !string.IsNullOrWhiteSpace(Grid[row][col]); // Mark prefilled cells
+            }
+        }
+    }
+
     private async Task OnDifficultyChanged()
     {
         // Perform some action when the selection changes
         Grid = sudokuSolver.GenerateSudokuGrid(difficulty);
+        InitializePrefilledGrid();
         await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
     }
 
