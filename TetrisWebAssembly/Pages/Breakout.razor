@@ -1,33 +1,36 @@
-﻿@using System.Globalization
-@page "/Breakout"
+﻿@page "/Breakout"
+@using System.Globalization
+@inject NavigationManager _nav
 <video muted loop id="bg">
     <source src="./css/BGTunnel.mp4" type="video/mp4" />
 </video>
 
-<div class="breakout-container" @ref="BreakoutContainer" @onmousemove="MovePaddle">
-    <div class="controls">
-        @if (IsPaused)
-        {
-            <button @onclick="StartGame">Start</button>
-        }
-        else
-        {
-            <button @onclick="PauseGame" disabled="@(IsPaused)">Pause</button>
-        }
-        <div class="breakout-stats">
-            <p>Score: @Score</p>
-@*             <p>@BallSpeedX</p>
+<div class="controls">
+    <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+
+    @if (IsPaused)
+    {
+        <button @onclick="StartGame">Start</button>
+    }
+    else
+    {
+        <button @onclick="PauseGame" disabled="@(IsPaused)">Pause</button>
+    }
+</div>
+<div class="breakout-stats">
+    <p>Score: @Score</p>
+    @*             <p>@BallSpeedX</p>
  *@            <p>Lives: @Lives</p>
-            @if (IsDemo)
-            {
-                <span>Demo</span>
-            }
-            else
-            {
-                <span>X @relativeX</span>
-            }
-        </div>
-    </div>
+    @if (IsDemo)
+    {
+        <span>Demo</span>
+    }
+    else
+    {
+        <span>X @relativeX</span>
+    }
+</div>
+<div class="breakout-container" @ref="BreakoutContainer" @onmousemove="MovePaddle">
     <svg class="game-field" xmlns="http://www.w3.org/2000/svg">
         @foreach (var block in Blocks)
         {

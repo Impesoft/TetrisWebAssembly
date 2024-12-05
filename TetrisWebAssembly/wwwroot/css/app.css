@@ -109,7 +109,7 @@ body {
     border: 2px solid #00F; /* Ensure the border is visible */
     outline: 1px solid red; /* Prevent focus outline on keyboard events */
     flex: 1;
-    height:100vh;
+    height: 100vh;
 }
 
 
@@ -157,10 +157,17 @@ body {
 .controls {
     position: absolute;
     float: left;
-    top: 100px;
+    top: 10px;
     left: 10px;
 }
+
 button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-select {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -188,7 +195,7 @@ button {
     }
 
 
- /*
+/*
  breakout css starts here
  */
 .breakout-container {
@@ -210,14 +217,17 @@ button {
     aspect-ratio: 2 / 3;
     max-height: 80vh; /* Limit height relative to the viewport */
 }
+
 .breakout-stats {
+    position: absolute;
     float: left;
+    top: 50px;
+    left:10px;
     display: flex;
     flex-direction: column;
-    width: 10vw;
-    overflow: hidden;
-    text-align: center;
-    font-size: 2vw;
+    width: fit-content;
+    text-align: left;
+    font-size: 1vw;
     font-family: monospace;
     font-weight: bold;
     /* Text Shadow Property */
@@ -233,6 +243,7 @@ button {
     min-width: 100%;
     min-height: 100%;
 }
+
 .tetris-svg {
     width: fit-content;
     height: fit-content;
