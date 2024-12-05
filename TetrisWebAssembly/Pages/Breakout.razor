@@ -1,4 +1,5 @@
-﻿@page "/Breakout"
+﻿@using System.Globalization
+@page "/Breakout"
 <div class="breakout-container" @ref="BreakoutContainer" @onmousemove="MovePaddle">
     <div class="controls">
         @if (IsPaused)
@@ -26,13 +27,24 @@
     <svg class="game-field" xmlns="http://www.w3.org/2000/svg">
         @foreach (var block in Blocks)
         {
-            <rect x="@(block.X * ScaleX)" y="@(block.Y * ScaleY)" width="@(50 * ScaleX)" height="@(20 * ScaleY)" fill="@block.Color" />
+            <rect x="@ScaleAndFormat(block.X, ScaleX)"
+                  y="@ScaleAndFormat(block.Y, ScaleY)"
+                  width="@ScaleAndFormat(50, ScaleX)"
+                  height="@ScaleAndFormat(20, ScaleY)"
+                  fill="@block.Color" />
         }
 
         <!-- Paddle -->
-        <rect x="@(PaddleX * ScaleX)" y="@(PaddleYPosition * ScaleY)" width="@(PaddleWidth * ScaleX)" height="@(20 * ScaleY)" fill="grey" />
+        <rect x="@ScaleAndFormat(PaddleX, ScaleX)"
+              y="@ScaleAndFormat(PaddleYPosition, ScaleY)"
+              width="@ScaleAndFormat(PaddleWidth, ScaleX)"
+              height="@ScaleAndFormat(20, ScaleY)"
+              fill="grey" />
 
         <!-- Ball -->
-        <circle cx="@(BallX * ScaleX)" cy="@(BallY * ScaleY)" r="@(BallRadius * ScaleX)" fill="white" />
+        <circle cx="@ScaleAndFormat(BallX, ScaleX)"
+                cy="@ScaleAndFormat(BallY, ScaleY)"
+                r="@ScaleAndFormat(BallRadius, ScaleX)"
+                fill="white" />
     </svg>
 </div>

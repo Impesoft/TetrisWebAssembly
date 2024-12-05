@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace TetrisWebAssembly.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
 using TetrisWebAssembly.Models;
@@ -21,7 +22,6 @@ public partial class Breakout : ComponentBase
     private double PaddleX = 250;
     private double BallX = 300, BallY = 760;
     private double BallSpeedX = 3, BallSpeedY = -3;
-    //private double MouseLastX = 0, MouseSpeed = 0;
     private int Score = 0;
     private int Lives = 5;
     private int PaddleWidth = 100;
@@ -313,6 +313,10 @@ public partial class Breakout : ComponentBase
         BallSpeedY = -3;
         IsPaused = true;
         InitializeBlocks();
+    }
+    private string ScaleAndFormat(double value, double scale)
+    {
+        return (value * scale).ToString(CultureInfo.InvariantCulture);
     }
 }
 
