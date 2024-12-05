@@ -1,12 +1,12 @@
 self.assetsManifest = {
-  "version": "IJyrCCuz",
+  "version": "zLBtQ1Zp",
   "assets": [
     {
       "hash": "sha256-G/xRpCaRZR+Pe80dkMPhDxRHstDTGoRABwBV32I7vYQ=",
       "url": "CNAME"
     },
     {
-      "hash": "sha256-/PU9g57gTBrIBwyWMlzX1cXm8vLIsBEG964SfWVimf8=",
+      "hash": "sha256-MabB2EMUI/Kqj2mKyvJiwGmSdOq5VIveASKIXep3EDQ=",
       "url": "TetrisWebAssembly.styles.css"
     },
     {
@@ -158,11 +158,11 @@ self.assetsManifest = {
       "url": "_framework/System.Text.RegularExpressions.gl65p7jdfx.wasm"
     },
     {
-      "hash": "sha256-TqOmjdoUGx9QUF6LUYhQJlfy5DQwwjlBtOWl6RxMjxc=",
-      "url": "_framework/TetrisWebAssembly.ukeqb7n838.wasm"
+      "hash": "sha256-ud9A1iiW4t1wUBYBAkhN+Vf/61pKUnyZXnNoHCwYHo4=",
+      "url": "_framework/TetrisWebAssembly.16a5tczwfo.wasm"
     },
     {
-      "hash": "sha256-JseUqftzGADqtUV1iTP5MfIK6GgXU4lWnYrRS5ybP2k=",
+      "hash": "sha256-mpA/bbCseq6tTmIseY2TU4IG0RDthwh8znkQFWRKMAo=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -198,7 +198,7 @@ self.assetsManifest = {
       "url": "_framework/icudt_no_CJK.lfu7j35m59.dat"
     },
     {
-      "hash": "sha256-msfrOZhBW2/ZbaAAhTZC/G9kNgnDNS0pfeD8k7PbEfs=",
+      "hash": "sha256-wa31M2AUG3xK4negK1eJlb0tDhF+hsKTGH0dzv1RzNM=",
       "url": "css/app.css"
     },
     {

@@ -1,3 +1,8 @@
+/* /Pages/Home.razor.rz.scp.css */
+.white[b-p1omuvtjcp] {
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
+}
 /* /Pages/SudokuGrid.razor.rz.scp.css */
 .sudoku-grid[b-7hdqyx0vr8] {
     /*border-collapse: collapse;*/
