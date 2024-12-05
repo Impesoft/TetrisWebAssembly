@@ -82,7 +82,6 @@ button {
     color: darkgreen;
 }
 form-select {
-    margin: 1rem;
     padding: .5rem 1rem;
     font-size: .75rem;
     background-color: #444;
@@ -95,3 +94,10 @@ form-select {
     form-select:hover {
         background-color: #555;
     }
+
+.controls {
+    position: absolute;
+    float: left;
+    top: 10px;
+    left: 10px;
+}
