@@ -109,7 +109,7 @@ public partial class Tetris
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
-        if (GameInstance.IsGameOver)
+        if (GameInstance.IsGameOver || !GameInstance.IsRunning)
             return;
 
         switch (e.Key)
@@ -136,21 +136,21 @@ public partial class Tetris
     }
     private async Task HandlePointerDown(PointerEventArgs e)
     {
-        if (GameInstance.IsGameOver)
+        if (GameInstance.IsGameOver || !GameInstance.IsRunning)
             return;
         if (e.ClientX < SvgWidth / 2)
         {
             GameInstance.MoveTetrominoLeft();
         }
-        else
+        if (e.ClientX > SvgWidth / 2)
         {
             GameInstance.MoveTetrominoRight();
         }
-        if (e.ClientY > SvgHeight / 2)
+        if (e.ClientY > SvgHeight)
         {
             GameInstance.MoveTetrominoDown();
         }
-        else
+        if (e.ClientY < SvgHeight/2)
         {
             GameInstance.RotateTetromino();
         }
