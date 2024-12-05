@@ -1,4 +1,8 @@
 ﻿@page "/Sudoku"
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
 @using TetrisWebAssembly.GameLogic
 @using TetrisWebAssembly.Helpers
 <select @bind="difficulty" @bind:after="OnDifficultyChanged" class="form-select">

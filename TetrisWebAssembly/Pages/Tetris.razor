@@ -1,5 +1,9 @@
 ﻿@page "/tetris"
 @namespace TetrisWebAssembly.Pages
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
 <!-- Main container for the Tetris game -->
 <div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @onpointerdown="HandlePointerDown" @ref="TetrisContainer">
     <div class="controls">

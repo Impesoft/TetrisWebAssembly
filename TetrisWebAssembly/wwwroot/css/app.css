@@ -92,6 +92,10 @@ code {
 */
 body {
     background-color: darkblue;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .tetris-container {
@@ -101,8 +105,13 @@ body {
     height: 100%;
     flex-direction: column;
     align-items: center;
-    outline: none; /* Prevent focus outline on keyboard events */
+    justify-content: center;
+    border: 2px solid #00F; /* Ensure the border is visible */
+    outline: 1px solid red; /* Prevent focus outline on keyboard events */
+    flex: 1;
+    height:100vh;
 }
+
 
 .tetris-board {
     display: block;
@@ -182,17 +191,6 @@ button {
  /*
  breakout css starts here
  */
-.tetris-container {
-    background-color: transparent;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    outline: none; /* Prevent focus outline on keyboard events */
-}
-
 .breakout-container {
     background-color: transparent;
     display: flex;

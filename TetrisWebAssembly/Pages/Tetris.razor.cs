@@ -11,6 +11,8 @@ public partial class Tetris
     private static int PreviewBoardHeight = 4;
     private static int BoardHeight = 20;
     private static int BlockSize = 50;
+    private static int OffsetFieldLeft;
+    private static int OffsetFieldBottom;
 
     [Inject] private IJSRuntime JSRuntime { get; set; }
 
@@ -33,7 +35,7 @@ public partial class Tetris
         int viewportWidth = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
         int viewportHeight = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight"));
         var maxBlockWidth = Math.Min(viewportWidth / (BoardWidth + 10), 50);
-        var maxBlockHeight = (int)Math.Min((viewportHeight / BoardHeight)*.8, 50);
+        var maxBlockHeight = (int)Math.Min((viewportHeight / BoardHeight) * .8, 50);
         var blockSize = Math.Min(Math.Min(maxBlockWidth, maxBlockHeight), 50);
         return blockSize;
     }
@@ -49,6 +51,13 @@ public partial class Tetris
             GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts);
             StateHasChanged();
             await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
+        }
+        else
+        {
+            var rect = await JSRuntime.InvokeAsync<BoundingClientRect>("eval",
+                new object[] { "document.querySelector('.tetris-board')?.getBoundingClientRect()" });
+            OffsetFieldLeft = (int)rect.Left;
+            OffsetFieldBottom = (int)(rect.Top + rect.Height);
         }
     }
 
@@ -136,21 +145,22 @@ public partial class Tetris
     }
     private async Task HandlePointerDown(PointerEventArgs e)
     {
+        var offSetFieldTop = OffsetFieldBottom - SvgHeight;
         if (GameInstance.IsGameOver || !GameInstance.IsRunning)
             return;
-        if (e.ClientX < SvgWidth / 2)
+        if (e.ClientX < OffsetFieldLeft)
         {
             GameInstance.MoveTetrominoLeft();
         }
-        if (e.ClientX > SvgWidth / 2)
+        if (e.ClientX > OffsetFieldLeft + SvgWidth)
         {
             GameInstance.MoveTetrominoRight();
         }
-        if (e.ClientY > SvgHeight)
+        if (e.ClientY > OffsetFieldBottom && (e.ClientX > OffsetFieldLeft || e.ClientX < OffsetFieldLeft+SvgWidth))
         {
             GameInstance.MoveTetrominoDown();
         }
-        if (e.ClientY < SvgHeight/2)
+        if (e.ClientY < OffsetFieldBottom - SvgHeight && (e.ClientX > OffsetFieldLeft || e.ClientX < OffsetFieldLeft + SvgWidth))
         {
             GameInstance.RotateTetromino();
         }
