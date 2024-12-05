@@ -18,8 +18,8 @@ public class TetrisGame
     public bool IsRunning { get; private set; } = false; // Flag to track if the game is running
     private static readonly int MinDropInterval = 200; // Minimum drop interval (faster speed)
     private int dropInterval = 1000; // Current drop interval (in milliseconds)
-    private CancellationTokenSource Cts = new CancellationTokenSource();
-    public TetrisGame(int blockSize, int boardWidth, int boardHeight, CancellationTokenSource cts)
+    private CancellationTokenSource? Cts = new CancellationTokenSource();
+    public TetrisGame(int blockSize, int boardWidth, int boardHeight, CancellationTokenSource? cts)
     {
         BlockSize = blockSize;
         BoardWidth = boardWidth;
@@ -69,7 +69,7 @@ public class TetrisGame
             {
                 IsGameOver = true;
                 IsRunning = false;
-                Cts.Cancel();
+                Cts?.Cancel();
             }
         }
     }

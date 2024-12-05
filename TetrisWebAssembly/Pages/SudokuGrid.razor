@@ -15,7 +15,7 @@
     }
 </select>
 </div>
-@if (Grid != null && Grid.Count > 0)
+@if (Grid != null && Grid.Count > 0 && IsValid != null && IsPrefilled != null)
 {
     <div class="sudoku-grid">
         @for (int row = 0; row < Grid.Count; row++)

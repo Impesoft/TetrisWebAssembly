@@ -9,8 +9,8 @@ public partial class SudokuGrid
     public List<List<string>> Grid = [];
     private SudokuSolver sudokuSolver = new SudokuSolver();
     private Difficulty difficulty = Difficulty.UnSelected;
-    private bool[][] IsValid; // Add this as a field in your class
-    private bool[][] IsPrefilled;
+    private bool[][]? IsValid; // Add this as a field in your class
+    private bool[][]? IsPrefilled;
 
     private void SolvePuzzle()
     {
@@ -68,11 +68,10 @@ public partial class SudokuGrid
         Grid[row][col] = value;
 
         // Validate the placement
-        var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
-        this.IsValid[row][col] = isValid;
-        if (!isValid)
+        if (IsValid != null)
         {
-            // Optionally, display an error message
+            var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
+            IsValid[row][col] = isValid;
         }
 
         // Optionally, trigger a re-render if needed

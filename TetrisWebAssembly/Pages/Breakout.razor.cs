@@ -27,7 +27,7 @@ public partial class Breakout : ComponentBase
     private int PaddleWidth = 100;
     private bool IsPaused = true;
     private double relativeX = 100;
-    private Timer GameLoopTimer;
+    private Timer? GameLoopTimer;
     private const int BallRadius = 10;
     private double PlayfieldOffsetLeft = 0;
     private const double MaxBallSpeed = 10; // Slightly higher top speed
@@ -295,7 +295,7 @@ public partial class Breakout : ComponentBase
         await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
         await BreakoutContainer.FocusAsync();
         IsPaused = false;
-        GameLoopTimer.Start();
+        GameLoopTimer?.Start();
     }
 
     private async Task PauseGame()

@@ -14,7 +14,7 @@ public partial class Tetris
     private static int OffsetFieldLeft;
     private static int OffsetFieldBottom;
 
-    [Inject] private IJSRuntime JSRuntime { get; set; }
+    [Inject] private IJSRuntime? JSRuntime { get; set; }
 
     private ElementReference TetrisContainer; // Reference for key input
     private static CancellationTokenSource? Cts = new CancellationTokenSource();
@@ -32,6 +32,8 @@ public partial class Tetris
     }
     private async Task<int> CalculateBlockSize()
     {
+        ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
+
         int viewportWidth = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
         int viewportHeight = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight"));
         var maxBlockWidth = Math.Min(viewportWidth / (BoardWidth + 10), 50);
@@ -54,6 +56,7 @@ public partial class Tetris
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
             var rect = await JSRuntime.InvokeAsync<BoundingClientRect>("eval",
                 new object[] { "document.querySelector('.tetris-board')?.getBoundingClientRect()" });
             OffsetFieldLeft = (int)rect.Left;
@@ -71,6 +74,8 @@ public partial class Tetris
         }
         // Start the background video
         // BackgroundVideo is an ElementReference to the video element
+
+        ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
         await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
 
 
