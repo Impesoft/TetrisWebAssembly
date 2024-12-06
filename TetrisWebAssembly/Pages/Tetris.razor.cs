@@ -148,7 +148,7 @@ public partial class Tetris
         await TetrisContainer.FocusAsync(); // Refocus on the container for key input
         StateHasChanged(); // Update the UI
     }
-    private async Task HandlePointerDown(PointerEventArgs e)
+    private async Task HandlePointerDown(HandlePointerDown e)
     {
         var offSetFieldTop = OffsetFieldBottom - SvgHeight;
         if (GameInstance.IsGameOver || !GameInstance.IsRunning)
