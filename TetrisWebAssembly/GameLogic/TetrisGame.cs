@@ -6,20 +6,20 @@ namespace TetrisWebAssembly.GameLogic;
 
 public class TetrisGame
 {
-    public int BoardWidth; // Width of the playfield (in blocks)
-    public int BoardHeight; // Height of the playfield (in blocks)
-    private int BlockSize;
+    public double BoardWidth; // Width of the playfield (in blocks)
+    public double BoardHeight; // Height of the playfield (in blocks)
+    public double BlockSize;
 
     public List<TetrisBlock> Blocks { get; private set; } = new(); // Locked blocks on the playfield
     public Tetromino CurrentTetromino { get; private set; } // Currently falling tetromino
     public Tetromino NextTetromino { get; private set; } // Preview of the next tetromino
     public bool IsGameOver { get; private set; } = false; // Flag to track if the game is over
-    public int Score { get; private set; } = 0; // Current game score
+    public double Score { get; private set; } = 0; // Current game score
     public bool IsRunning { get; private set; } = false; // Flag to track if the game is running
-    private static readonly int MinDropInterval = 200; // Minimum drop interval (faster speed)
-    private int dropInterval = 1000; // Current drop interval (in milliseconds)
+    private static readonly double MinDropInterval = 200; // Minimum drop doubleerval (faster speed)
+    private double dropInterval = 1000; // Current drop doubleerval (in milliseconds)
     private CancellationTokenSource? Cts = new CancellationTokenSource();
-    public TetrisGame(int blockSize, int boardWidth, int boardHeight, CancellationTokenSource? cts)
+    public TetrisGame(double blockSize, double boardWidth, double boardHeight, CancellationTokenSource? cts)
     {
         BlockSize = blockSize;
         BoardWidth = boardWidth;
@@ -105,7 +105,7 @@ public class TetrisGame
     }
 
     /// <summary>
-    /// Locks the current tetromino into place.
+    /// Locks the current tetromino doubleo place.
     /// </summary>
     private void LockTetromino()
     {
@@ -133,7 +133,7 @@ public class TetrisGame
         foreach (var block in Blocks)
         {
             // Count how many completed rows are **below** the current block
-            int rowsClearedBelow = completedRows.Count(row => row > block.Y);
+            double rowsClearedBelow = completedRows.Count(row => row > block.Y);
 
             // Move the block down by the number of cleared rows below it
             block.Y += rowsClearedBelow * BlockSize;
@@ -149,7 +149,7 @@ public class TetrisGame
     /// <summary>
     /// Adjusts the drop speed based on the number of cleared lines.
     /// </summary>
-    private void AdjustSpeed(int linesCleared)
+    private void AdjustSpeed(double linesCleared)
     {
         if (linesCleared > 0 && dropInterval > MinDropInterval)
         {
@@ -172,9 +172,9 @@ public class TetrisGame
     }
 
     /// <summary>
-    /// Returns the current drop interval (for debugging or UI purposes).
+    /// Returns the current drop doubleerval (for debugging or UI purposes).
     /// </summary>
-    public int GetDropInterval()
+    public double GetDropInterval()
     {
         return dropInterval;
     }

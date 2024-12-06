@@ -12,17 +12,17 @@ public class Tetromino
     }
     public List<TetrisBlock> Blocks { get; private set; } = new();
     public string Color { get; private set; } = "#FFFFFF"; // Default color
-    private static readonly Dictionary<string, (List<(int x, int y)> shape, string color)> TetrominoDefinitions = new()
+    private static readonly Dictionary<string, (List<(double x, double y)> shape, string color)> TetrominoDefinitions = new()
     {
-        { "I", (new List<(int x, int y)> { (0, 0), (1, 0), (2, 0), (3, 0) }, "#00FFFF") }, // Cyan
-        { "O", (new List<(int x, int y)> { (0, 0), (1, 0), (0, 1), (1, 1) }, "#FFFF00") }, // Yellow
-        { "T", (new List<(int x, int y)> { (0, 0), (1, 0), (2, 0), (1, 1) }, "#800080") }, // Purple
-        { "S", (new List<(int x, int y)> { (1, 0), (2, 0), (0, 1), (1, 1) }, "#00FF00") }, // Green
-        { "Z", (new List<(int x, int y)> { (0, 0), (1, 0), (1, 1), (2, 1) }, "#FF0000") }, // Red
-        { "J", (new List<(int x, int y)> { (0, 0), (0, 1), (1, 1), (2, 1) }, "#0000FF") }, // Blue
-        { "L", (new List<(int x, int y)> { (2, 0), (0, 1), (1, 1), (2, 1) }, "#FFA500") }  // Orange
+        { "I", (new List<(double x, double y)> { (0, 0), (1, 0), (2, 0), (3, 0) }, "#00FFFF") }, // Cyan
+        { "O", (new List<(double x, double y)> { (0, 0), (1, 0), (0, 1), (1, 1) }, "#FFFF00") }, // Yellow
+        { "T", (new List<(double x, double y)> { (0, 0), (1, 0), (2, 0), (1, 1) }, "#800080") }, // Purple
+        { "S", (new List<(double x, double y)> { (1, 0), (2, 0), (0, 1), (1, 1) }, "#00FF00") }, // Green
+        { "Z", (new List<(double x, double y)> { (0, 0), (1, 0), (1, 1), (2, 1) }, "#FF0000") }, // Red
+        { "J", (new List<(double x, double y)> { (0, 0), (0, 1), (1, 1), (2, 1) }, "#0000FF") }, // Blue
+        { "L", (new List<(double x, double y)> { (2, 0), (0, 1), (1, 1), (2, 1) }, "#FFA500") }  // Orange
     };
-    public static Tetromino GenerateRandom(int blockSize)
+    public static Tetromino GenerateRandom(double blockSize)
     {
         var selected = TetrominoDefinitions.ElementAt(Random.Next(TetrominoDefinitions.Count));
         var shapeOffsets = selected.Value.shape;
@@ -34,7 +34,7 @@ public class Tetromino
 
         return new Tetromino(blocks, color);
     }
-    public bool CanMove(List<TetrisBlock> existingBlocks, int width, int height, int dx, int dy, int blockSize)
+    public bool CanMove(List<TetrisBlock> existingBlocks, double width, double height, double dx, double dy, double blockSize)
     {
         return Blocks.All(block =>
             block.X + dx * blockSize >= 0 &&
@@ -43,7 +43,7 @@ public class Tetromino
             !existingBlocks.Any(b => b.X == block.X + dx * blockSize && b.Y == block.Y + dy * blockSize));
     }
 
-    public void Move(int dx, int dy, int blockSize)
+    public void Move(double dx, double dy, double blockSize)
     {
         Blocks.ForEach(b =>
         {
@@ -51,18 +51,18 @@ public class Tetromino
             b.Y += dy * blockSize;
         });
     }
-    public void RotateClockwise(List<TetrisBlock> existingBlocks, int width, int height, int blockSize)
+    public void RotateClockwise(List<TetrisBlock> existingBlocks, double width, double height, double blockSize)
     {
         var pivot = Blocks[0];
 
         var rotatedBlocks = Blocks.Select(block =>
         {
-            int relativeX = block.X - pivot.X;
-            int relativeY = block.Y - pivot.Y;
+            double relativeX = block.X - pivot.X;
+            double relativeY = block.Y - pivot.Y;
 
             // Apply rotation formula
-            int rotatedX = -relativeY + pivot.X;
-            int rotatedY = relativeX + pivot.Y;
+            double rotatedX = -relativeY + pivot.X;
+            double rotatedY = relativeX + pivot.Y;
 
             return new TetrisBlock(rotatedX, rotatedY, block.Color);
         }).ToList();

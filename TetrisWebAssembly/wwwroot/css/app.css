@@ -140,10 +140,11 @@ body {
 }
 
 .stats-container {
-    position: absolute;
     float: left;
+    position: absolute;
     display: flex;
     flex-direction: column;
+    left: 10px;
     top: 150px;
     text-align: center;
     font-size: 3rem;
@@ -262,4 +263,22 @@ button {
 .sudoku-cell {
     background-color: rebeccapurple;
     color: aqua;
+}
+
+
+@media screen and (max-width: 900px), screen and (orientation: portrait) {
+    .stats-container {
+        float: none;
+        position:initial;
+        display: flex;
+        flex-direction: column;
+        top: 75px;
+        text-align: center;
+        font-size: 1rem;
+        font-family: monospace;
+        font-weight: bold;
+        /* Text Shadow Property */
+        text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
+        color: lightgrey;
+    }
 }

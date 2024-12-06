@@ -6,14 +6,15 @@ using TetrisWebAssembly.GameLogic;
 namespace TetrisWebAssembly.Pages;
 public partial class Tetris
 {
-    private static int PreviewBoardWidth = 4;
-    private static int BoardWidth = 10;
-    private static int PreviewBoardHeight = 4;
-    private static int BoardHeight = 20;
-    private static int BlockSize = 50;
-    private static int OffsetFieldLeft;
-    private static int OffsetFieldBottom;
+    private static double PreviewBoardWidth = 4;
+    private static double BoardWidth = 10;
+    private static double PreviewBoardHeight = 4;
+    private static double BoardHeight = 20;
+    private static double BlockSize = 50;
+    private static double OffsetFieldLeft;
+    private static double OffsetFieldBottom;
 
+    public double OffsetFieldTop { get; private set; }
     [Inject] private IJSRuntime? JSRuntime { get; set; }
 
     private ElementReference TetrisContainer; // Reference for key input
@@ -21,46 +22,74 @@ public partial class Tetris
     private TetrisGame GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts); // The game instance
     private PeriodicTimer? GameTimer;
 
-    private int SvgWidth;
-    private int PreviewSvgWidth;
-    private int SvgHeight;
-    private int PreviewSvgHeight;
+    private double SvgWidth;
+    private double PreviewSvgWidth;
+    private double SvgHeight;
+    private double PreviewSvgHeight;
 
     protected override void OnInitialized()
     {
         // Initialize the game instance
     }
-    private async Task<int> CalculateBlockSize()
+    private async Task CalculateBlockSize()
     {
         ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
+        var rect = await JSRuntime.InvokeAsync<BoundingClientRect>("eval",
+    new object[] { "document.querySelector('.tetris-board')?.getBoundingClientRect()" });
 
-        int viewportWidth = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
-        int viewportHeight = (int)(await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight"));
-        var maxBlockWidth = Math.Min(viewportWidth / (BoardWidth + 10), 50);
-        var maxBlockHeight = (int)Math.Min((viewportHeight / BoardHeight) * .8, 50);
+        double viewportWidth = (double)(await JSRuntime.InvokeAsync<double>("eval", "window.innerWidth"));
+        double viewportHeight = (double)(await JSRuntime.InvokeAsync<double>("eval", "window.innerHeight"));
+        //viewportHeight =(double)(viewportHeight - rect.Top);
+        Console.WriteLine("top:" + rect.Top);
+        Console.WriteLine("vh" + viewportHeight);
+        Console.WriteLine("vw" + viewportWidth);
+        double maxBlockWidth, maxBlockHeight;
+        if (viewportWidth > 1218)
+        {
+            var possibleWidth = (viewportWidth - 300) / BoardWidth;
+            var possibleHeight = viewportHeight / BoardHeight;
+            maxBlockWidth = Math.Min(possibleWidth, 50);
+            maxBlockHeight = (double)Math.Min(possibleHeight, 50);
+            Console.WriteLine($"naast elkaar? w{possibleWidth}/{maxBlockWidth} h{possibleHeight}/{maxBlockHeight}");
+        }
+        else
+        {
+            var possibleWidth = viewportWidth / BoardWidth;
+            var possibleHeight = (viewportHeight - rect.Top) / BoardHeight;
+            maxBlockWidth = (double)Math.Min(viewportWidth / BoardWidth, 50);
+            maxBlockHeight = (double)Math.Min(possibleHeight, 50);
+            Console.WriteLine($"onder elkaar? w{possibleWidth}/{maxBlockWidth} h{possibleHeight}/{maxBlockHeight} t:{rect.Top};");
+        }
         var blockSize = Math.Min(Math.Min(maxBlockWidth, maxBlockHeight), 50);
-        return blockSize;
+        BlockSize = blockSize;
+        SvgWidth = BoardWidth * BlockSize;
+        SvgHeight = BoardHeight * BlockSize;
+        PreviewSvgWidth = PreviewBoardWidth * BlockSize;
+        PreviewSvgHeight = PreviewBoardHeight * BlockSize;
+        GameInstance.BoardWidth = BoardWidth;
+        GameInstance.BoardHeight = BoardHeight;
+        GameInstance.BlockSize = BlockSize;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            BlockSize = await CalculateBlockSize();
-            SvgWidth = BoardWidth * BlockSize;
-            SvgHeight = BoardHeight * BlockSize;
-            PreviewSvgWidth = PreviewBoardWidth * BlockSize;
-            PreviewSvgHeight = PreviewBoardHeight * BlockSize;
+            ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
+            await JSRuntime.InvokeVoidAsync("resizeHandler.addEventListener", DotNetObjectReference.Create(this));
+            await CalculateBlockSize();
             GameInstance = new TetrisGame(BlockSize, BoardWidth, BoardHeight, Cts);
             StateHasChanged();
             await TetrisContainer.FocusAsync(); // Ensure focus on the container for key input
         }
         else
         {
+            await CalculateBlockSize();
             ArgumentNullException.ThrowIfNull(JSRuntime, nameof(JSRuntime));
             var rect = await JSRuntime.InvokeAsync<BoundingClientRect>("eval",
                 new object[] { "document.querySelector('.tetris-board')?.getBoundingClientRect()" });
-            OffsetFieldLeft = (int)rect.Left;
-            OffsetFieldBottom = (int)(rect.Top + rect.Height);
+            OffsetFieldLeft = (double)rect.Left;
+            OffsetFieldBottom = (double)(rect.Top + rect.Height);
+            OffsetFieldTop = (double)rect.Top;
         }
     }
 
@@ -148,7 +177,7 @@ public partial class Tetris
         await TetrisContainer.FocusAsync(); // Refocus on the container for key input
         StateHasChanged(); // Update the UI
     }
-    private async Task HandlePointerDown(HandlePointerDown e)
+    private async Task HandlePointerDown(PointerEventArgs e)
     {
         var offSetFieldTop = OffsetFieldBottom - SvgHeight;
         if (GameInstance.IsGameOver || !GameInstance.IsRunning)
@@ -161,7 +190,7 @@ public partial class Tetris
         {
             GameInstance.MoveTetrominoRight();
         }
-        if (e.ClientY > OffsetFieldBottom && (e.ClientX > OffsetFieldLeft || e.ClientX < OffsetFieldLeft+SvgWidth))
+        if (e.ClientY > OffsetFieldBottom && (e.ClientX > OffsetFieldLeft || e.ClientX < OffsetFieldLeft + SvgWidth))
         {
             GameInstance.MoveTetrominoDown();
         }
@@ -172,4 +201,24 @@ public partial class Tetris
         await TetrisContainer.FocusAsync(); // Refocus on the container for key input
         StateHasChanged(); // Update the UI
     }
+    [JSInvokable]
+    public async Task OnWindowResize()
+    {
+        await CalculateBlockSize();
+        StateHasChanged(); // Trigger a UI update after recalculating sizes
+    }
+    public void Dispose()
+    {
+        // Cancel game loop and dispose resources
+        Cts?.Cancel();
+        Cts?.Dispose();
+        GameTimer?.Dispose();
+
+        // Remove the resize event listener
+        if (JSRuntime is not null)
+        {
+            JSRuntime.InvokeVoidAsync("resizeHandler.removeEventListener", DotNetObjectReference.Create(this));
+        }
+    }
+
 }

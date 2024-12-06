@@ -7,16 +7,6 @@
 
 <!-- Main container for the Tetris game -->
 <div class="tetris-container" tabindex="0" @onkeydown="HandleKeyPress" @onpointerdown="HandlePointerDown" @ref="TetrisContainer">
-    <div class="controls">
-        <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
-        @if (GameTimer == null)
-        {
-            <button @onclick="StartGame">Start</button>
-        }
-        else
-        {
-            <button @onclick="PauseGame">Pause</button>
-        })
         <div class="stats-container">
             <span>Score: @GameInstance.Score</span>
             <div class="preview-container">
@@ -43,6 +33,16 @@
                 </svg>
             </div>
         </div>
+    <div class="controls">
+        <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+        @if (GameTimer == null)
+        {
+            <button @onclick="StartGame">Start</button>
+        }
+        else
+        {
+            <button @onclick="PauseGame">Pause</button>
+        })
     </div>
     <!-- Game stats -->
     <!-- Preview container for the next tetromino -->
