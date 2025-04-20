@@ -11,11 +11,43 @@ public partial class SudokuGrid
     private Difficulty difficulty = Difficulty.UnSelected;
     private bool[][]? IsValid; // Add this as a field in your class
     private bool[][]? IsPrefilled;
+    private int currentRow = 0;
+    private int currentCol = 0;
 
     private void SolvePuzzle()
     {
         Grid = sudokuSolver.Solve(Grid);
 
+    }
+    // similar to the previous method, but this one will be called when the user clicks a button to solve only one field on the puzzle
+    private void SolveOneField()
+    {
+        // Check if currentRow and currentCol are not out of bounds
+        if (currentRow < 0 || currentRow >= Grid.Count || currentCol < 0 || currentCol >= Grid[currentRow].Count)
+        {
+            return; // Invalid cell position
+        }
+
+        // Check if the cell is empty
+        if (string.IsNullOrWhiteSpace(Grid[currentRow][currentCol]))
+        {
+            // Try to solve the cell
+            for (int num = 1; num <= 9; num++)
+            {
+                string numStr = num.ToString();
+                if (sudokuSolver.IsValidPlacement(Grid, currentRow, currentCol, numStr))
+                {
+                    Grid[currentRow][currentCol] = numStr;
+                    var isSolvable = sudokuSolver.Solve(Grid);
+                    if (isSolvable is null)
+                    {
+                        Grid[currentRow][currentCol] = ""; // Reset the cell if it leads to an unsolvable state
+                        continue;
+                    }
+                    break; // Exit the loop after placing a valid number
+                }
+            }
+        }
     }
     protected override void OnInitialized()
     {
@@ -77,4 +109,11 @@ public partial class SudokuGrid
         // Optionally, trigger a re-render if needed
         StateHasChanged();
     }
+    // similar to the previous method, but this one will be called when the user clicks a cell to set the current cell position
+    private void SetCurrentCell(int row, int col, EventArgs args)
+    {
+        currentRow = row;
+        currentCol = col;
+    }
+
 }

@@ -31,6 +31,7 @@
                            class="sudoku-cell @(IsValid[row][col] ? "green" : "invalid-cell")"
                            value="@(Grid[row][col] == "0" ? "" : Grid[row][col].ToString())"
                            @oninput="(e) => SetGridValue(x,y,e)"
+                           @onclick="(e) => SetCurrentCell(x, y, e)"
                            disabled=@IsPrefilled[row][col]
                            min="1" max="9" />
                 }
@@ -49,4 +50,5 @@ else
 {
     <p class="sudoku-unsolved">Sudoku unsolved</p>
     <button @onclick="SolvePuzzle">Solve</button>
+    <button @onclick="SolveOneField">Hint</button>
 })

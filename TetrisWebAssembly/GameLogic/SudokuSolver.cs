@@ -30,7 +30,7 @@ public class SudokuSolver
         throw new Exception("Failed to generate a complete Sudoku grid.");
     }
 
-    public List<List<string>> Solve(List<List<string>> puzzle)
+    public List<List<string>>? Solve(List<List<string>> puzzle)
     {
         var sudokuGrid = puzzle
             .Select(row => row
@@ -43,7 +43,7 @@ public class SudokuSolver
             return sudokuGrid;
         }
 
-        throw new Exception("Sudoku puzzle cannot be solved.");
+        return null; // Return null if the puzzle cannot be solved
     }
     private bool SolveSudoku(List<List<string>> puzzle)
     {
