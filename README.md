@@ -4,6 +4,7 @@ TetrisWebAssembly is a Blazor WebAssembly project that implements a Tetris game 
 
 ## Features
 - **Tetris Game**: A fully functional Tetris game with responsive controls and dynamic gameplay.
+- **Breakout Clone**: A fully functional Breakout clone with responsive controls and dynamic gameplay.
 - **Sudoku Solver**: A Sudoku grid with solving capabilities, including solving individual cells or the entire puzzle.
 - **Offline Support**: Service worker integration for offline functionality.
 - **Responsive Design**: Optimized for both desktop and mobile devices.
