@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "TetrisWebAssembly",
   "resources": {
-    "hash": "sha256-O6rdwo0tTvM9pBwZp7WqzxUV2pCR34eG1tWcQ3pJLF8=",
+    "hash": "sha256-fHkZqj40Mi/9bIbpAC3uOmAxlUxDjRrqv/Aj9wNFquo=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.f19wdw0doa.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ff2ac164p7.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -40,7 +40,7 @@
       "System.Text.Json.uhegoxcya3.wasm": "System.Text.Json.wasm",
       "System.Text.RegularExpressions.gjrc7fe0iy.wasm": "System.Text.RegularExpressions.wasm",
       "System.f0fr8djds0.wasm": "System.wasm",
-      "TetrisWebAssembly.zjm2s3k8fg.wasm": "TetrisWebAssembly.wasm",
+      "TetrisWebAssembly.0gliflj17m.wasm": "TetrisWebAssembly.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.hvg7u8bimp.js": "dotnet.native.js",
       "dotnet.native.3c4wvb350q.wasm": "dotnet.native.wasm",
@@ -103,7 +103,7 @@
       "System.Text.Json.uhegoxcya3.wasm": "sha256-ntbe5aoHZAilknCQca7vZHrrcHl6Mxbl2TfQXwXqIN0=",
       "System.Text.RegularExpressions.gjrc7fe0iy.wasm": "sha256-bPlopc5D66ZLknzJ5PcpsBvpXxGmy7xL7+4gm/cjTdc=",
       "System.f0fr8djds0.wasm": "sha256-v1DeJU321NUwk3KJ0Lf8lQA3zwRfrxNommmMBs1s3Gk=",
-      "TetrisWebAssembly.zjm2s3k8fg.wasm": "sha256-UVmyUfwI2EeyzuNhVZCZFhft0gUjTIRTPzuTXQ4e+ss="
+      "TetrisWebAssembly.0gliflj17m.wasm": "sha256-EJDYBTft4qUQKJ8Y+d/WE2+9WtQiVB8J2EDVQwgAwug="
     }
   },
   "cacheBootResources": true,
