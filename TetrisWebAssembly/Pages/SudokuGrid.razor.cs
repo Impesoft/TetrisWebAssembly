@@ -1,52 +1,55 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 using TetrisWebAssembly.GameLogic;
 
 namespace TetrisWebAssembly.Pages;
 public partial class SudokuGrid
 {
     [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
-    public List<List<string>> Grid = [];
+    public List<List<string>>? Grid = [];
     private SudokuSolver sudokuSolver = new SudokuSolver();
     private Difficulty difficulty = Difficulty.UnSelected;
     private bool[][]? IsValid; // Add this as a field in your class
     private bool[][]? IsPrefilled;
     private int currentRow = 0;
     private int currentCol = 0;
+    private readonly Random _random = new();
+
 
     private void SolvePuzzle()
     {
+        if (Grid == null)
+            return;
         Grid = sudokuSolver.Solve(Grid);
 
     }
     // similar to the previous method, but this one will be called when the user clicks a button to solve only one field on the puzzle
     private void SolveOneField()
     {
-        // Check if currentRow and currentCol are not out of bounds
-        if (currentRow < 0 || currentRow >= Grid.Count || currentCol < 0 || currentCol >= Grid[currentRow].Count)
-        {
-            return; // Invalid cell position
-        }
+        if (Grid == null)
+            return;
+        if (currentRow is < 0 or >= 9 || currentCol is < 0 or >= 9)
+            return;
 
-        // Check if the cell is empty
-        if (string.IsNullOrWhiteSpace(Grid[currentRow][currentCol]))
+        if (!string.IsNullOrWhiteSpace(Grid[currentRow][currentCol]))
+            return;
+
+        var candidates = Enumerable.Range(1, 9).OrderBy(_ => _random.Next());
+
+        foreach (var num in candidates)
         {
-            // Try to solve the cell
-            for (int num = 1; num <= 9; num++)
-            {
-                string numStr = num.ToString();
-                if (sudokuSolver.IsValidPlacement(Grid, currentRow, currentCol, numStr))
-                {
-                    Grid[currentRow][currentCol] = numStr;
-                    var isSolvable = sudokuSolver.Solve(Grid);
-                    if (isSolvable is null)
-                    {
-                        Grid[currentRow][currentCol] = ""; // Reset the cell if it leads to an unsolvable state
-                        continue;
-                    }
-                    break; // Exit the loop after placing a valid number
-                }
-            }
+            var numStr = num.ToString();
+            if (!sudokuSolver.IsValidPlacement(Grid, currentRow, currentCol, numStr))
+                continue;
+
+            Grid[currentRow][currentCol] = numStr;
+
+            var gridCopy = Grid.Select(row => row.ToList()).ToList(); // Deep clone
+            if (sudokuSolver.Solve(gridCopy) is not null)
+                break; // This number leads to a solvable grid
+
+            Grid[currentRow][currentCol] = ""; // Backtrack and try next candidate
         }
     }
     protected override void OnInitialized()
@@ -63,6 +66,8 @@ public partial class SudokuGrid
     }
     private void InitializeValidationGrid()
     {
+        if (Grid == null)
+            return;
         IsValid = new bool[Grid.Count][];
         for (int row = 0; row < Grid.Count; row++)
         {
@@ -75,6 +80,8 @@ public partial class SudokuGrid
     }
     private void InitializePrefilledGrid()
     {
+        if (Grid == null)
+            return;
         IsPrefilled = new bool[9][];
         for (int row = 0; row < 9; row++)
         {
@@ -96,6 +103,8 @@ public partial class SudokuGrid
 
     private void SetGridValue(int row, int col, ChangeEventArgs args)
     {
+        if (Grid == null)
+            return;
         var value = args.Value?.ToString() ?? "";
         Grid[row][col] = value;
 

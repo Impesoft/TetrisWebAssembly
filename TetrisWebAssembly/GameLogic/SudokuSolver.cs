@@ -53,32 +53,28 @@ public class SudokuSolver
             {
                 if (puzzle[row][col] == "")
                 {
-                    for (int num = 1; num <= 9; num++)
+                    List<int> numbers = Enumerable.Range(1, 9).OrderBy(_ => _random.Next()).ToList();
+
+                    foreach (int num in numbers)
                     {
                         string numStr = num.ToString();
                         if (IsValidPlacement(puzzle, row, col, numStr))
                         {
                             puzzle[row][col] = numStr;
 
-                            // Recurse to solve the next cell
                             if (SolveSudoku(puzzle))
-                            {
                                 return true;
-                            }
 
-                            // Backtrack
                             puzzle[row][col] = "";
                         }
                     }
 
-                    // If no valid number is found, return false
-                    return false;
+                    return false; // No valid number found
                 }
             }
         }
 
-        // If no empty cells are left, the puzzle is solved
-        return true;
+        return true; // Puzzle is completely filled
     }
     private List<List<string>> RemoveNumbers(List<List<string>> grid, Difficulty difficulty)
     {
