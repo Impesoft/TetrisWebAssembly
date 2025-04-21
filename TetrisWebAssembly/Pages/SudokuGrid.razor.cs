@@ -123,22 +123,37 @@ public partial class SudokuGrid
         return null; // Return null if no empty cell is found
     }
 
-    private void SetGridValue(int row, int col, ChangeEventArgs args)
+    private async Task SetGridValue(int row, int col, ChangeEventArgs args)
     {
         if (Grid == null)
             return;
-        var value = args.Value?.ToString() ?? "";
+        var value = args.Value?.ToString()?.Trim();
+        if (string.IsNullOrEmpty(value) || value.Length > 1 || !char.IsDigit(value[0]) || value == "0")
+        {
+            await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{row}-{col}').value = ''");
+            return; // Invalid input: ignore
+        }
+
         Grid[row][col] = value;
 
         // Validate the placement
         if (IsValid != null)
         {
             var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
-            IsValid[row][col] = isValid;
+            var breaksSolution = sudokuSolver.Solve(Grid) == null;
+            IsValid[row][col] = isValid && !breaksSolution;
         }
 
         // Optionally, trigger a re-render if needed
         StateHasChanged();
+
+        // Focus next empty cell
+        var next = FindNextEmptyField(Grid);
+        if (next.HasValue)
+        {
+            var (nextRow, nextCol) = next.Value;
+            await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{nextRow}-{nextCol}').focus()");
+        }
     }
     // similar to the previous method, but this one will be called when the user clicks a cell to set the current cell position
     private void SetCurrentCell(int row, int col, EventArgs args)

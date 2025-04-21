@@ -7,7 +7,7 @@
 </video>
 <div class="controls">
 <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
-<select @bind="difficulty" @bind:after="OnDifficultyChanged" class="form-select">
+<select @bind="difficulty" id="Difficulty" @bind:after="OnDifficultyChanged" class="form-select">
     <option value="" disabled selected>-- Select Difficulty --</option>
     @foreach (var difficulty in Enum.GetValues<Difficulty>())
     {
@@ -26,6 +26,7 @@
                     var x = row;
                     var y = col;
                     <input type="text"
+                           id="cell-@x-@y"
                            maxlength="1"
                            pattern="[0-9]{1,5}"
                            class="sudoku-cell @(IsValid[row][col] ? "green" : "invalid-cell")"
