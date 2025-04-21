@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "YPk8POUW",
+  "version": "WbkVU2x9",
   "assets": [
     {
       "hash": "sha256-G/xRpCaRZR+Pe80dkMPhDxRHstDTGoRABwBV32I7vYQ=",
@@ -138,8 +138,8 @@ self.assetsManifest = {
       "url": "_framework/System.Runtime.InteropServices.JavaScript.zp9u3yqbi4.wasm"
     },
     {
-      "hash": "sha256-cXM8SB7YBOr2FqSshrrxFHqTKRorarvwfJmYGN0x78c=",
-      "url": "_framework/System.Runtime.f04huom70q.wasm"
+      "hash": "sha256-JHA4hx/5wz5QZm+c3+VE6ezNUp5GfgNartE6+xOKs9o=",
+      "url": "_framework/System.Runtime.k4cn7ra6x6.wasm"
     },
     {
       "hash": "sha256-KD5saNzkpUD3A/RXlqBthi/qKA3Sk2nZuNvyfL9+EWc=",
@@ -158,11 +158,11 @@ self.assetsManifest = {
       "url": "_framework/System.f0fr8djds0.wasm"
     },
     {
-      "hash": "sha256-EJDYBTft4qUQKJ8Y+d/WE2+9WtQiVB8J2EDVQwgAwug=",
-      "url": "_framework/TetrisWebAssembly.0gliflj17m.wasm"
+      "hash": "sha256-9/NqPM/jnz25Gzk0WXjNGwEVcXaxQ/VjHeijmHCzZ2I=",
+      "url": "_framework/TetrisWebAssembly.l9fnjvxqw4.wasm"
     },
     {
-      "hash": "sha256-TbkS1jXXCH+7BLFX5HjbfotdRzjsCgZSY62Pf6L/3Yc=",
+      "hash": "sha256-28AAOy5+jlHNWXlSQqI/3Tp2MqLWlftpN2wGsfueUgo=",
       "url": "_framework/blazor.boot.json"
     },
     {
