@@ -26,16 +26,12 @@
         aspect-ratio: 1 /1; /* Force a square aspect ratio */
         font-size: 2vw;
         text-align: center;
-        background-color: #3c3f44; /* Darker input background */
         color: #fff; /* White text */
         font-weight: bold;
         box-sizing: border-box;
     }
 
-        .sudoku-grid input[type="text"]:focus[b-7hdqyx0vr8] {
-            background-color: #565a60; /* Slightly lighter for focus */
-            border: 1px solid green;
-        }
+
 
 button[b-7hdqyx0vr8] {
     margin: 20px;
@@ -75,18 +71,23 @@ button[b-7hdqyx0vr8] {
     /* Text Shadow Property */
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
 }
+
 .invalid-cell[b-7hdqyx0vr8] {
     background-color: red;
     color: white;
     border: 5px solid red;
 }
-.sudoku-cell[b-7hdqyx0vr8] {
-    background-color: rebeccapurple;
-}
+
 .green[b-7hdqyx0vr8] {
     background-color: green;
-    color: darkgreen;
+    background-color: #3c3f44; /* Darker input background */
 }
+
+.green:focus[b-7hdqyx0vr8] {
+    background-color: #565a60; /* Slightly lighter for focus */
+}
+
+
 form-select[b-7hdqyx0vr8] {
     padding: .5rem 1rem;
     font-size: .75rem;
