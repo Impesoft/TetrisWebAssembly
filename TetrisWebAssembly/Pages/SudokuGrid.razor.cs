@@ -33,7 +33,7 @@ public partial class SudokuGrid
             return;
 
         if (!string.IsNullOrWhiteSpace(Grid[currentRow][currentCol]))
-            return;
+          (currentRow,currentCol) =  FindNextEmptyField(Grid) ?? (0,0);
 
         var candidates = Enumerable.Range(1, 9).OrderBy(_ => _random.Next());
 
@@ -99,6 +99,28 @@ public partial class SudokuGrid
         Grid = sudokuSolver.GenerateSudokuGrid(difficulty);
         InitializePrefilledGrid();
         await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
+    }
+
+    public (int row, int col)? FindNextEmptyField(List<List<string>> grid)
+    {
+
+        for (int row = currentRow; row < grid.Count; row++)
+        {
+            for (int col = currentCol; col < grid[row].Count; col++)
+            {
+                if (string.IsNullOrWhiteSpace(grid[row][col]))
+                {
+                    return (row, col); // Return the first empty cell
+                }
+            }
+            currentCol = 0; // Reset column for the next row
+        }
+        if (currentRow > 0)
+        {
+            currentRow = 0; // Reset column for the next row to make sure we start from the beginning of the grid again
+            return FindNextEmptyField(grid); // Recursively check the next row
+        }
+        return null; // Return null if no empty cell is found
     }
 
     private void SetGridValue(int row, int col, ChangeEventArgs args)
