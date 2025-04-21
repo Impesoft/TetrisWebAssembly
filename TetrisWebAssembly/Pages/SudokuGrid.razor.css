@@ -20,16 +20,12 @@
         aspect-ratio: 1 /1; /* Force a square aspect ratio */
         font-size: 2vw;
         text-align: center;
-        background-color: #3c3f44; /* Darker input background */
         color: #fff; /* White text */
         font-weight: bold;
         box-sizing: border-box;
     }
 
-        .sudoku-grid input[type="text"]:focus {
-            background-color: #565a60; /* Slightly lighter for focus */
-            border: 1px solid green;
-        }
+
 
 button {
     margin: 20px;
@@ -69,18 +65,23 @@ button {
     /* Text Shadow Property */
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, 1px 1px 0 black, 1px 1px 0 black, 1px 1px 2px black, 0 0 1em blue, 0 0 0.2em black;
 }
+
 .invalid-cell {
     background-color: red;
     color: white;
     border: 5px solid red;
 }
-.sudoku-cell {
-    background-color: rebeccapurple;
-}
+
 .green {
     background-color: green;
-    color: darkgreen;
+    background-color: #3c3f44; /* Darker input background */
 }
+
+.green:focus {
+    background-color: #565a60; /* Slightly lighter for focus */
+}
+
+
 form-select {
     padding: .5rem 1rem;
     font-size: .75rem;

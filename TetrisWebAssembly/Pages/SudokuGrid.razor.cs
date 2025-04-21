@@ -25,7 +25,7 @@ public partial class SudokuGrid
 
     }
     // similar to the previous method, but this one will be called when the user clicks a button to solve only one field on the puzzle
-    private void SolveOneField()
+    private async Task SolveOneField()
     {
         if (Grid == null)
             return;
@@ -33,7 +33,7 @@ public partial class SudokuGrid
             return;
 
         if (!string.IsNullOrWhiteSpace(Grid[currentRow][currentCol]))
-          (currentRow,currentCol) =  FindNextEmptyField(Grid) ?? (0,0);
+            (currentRow, currentCol) = FindNextEmptyField(Grid) ?? (0, 0);
 
         var candidates = Enumerable.Range(1, 9).OrderBy(_ => _random.Next());
 
@@ -51,6 +51,9 @@ public partial class SudokuGrid
 
             Grid[currentRow][currentCol] = ""; // Backtrack and try next candidate
         }
+        (int nextRow, int nextCol) = FindNextEmptyField(Grid) ?? (0,0);
+        await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{nextRow}-{nextCol}').focus()");
+
     }
     protected override void OnInitialized()
     {
@@ -134,15 +137,14 @@ public partial class SudokuGrid
             return; // Invalid input: ignore
         }
 
-        Grid[row][col] = value;
+        Grid[row][col] = ""; // Clear the cell first to avoid immediate validation failure
 
         // Validate the placement
-        if (IsValid != null)
-        {
-            var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
-            var breaksSolution = sudokuSolver.Solve(Grid) == null;
-            IsValid[row][col] = isValid && !breaksSolution;
-        }
+        var isValid = sudokuSolver.IsValidPlacement(Grid, row, col, value);
+        var breaksSolution = sudokuSolver.Solve(Grid) == null;
+        IsValid[row][col] = isValid && !breaksSolution;
+
+        Grid[row][col] = value;
 
         // Optionally, trigger a re-render if needed
         StateHasChanged();
@@ -152,7 +154,7 @@ public partial class SudokuGrid
         if (next.HasValue)
         {
             var (nextRow, nextCol) = next.Value;
-            await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{nextRow}-{nextCol}').focus()");
+            await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{nextRow}-{nextCol}').click()");
         }
     }
     // similar to the previous method, but this one will be called when the user clicks a cell to set the current cell position

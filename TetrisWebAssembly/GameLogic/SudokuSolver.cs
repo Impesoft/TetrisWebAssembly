@@ -110,7 +110,8 @@ public class SudokuSolver
         int startRow = row / 3 * 3;
         int startCol = col / 3 * 3;
         var subgrid = GetSubgrid(grid, startRow, startCol);
-        return !subgrid.Contains(num);
+        var result = subgrid.Contains(num);
+        return !result;
     }
 
     List<string> GetSubgrid(List<List<string>> grid, int startRow, int startCol)
