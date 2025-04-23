@@ -51,7 +51,7 @@ public partial class SudokuGrid
 
             Grid[currentRow][currentCol] = ""; // Backtrack and try next candidate
         }
-        (int nextRow, int nextCol) = FindNextEmptyField(Grid) ?? (0,0);
+        (int nextRow, int nextCol) = FindNextEmptyField(Grid) ?? (0, 0);
         await JSRuntime.InvokeVoidAsync("eval", $"document.getElementById('cell-{nextRow}-{nextCol}').focus()");
 
     }
@@ -62,43 +62,33 @@ public partial class SudokuGrid
         Grid = Enumerable.Range(0, 9)
                      .Select(_ => Enumerable.Repeat("", 9).ToList())
                      .ToList();
-        InitializeValidationGrid();
-        InitializePrefilledGrid();
 
-        //sudokuSolver.GenerateSudokuGrid(difficulty);
-    }
-    private void InitializeValidationGrid()
-    {
-        if (Grid == null)
-            return;
-        IsValid = new bool[Grid.Count][];
-        for (int row = 0; row < Grid.Count; row++)
-        {
-            IsValid[row] = new bool[Grid[row].Count];
-            for (int col = 0; col < Grid[row].Count; col++)
-            {
-                IsValid[row][col] = true; // Initially, all cells are valid
-            }
-        }
+        InitializePrefilledGrid();
+        IsValid = Grid.Select(row => Enumerable.Repeat(true, row.Count).ToArray()).ToArray();
     }
     private void InitializePrefilledGrid()
     {
         if (Grid == null)
             return;
-        IsPrefilled = new bool[9][];
-        for (int row = 0; row < 9; row++)
-        {
-            IsPrefilled[row] = new bool[9];
-            for (int col = 0; col < Grid[row].Count; col++)
-            {
-                IsPrefilled[row][col] = !string.IsNullOrWhiteSpace(Grid[row][col]); // Mark prefilled cells
-            }
-        }
+
+        IsPrefilled = Grid
+            .Select(row => row.Select(cell => !string.IsNullOrWhiteSpace(cell)).ToArray())
+            .ToArray();
     }
 
     private async Task OnDifficultyChanged()
     {
         // Perform some action when the selection changes
+        if (difficulty == Difficulty.UnSelected)
+        {
+            Grid = Enumerable.Range(0, 9)
+                     .Select(_ => Enumerable.Repeat("", 9).ToList())
+                     .ToList();
+            InitializePrefilledGrid();
+            IsValid = Grid.Select(row => Enumerable.Repeat(true, row.Count).ToArray()).ToArray();
+            return;
+        }
+
         Grid = sudokuSolver.GenerateSudokuGrid(difficulty);
         InitializePrefilledGrid();
         await JSRuntime.InvokeVoidAsync("eval", "document.getElementById('bg').play()");
@@ -128,7 +118,7 @@ public partial class SudokuGrid
 
     private async Task SetGridValue(int row, int col, ChangeEventArgs args)
     {
-        if (Grid == null)
+        if (Grid == null || IsValid == null)
             return;
         var value = args.Value?.ToString()?.Trim();
         if (string.IsNullOrEmpty(value) || value.Length > 1 || !char.IsDigit(value[0]) || value == "0")

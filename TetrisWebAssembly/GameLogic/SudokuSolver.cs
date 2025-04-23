@@ -106,7 +106,7 @@ public class SudokuSolver
         // Check row and column
         if (grid[row].Contains(num) || grid.Select(r => r[col]).Contains(num)) return false;
 
-        // Check 3x3 subgrid
+        // Check 3x3 subGrid
         int startRow = row / 3 * 3;
         int startCol = col / 3 * 3;
         var subgrid = GetSubgrid(grid, startRow, startCol);
