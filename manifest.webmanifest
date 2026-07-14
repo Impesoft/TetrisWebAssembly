@@ -1,6 +1,6 @@
 {
-  "name": "TetrisWebAssembly",
-  "short_name": "TetrisWebAssembly",
+  "name": "BlazorArcade",
+  "short_name": "BlazorArcade",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
