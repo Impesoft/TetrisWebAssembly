@@ -17,7 +17,7 @@ public class SudokuGridTests : TestContext
     public void SudokuGrid_RendersCorrectNumberOfCells()
     {
         // Arrange & Act: Render the SudokuGrid component.
-        var cut = RenderComponent<SudokuGrid>();
+        var cut = Render<SudokuGrid>();
 
         // Assert: Verify that 81 input elements (for 9x9 grid) are rendered.
         Assert.Equal(81, cut.FindAll("input").Count);
@@ -30,7 +30,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>();
+        var cut = ctx.Render<SudokuGrid>();
         // Act
         var firstCell = cut.Find("input");
         firstCell.Input("5");
@@ -45,7 +45,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         // Setup JSInterop to handle eval call
         ctx.JSInterop.SetupVoid("eval", "document.getElementById('bg').play()");
-        var cut = ctx.RenderComponent<SudokuGrid>();
+        var cut = ctx.Render<SudokuGrid>();
         cut.Find("select").Change(Difficulty.Easy);
 
         // Act
@@ -62,7 +62,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>();
+        var cut = ctx.Render<SudokuGrid>();
         cut.Find("select").Change(Difficulty.Easy);
 
         var allInputs = cut.FindAll("input");
@@ -89,7 +89,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
+        var cut = ctx.Render<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
         // Act
         emptyCell.Input("5");
         // Assert
@@ -102,7 +102,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
+        var cut = ctx.Render<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
         // Act
         emptyCell.Input("5");
         // Assert
@@ -115,7 +115,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
+        var cut = ctx.Render<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
         // Act
         emptyCell.Input("");
         // Assert
@@ -130,7 +130,7 @@ public class SudokuGridTests : TestContext
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("eval", _ => true);
 
-        var cut = ctx.RenderComponent<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
+        var cut = ctx.Render<SudokuGrid>(); var emptyCell = cut.Find("input:not([disabled])");
         // Act
         emptyCell.Input("a");
         // Assert
@@ -140,7 +140,10 @@ public class SudokuGridTests : TestContext
     public void FindNextEmptyField_ReturnsCorrectCell()
     {
         // Arrange
-        var cut = RenderComponent<SudokuGrid>();
+        using var ctx = new TestContext();
+        ctx.JSInterop.SetupVoid("eval", _ => true);
+
+        var cut = ctx.Render<SudokuGrid>();
         var grid = new List<List<string>>()
         {
             new List<string> { "5", "3", "", "6", "", "", "", "", "" },
