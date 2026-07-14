@@ -1,3 +1,144 @@
+/* /Pages/Chess.razor.rz.scp.css */
+.chess-container[b-lm35k8fgxl] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.chess-header[b-lm35k8fgxl] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.arcade-title[b-lm35k8fgxl] {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.status-panel[b-lm35k8fgxl] {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-height: 30px;
+}
+
+.turn-indicator.white-turn[b-lm35k8fgxl] {
+    color: #eee;
+}
+
+.turn-indicator.black-turn[b-lm35k8fgxl] {
+    color: #999;
+}
+
+.game-over[b-lm35k8fgxl] {
+    color: #ff3333;
+    animation: blink-b-lm35k8fgxl 1s infinite;
+}
+
+.check-warning[b-lm35k8fgxl] {
+    color: #ffaa00;
+}
+
+.controls[b-lm35k8fgxl] {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.arcade-btn[b-lm35k8fgxl] {
+    background-color: #222;
+    color: white;
+    border: 2px solid #555;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.arcade-btn:hover[b-lm35k8fgxl] {
+    background-color: #444;
+}
+
+.ai-toggle[b-lm35k8fgxl] {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.board-wrapper[b-lm35k8fgxl] {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.chess-board[b-lm35k8fgxl] {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 80vmin;
+    max-width: 600px;
+    height: 80vmin;
+    max-height: 600px;
+    border: 2px solid #333;
+}
+
+.square[b-lm35k8fgxl] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.light-square[b-lm35k8fgxl] {
+    background-color: #f0d9b5;
+}
+
+.dark-square[b-lm35k8fgxl] {
+    background-color: #b58863;
+}
+
+.chess-piece[b-lm35k8fgxl] {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    z-index: 10;
+    filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
+}
+
+.selected[b-lm35k8fgxl] {
+    background-color: rgba(106, 156, 92, 0.8) !important;
+}
+
+.valid-move[b-lm35k8fgxl] {
+    /* Optional base styling for a valid move square */
+}
+
+.move-indicator[b-lm35k8fgxl] {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+@keyframes blink-b-lm35k8fgxl {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
 /* /Pages/Game2048.razor.rz.scp.css */
 .game-container-2048[b-bxh5ch49o5] {
     display: flex;
@@ -273,6 +414,94 @@ button:hover[b-n05ekmypqe] {
 
 .blink[b-n05ekmypqe] {
     opacity: 0.5;
+}
+/* /Pages/Platformer.razor.rz.scp.css */
+.game-container-platformer[b-pnyjh751qu] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    outline: none; /* remove focus outline */
+    font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+    color: white;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.controls[b-pnyjh751qu] {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+button[b-pnyjh751qu] {
+    background-color: #8f7a66;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+button:hover[b-pnyjh751qu] {
+    background-color: #9f8b77;
+}
+
+.header[b-pnyjh751qu] {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 10px;
+}
+
+.title[b-pnyjh751qu] {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+}
+
+.svg-container[b-pnyjh751qu] {
+    position: relative;
+    width: 100%;
+    max-width: 800px; /* Base width of the game */
+    aspect-ratio: 800 / 600; /* Preserve aspect ratio */
+    background-color: #222;
+    border: 4px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.overlay-message[b-pnyjh751qu] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    pointer-events: none;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.game-over-text[b-pnyjh751qu] {
+    color: red;
+}
+
+.game-won-text[b-pnyjh751qu] {
+    color: gold;
+}
+
+.instructions[b-pnyjh751qu] {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #ccc;
+    text-align: center;
 }
 /* /Pages/SudokuGrid.razor.rz.scp.css */
 .sudoku-grid[b-wu6p9ckg5v] {
