@@ -94,8 +94,9 @@ body {
     background-color: darkblue;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .tetris-container {

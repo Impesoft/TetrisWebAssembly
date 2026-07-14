@@ -1,21 +1,350 @@
 @page "/"
 @inject NavigationManager _nav
+
 <video muted loop id="bg">
     <source src="./css/BGTunnel.mp4" type="video/mp4" />
 </video>
 
-@if (GameNr == 0)
-{
-    <h3 class="white">Welcome to the Arcade!</h3>
-    <p class="white">Choose a game to play:</p>
-}
-<div class="game-selection">
-    <button @onclick="@(() => _nav.NavigateTo("/Tetris"))">Tetris</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Breakout"))">Breakout</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Sudoku"))">Sudoku</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Pacman"))">Pacman</button>
-    <button @onclick="@(() => _nav.NavigateTo("/2048"))">2048</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Platformer"))">Platformer</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Chess"))">Chess</button>
-    <button @onclick="@(() => _nav.NavigateTo("/Connect4"))">Connect 4</button>
+<div class="home-container">
+    @if (GameNr == 0)
+    {
+        <h3 class="white">Welcome to the Arcade!</h3>
+        <p class="white">Choose a game to play:</p>
+    }
+
+    <div class="game-grid">
+        
+        <!-- Tetris -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Tetris"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 20 20 h 20 v 60 h -20 z" fill="#00ffff" stroke="#fff" stroke-width="2" />
+                    <path d="M 50 40 h 30 v 20 h -10 v 20 h -20 z" fill="#aa00ff" stroke="#fff" stroke-width="2" />
+                    <path d="M 50 10 h 20 v 20 h -20 z" fill="#ffff00" stroke="#fff" stroke-width="2" />
+                </svg>
+            </div>
+            <h4 class="game-title">Tetris</h4>
+        </div>
+
+        <!-- Breakout -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Breakout"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="35" height="15" fill="#ff4d4d" rx="2" />
+                    <rect x="55" y="10" width="35" height="15" fill="#4da6ff" rx="2" />
+                    <rect x="10" y="30" width="35" height="15" fill="#4da6ff" rx="2" />
+                    <rect x="55" y="30" width="35" height="15" fill="#ff4d4d" rx="2" />
+                    <circle cx="50" cy="65" r="8" fill="#fff" />
+                    <rect x="30" y="85" width="40" height="10" fill="#fff" rx="5" />
+                </svg>
+            </div>
+            <h4 class="game-title">Breakout</h4>
+        </div>
+
+        <!-- Sudoku -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Sudoku"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="80" fill="none" stroke="#fff" stroke-width="4" rx="4" />
+                    <line x1="36" y1="10" x2="36" y2="90" stroke="#fff" stroke-width="2" />
+                    <line x1="63" y1="10" x2="63" y2="90" stroke="#fff" stroke-width="2" />
+                    <line x1="10" y1="36" x2="90" y2="36" stroke="#fff" stroke-width="2" />
+                    <line x1="10" y1="63" x2="90" y2="63" stroke="#fff" stroke-width="2" />
+                    <text x="23" y="28" fill="#fff" font-family="sans-serif" font-weight="bold" font-size="20" text-anchor="middle">5</text>
+                    <text x="76" y="56" fill="#fff" font-family="sans-serif" font-weight="bold" font-size="20" text-anchor="middle">3</text>
+                    <text x="50" y="83" fill="#fff" font-family="sans-serif" font-weight="bold" font-size="20" text-anchor="middle">8</text>
+                </svg>
+            </div>
+            <h4 class="game-title">Sudoku</h4>
+        </div>
+
+        <!-- Pacman -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Pacman"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 50 50 L 90 20 A 40 40 0 1 0 90 80 Z" fill="#ffcc00" />
+                    <circle cx="55" cy="30" r="5" fill="#000" />
+                    <circle cx="85" cy="50" r="6" fill="#fff" />
+                </svg>
+            </div>
+            <h4 class="game-title">Pacman</h4>
+        </div>
+
+        <!-- 2048 -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/2048"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="80" rx="15" fill="#edc22e" stroke="#fff" stroke-width="2" />
+                    <text x="50" y="58" fill="#fff" font-family="sans-serif" font-weight="bold" font-size="26" text-anchor="middle">2048</text>
+                </svg>
+            </div>
+            <h4 class="game-title">2048</h4>
+        </div>
+
+        <!-- Platformer -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Platformer"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="80" width="40" height="15" fill="#4dff4d" rx="4" />
+                    <rect x="60" y="50" width="40" height="15" fill="#4dff4d" rx="4" />
+                    <rect x="35" y="45" width="20" height="20" fill="#ff3333" rx="4" transform="rotate(15 45 55)" />
+                    <path d="M 20 70 Q 30 50 40 55" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="4 4" />
+                </svg>
+            </div>
+            <h4 class="game-title">Platformer</h4>
+        </div>
+
+        <!-- Chess -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Chess"))">
+            <div class="game-icon">
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    role="img"
+    aria-labelledby="title description">
+
+    <title id="title">Classic Staunton Chess Knight</title>
+    <desc id="description">
+        A traditional carved Staunton knight with a recognizable horse profile.
+    </desc>
+
+    <defs>
+        <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#dddddd" />
+            <stop offset="45%" stop-color="#aaaaaa" />
+            <stop offset="100%" stop-color="#555555" />
+        </linearGradient>
+
+        <linearGradient id="baseWood" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#dddddd" />
+            <stop offset="55%" stop-color="#aaaaaa" />
+            <stop offset="100%" stop-color="#555555" />
+        </linearGradient>
+
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+            <feDropShadow
+                dx="0"
+                dy="8"
+                stdDeviation="8"
+                flood-color="#000"
+                flood-opacity="0.3" />
+        </filter>
+    </defs>
+
+    <g
+        stroke="#cccccc"
+        stroke-width="9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        filter="#dddddd">
+
+        <!-- Main horse and neck silhouette -->
+        <path
+            d="
+                M125 355
+
+                C168 326 184 299 120 380
+                L300 350
+
+                C263 179 267 164 265 148
+
+                L224 104
+
+                L203 109
+                L184 129
+                L161 160
+
+                L128 176
+                L103 190
+
+                L90 213
+                L101 236
+                L123 246
+
+                L148 233
+                L164 209
+                L176 210
+                l 20 0
+                C130 332 137 350 156 355
+                Z"
+            fill="#dddddd" />
+
+        <!-- Mane mass -->
+        <path
+            d="
+                M253 72
+
+                C288 77 317 100 331 132
+                C343 159 347 194 346 233
+                L343 350
+
+                L303 350
+
+                
+                C281 183 267 158 248 143
+
+                
+                Z"
+            fill="#dddddd" />
+
+        <!-- Ear -->
+        <path
+            d="
+                M224 105
+                L222 66
+                C222 55 235 49 242 58
+                L260 82
+                L253 113
+                Z"
+            fill="#dddddd" />
+
+        <!-- Second ear -->
+        <path
+            d="
+                M252 91
+                L265 66
+                C269 58 279 61 280 70
+                L280 102
+                Z"
+            fill="#dddddd" />
+
+        <!-- Forehead plane -->
+        <path
+            d="
+                M248 117
+                L224 104
+                L203 109
+                L184 129
+                L161 160"
+            fill="none" />
+
+        <!-- Muzzle top -->
+        <path
+            d="
+                M161 160
+                L128 176
+                L103 190
+                L90 213"
+            fill="none" />
+
+        <!-- Mouth -->
+        <path
+            d="
+                M96 222
+                C109 220 119 216 128 207
+            "
+            fill="none"
+            stroke-width="7" />
+
+        <!-- Lower jaw -->
+        <path
+            d="
+                M101 236
+                L123 246
+                L148 233
+                L164 209
+            "
+            fill="none" />
+
+        <!-- Eye socket -->
+
+        <circle
+            cx="213"
+            cy="139"
+            r="11"
+            fill="#1e0d06"
+            stroke="#aaaaaa"
+            stroke-width="5" />
+
+        <!-- Nostril -->
+        <ellipse
+            cx="111"
+            cy="202"
+            rx="8"
+            ry="5"
+            fill="#291107"
+            stroke="none"
+            transform="rotate(-25 111 202)" />
+
+
+
+
+        <!-- Collar -->
+        <path
+            d="
+                M139 349
+                H336
+                L351 374
+                C355 381 350 390 341 390
+                H133
+                C124 390 119 381 123 374
+                Z"
+            fill="url(#baseWood)" />
+
+        <!-- Rounded Staunton pedestal -->
+        <path
+            d="
+                M142 387
+                H330
+
+                C332 407 345 420 359 429
+                C371 437 371 456 358 463
+
+                C331 476 300 482 236 482
+                C172 482 141 476 114 463
+
+                C101 456 101 437 113 429
+                C127 420 140 407 142 387
+                Z"
+            fill="url(#baseWood)" />
+
+        <!-- Base ring -->
+        <path
+            d="
+                M104 461
+                H368
+                L384 481
+                C390 489 384 500 374 500
+                H98
+                C88 500 82 489 88 481
+                Z"
+            fill="url(#baseWood)" />
+
+        <!-- Base highlight -->
+        <path
+            d="
+                M127 450
+                C177 462 295 462 345 450
+            "
+            fill="none"
+            stroke="#555555"
+            stroke-width="7" />
+    </g>
+</svg>
+            </div>
+            <h4 class="game-title">Chess</h4>
+        </div>
+
+        <!-- Connect 4 -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Connect4"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="80" fill="#0055ff" rx="10" stroke="#fff" stroke-width="2"/>
+                    <circle cx="30" cy="30" r="12" fill="#ff4d4d" />
+                    <circle cx="50" cy="30" r="12" fill="#111" />
+                    <circle cx="70" cy="30" r="12" fill="#ffff66" />
+                    
+                    <circle cx="30" cy="50" r="12" fill="#111" />
+                    <circle cx="50" cy="50" r="12" fill="#ff4d4d" />
+                    <circle cx="70" cy="50" r="12" fill="#111" />
+                    
+                    <circle cx="30" cy="70" r="12" fill="#ffff66" />
+                    <circle cx="50" cy="70" r="12" fill="#111" />
+                    <circle cx="70" cy="70" r="12" fill="#ff4d4d" />
+                </svg>
+            </div>
+            <h4 class="game-title">Connect 4</h4>
+        </div>
+
+    </div>
 </div>
