@@ -1,0 +1,77 @@
+@page "/Chess"
+@using BlazorArcade.GameLogic
+@using ChessDotNet
+@inject IJSRuntime JSRuntime
+@inject NavigationManager _nav
+
+<PageTitle>Chess</PageTitle>
+
+<div class="chess-container">
+    <div class="chess-header">
+        <h2 class="arcade-title">CHESS</h2>
+        <div class="status-panel">
+            <div class="turn-indicator @(Game.WhoseTurn == Player.White ? "white-turn" : "black-turn")">
+                @(Game.WhoseTurn == Player.White ? "WHITE'S TURN" : "BLACK'S TURN")
+            </div>
+            @if (Game.IsCheckmated(Player.White))
+            {
+                <div class="game-over checkmate">CHECKMATE! BLACK WINS!</div>
+            }
+            else if (Game.IsCheckmated(Player.Black))
+            {
+                <div class="game-over checkmate">CHECKMATE! WHITE WINS!</div>
+            }
+            else if (Game.IsStalemated(Player.White) || Game.IsStalemated(Player.Black))
+            {
+                <div class="game-over stalemate">STALEMATE! DRAW!</div>
+            }
+            else if (Game.IsInCheck(Game.WhoseTurn))
+            {
+                <div class="check-warning">CHECK!</div>
+            }
+        </div>
+        
+        <div class="controls">
+            <button class="arcade-btn" @onclick="@(() => _nav.NavigateTo("/"))">HOME</button>
+            <button class="arcade-btn" @onclick="NewGame">NEW GAME</button>
+            <label class="ai-toggle">
+                <input type="checkbox" @bind="PlayAgainstComputer" />
+                Play vs Computer
+            </label>
+        </div>
+    </div>
+
+    <div class="board-wrapper">
+        <div class="chess-board">
+            @for (int row = 0; row < 8; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    int r = row;
+                    int c = col;
+                    bool isLight = (r + c) % 2 == 0;
+                    string squareColor = isLight ? "light-square" : "dark-square";
+                    
+                    var pos = GetPosition(r, c);
+                    var piece = Game.GetPieceAt(pos);
+                    
+                    bool isSelected = SelectedPosition != null && SelectedPosition.Equals(pos);
+                    bool isValidMove = ValidMoves.Any(m => m.NewPosition.Equals(pos));
+                    string selectedClass = isSelected ? "selected" : "";
+                    string validMoveClass = isValidMove ? "valid-move" : "";
+
+                    <div class="square @squareColor @selectedClass @validMoveClass" @onclick="() => OnSquareClick(pos)">
+                        @if (piece != null)
+                        {
+                            <img src="@GetPieceImage(piece)" class="chess-piece" />
+                        }
+                        @if (isValidMove)
+                        {
+                            <div class="move-indicator"></div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

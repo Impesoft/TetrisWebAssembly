@@ -1,0 +1,140 @@
+.chess-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+.chess-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.arcade-title {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.status-panel {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-height: 30px;
+}
+
+.turn-indicator.white-turn {
+    color: #eee;
+}
+
+.turn-indicator.black-turn {
+    color: #999;
+}
+
+.game-over {
+    color: #ff3333;
+    animation: blink 1s infinite;
+}
+
+.check-warning {
+    color: #ffaa00;
+}
+
+.controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.arcade-btn {
+    background-color: #222;
+    color: white;
+    border: 2px solid #555;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.arcade-btn:hover {
+    background-color: #444;
+}
+
+.ai-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.board-wrapper {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 80vmin;
+    max-width: 600px;
+    height: 80vmin;
+    max-height: 600px;
+    border: 2px solid #333;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.light-square {
+    background-color: #f0d9b5;
+}
+
+.dark-square {
+    background-color: #b58863;
+}
+
+.chess-piece {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    z-index: 10;
+    filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
+}
+
+.selected {
+    background-color: rgba(106, 156, 92, 0.8) !important;
+}
+
+.valid-move {
+    /* Optional base styling for a valid move square */
+}
+
+.move-indicator {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

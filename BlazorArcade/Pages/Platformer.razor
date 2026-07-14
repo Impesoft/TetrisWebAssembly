@@ -1,0 +1,71 @@
+@page "/Platformer"
+@namespace BlazorArcade.Pages
+@inject NavigationManager _nav
+
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<div class="controls">
+    <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+    <button @onclick="StartGame">Restart</button>
+</div>
+
+<div class="game-container-platformer" tabindex="0" 
+     @onkeydown="HandleKeyDown" 
+     @onkeyup="HandleKeyUp"
+     @ref="GameContainer">
+    
+    <div class="header">
+        <h1 class="title">Platformer</h1>
+    </div>
+
+    <div class="svg-container">
+        <svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+            <!-- Background -->
+            <rect width="800" height="600" fill="#222" />
+
+            <!-- Goal -->
+            <rect x="@GameInstance.Goal.X" y="@GameInstance.Goal.Y" width="@GameInstance.Goal.Width" height="@GameInstance.Goal.Height" fill="gold" />
+            
+            <!-- Platforms -->
+            @foreach (var p in GameInstance.Platforms)
+            {
+                <rect x="@p.X" y="@p.Y" width="@p.Width" height="@p.Height" fill="#555" stroke="#777" stroke-width="2" />
+            }
+
+            <!-- Player -->
+            <rect x="@GameInstance.Player.X" y="@GameInstance.Player.Y" width="@GameInstance.Player.Width" height="@GameInstance.Player.Height" fill="#00ffcc" />
+            
+            <!-- Eyes on player -->
+            @if (GameInstance.Player.VelocityX >= 0)
+            {
+                <circle cx="@(GameInstance.Player.X + 20)" cy="@(GameInstance.Player.Y + 10)" r="3" fill="black" />
+                <circle cx="@(GameInstance.Player.X + 25)" cy="@(GameInstance.Player.Y + 10)" r="3" fill="black" />
+            }
+            else
+            {
+                <circle cx="@(GameInstance.Player.X + 5)" cy="@(GameInstance.Player.Y + 10)" r="3" fill="black" />
+                <circle cx="@(GameInstance.Player.X + 10)" cy="@(GameInstance.Player.Y + 10)" r="3" fill="black" />
+            }
+        </svg>
+
+        <!-- HTML Overlays -->
+        <div style="position: absolute; left: @(GameInstance.Goal.X / 800.0 * 100)%; top: @(GameInstance.Goal.Y / 600.0 * 100)%; width: @(GameInstance.Goal.Width / 800.0 * 100)%; height: @(GameInstance.Goal.Height / 600.0 * 100)%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 12px; pointer-events: none;">
+            EXIT
+        </div>
+
+        @if (GameInstance.IsGameOver)
+        {
+            <div class="overlay-message game-over-text">GAME OVER</div>
+        }
+        else if (GameInstance.IsGameWon)
+        {
+            <div class="overlay-message game-won-text">YOU WIN!</div>
+        }
+    </div>
+    
+    <div class="instructions">
+        Use Arrow Keys or A/D to move. Up Arrow, W, or Space to jump.
+    </div>
+</div>
