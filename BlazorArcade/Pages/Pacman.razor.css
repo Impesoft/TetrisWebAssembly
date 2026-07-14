@@ -73,3 +73,22 @@ button:hover {
 .blink {
     opacity: 0.5;
 }
+
+@media (max-width: 576px) {
+    .pacman-board {
+        max-width: 100vw;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+    }
+    .stats-container {
+        max-width: 100vw;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    .pacman-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+}

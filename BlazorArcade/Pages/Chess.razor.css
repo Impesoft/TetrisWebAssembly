@@ -50,6 +50,10 @@
     display: flex;
     gap: 20px;
     align-items: center;
+    position: static;
+    float: none;
+    width: 100%;
+    justify-content: center;
 }
 
 .arcade-btn {

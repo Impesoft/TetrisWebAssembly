@@ -14,6 +14,9 @@
 <div class="game-container-platformer" tabindex="0" 
      @onkeydown="HandleKeyDown" 
      @onkeyup="HandleKeyUp"
+     @ontouchstart="HandleTouchStart"
+     @ontouchmove="HandleTouchMove"
+     @ontouchend="HandleTouchEnd"
      @ref="GameContainer">
     
     <div class="header">

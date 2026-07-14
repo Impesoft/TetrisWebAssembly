@@ -148,3 +148,44 @@
 .player-2 {
     background: radial-gradient(circle at 30% 30%, #ffff66, #ffcc00);
 }
+
+.controls {
+    position: static;
+    float: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 576px) {
+    .connect4-board {
+        width: 100vw;
+        padding: 5px;
+        gap: 5px;
+        box-sizing: border-box;
+    }
+    .board-row {
+        gap: 5px;
+    }
+    .board-cell {
+        width: calc((100vw - 40px) / 7);
+        height: calc((100vw - 40px) / 7);
+    }
+    .hole {
+        width: 83%;
+        height: 83%;
+    }
+    .column-selectors {
+        gap: 5px;
+        width: 100vw;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+    .column-selector {
+        width: calc((100vw - 40px) / 7);
+    }
+}

@@ -102,3 +102,31 @@ form-select {
     top: 10px;
     left: 10px;
 }
+
+@media (max-width: 992px) {
+    .sudoku-grid {
+        width: 100%;
+        max-width: 100vw;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    .sudoku-grid td {
+        width: calc(100vw / 9 - 2px);
+    }
+
+    .sudoku-grid input[type="text"] {
+        width: calc(100vw / 9 - 2px);
+        font-size: 5vw;
+    }
+
+    .controls {
+        position: static;
+        float: none;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+}

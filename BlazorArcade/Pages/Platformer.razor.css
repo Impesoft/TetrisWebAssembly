@@ -7,6 +7,7 @@
     color: white;
     margin-top: 20px;
     width: 100%;
+    touch-action: none; /* Prevent scrolling during swipe controls */
 }
 
 .controls {
@@ -14,6 +15,9 @@
     display: flex;
     gap: 10px;
     justify-content: center;
+    position: static;
+    float: none;
+    width: 100%;
 }
 
 button {

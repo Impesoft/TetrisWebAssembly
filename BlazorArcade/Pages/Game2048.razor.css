@@ -13,6 +13,9 @@
     display: flex;
     gap: 10px;
     justify-content: center;
+    position: static;
+    float: none;
+    width: 100%;
 }
 
 button {
