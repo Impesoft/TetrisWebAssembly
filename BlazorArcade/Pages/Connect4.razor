@@ -1,0 +1,70 @@
+@page "/Connect4"
+@namespace BlazorArcade.Pages
+@inject NavigationManager _nav
+
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<div class="controls">
+    <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+    <button @onclick="RestartGame">Restart</button>
+    <button @onclick="ToggleMode">Mode: @(IsAiMode ? "1 Player (vs AI)" : "2 Players")</button>
+</div>
+
+<div class="game-container-connect4" tabindex="0" @ref="GameContainer">
+    
+    <div class="header">
+        <h1 class="title">Connect 4</h1>
+        <div class="status-box">
+            @if (GameInstance.IsGameOver)
+            {
+                if (GameInstance.IsDraw)
+                {
+                    <div class="status-message draw">It's a Draw!</div>
+                }
+                else
+                {
+                    <div class="status-message win">Player @GameInstance.Winner Wins!</div>
+                }
+            }
+            else
+            {
+                <div class="status-message turn">Player @GameInstance.CurrentPlayer's Turn</div>
+                <div class="turn-indicator player-@GameInstance.CurrentPlayer"></div>
+            }
+        </div>
+    </div>
+
+    <div class="game-board-wrapper">
+        <div class="column-selectors">
+            @for (int c = 0; c < BlazorArcade.GameLogic.Connect4Logic.Columns; c++)
+            {
+                int col = c;
+                <div class="column-selector" @onclick="() => DropPiece(col)">
+                    <div class="arrow-down"></div>
+                </div>
+            }
+        </div>
+
+        <div class="connect4-board">
+            @for (int r = 0; r < BlazorArcade.GameLogic.Connect4Logic.Rows; r++)
+            {
+                <div class="board-row">
+                    @for (int c = 0; c < BlazorArcade.GameLogic.Connect4Logic.Columns; c++)
+                    {
+                        int val = GameInstance.Board[r, c];
+                        <div class="board-cell" @onclick="() => DropPiece(c)">
+                            <div class="hole">
+                                @if (val > 0)
+                                {
+                                    <div class="piece player-@val"></div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
