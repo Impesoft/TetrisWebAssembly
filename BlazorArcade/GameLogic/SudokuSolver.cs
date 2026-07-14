@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace TetrisWebAssembly.GameLogic;
+namespace BlazorArcade.GameLogic;
 
 public class SudokuSolver
 {

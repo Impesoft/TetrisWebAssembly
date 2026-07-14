@@ -1,6 +1,6 @@
-﻿using TetrisWebAssembly.Models;
+using BlazorArcade.Models;
 
-namespace TetrisWebAssembly.Helpers;
+namespace BlazorArcade.Helpers;
 public class Tetromino
 {
     private static readonly Random Random = new();

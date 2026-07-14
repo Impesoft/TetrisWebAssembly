@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using TetrisWebAssembly.Helpers;
-using TetrisWebAssembly.Models;
+using System.Threading;
+using BlazorArcade.Helpers;
+using BlazorArcade.Models;
 
-namespace TetrisWebAssembly.GameLogic;
+namespace BlazorArcade.GameLogic;
 
 public class TetrisGame
 {

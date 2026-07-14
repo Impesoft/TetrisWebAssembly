@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
-using TetrisWebAssembly.GameLogic;
+using BlazorArcade.GameLogic;
 
-namespace TetrisWebAssembly.Pages;
+namespace BlazorArcade.Pages;
 public partial class SudokuGrid
 {
     [Inject] private IJSRuntime JSRuntime { get; set; } = default!;

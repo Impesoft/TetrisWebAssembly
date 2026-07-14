@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Components;
 
-namespace TetrisWebAssembly.Pages;
+namespace BlazorArcade.Pages;
 
 public partial class Home : ComponentBase
 {

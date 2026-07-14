@@ -1,0 +1,71 @@
+@page "/2048"
+@namespace BlazorArcade.Pages
+@inject NavigationManager _nav
+
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<div class="controls">
+    <button @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+    <button @onclick="RestartGame">Restart</button>
+</div>
+
+<div class="game-container-2048" tabindex="0" 
+     @onkeydown="HandleKeyDown" 
+     @ontouchstart="HandleTouchStart" 
+     @ontouchend="HandleTouchEnd" 
+     @ref="GameContainer">
+    
+    <div class="header">
+        <h1 class="title">2048</h1>
+        <div class="score-container">
+            <div class="score-box">
+                <div class="score-label">SCORE</div>
+                <div class="score-value">@GameInstance.Score</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-board-wrapper">
+        @if (GameInstance.IsGameOver)
+        {
+            <div class="game-message game-over">
+                <p>Game Over!</p>
+                <div class="lower">
+                    <button class="retry-button" @onclick="RestartGame">Try again</button>
+                </div>
+            </div>
+        }
+        else if (GameInstance.IsGameWon && !GameInstance.HasWonPreviously)
+        {
+            <div class="game-message game-won">
+                <p>You Win!</p>
+                <div class="lower">
+                    <button class="keep-playing-button" @onclick="ContinueGame">Keep going</button>
+                    <button class="retry-button" @onclick="RestartGame">Try again</button>
+                </div>
+            </div>
+        }
+
+        <div class="grid-container">
+            @for (int r = 0; r < GameInstance.Size; r++)
+            {
+                <div class="grid-row">
+                    @for (int c = 0; c < GameInstance.Size; c++)
+                    {
+                        int val = GameInstance.Grid[r, c];
+                        <div class="grid-cell">
+                            @if (val > 0)
+                            {
+                                <div class="tile tile-@val @GetTileClass(val)">
+                                    <div class="tile-inner">@val</div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

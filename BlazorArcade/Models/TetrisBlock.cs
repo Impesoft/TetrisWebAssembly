@@ -1,4 +1,4 @@
-﻿namespace TetrisWebAssembly.Models;
+namespace BlazorArcade.Models;
 
 public class TetrisBlock
 {

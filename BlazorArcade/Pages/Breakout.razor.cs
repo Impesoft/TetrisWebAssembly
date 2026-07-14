@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace TetrisWebAssembly.Pages;
+namespace BlazorArcade.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Timers;
-using TetrisWebAssembly.Models;
+using BlazorArcade.Models;
 
 public partial class Breakout : ComponentBase
 {

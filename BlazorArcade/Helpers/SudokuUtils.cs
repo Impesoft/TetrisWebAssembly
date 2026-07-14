@@ -1,4 +1,4 @@
-﻿namespace TetrisWebAssembly.Helpers;
+namespace BlazorArcade.Helpers;
 
 public static class SudokuUtils
 {

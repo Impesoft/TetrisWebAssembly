@@ -1,9 +1,9 @@
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
-using TetrisWebAssembly.GameLogic;
+using BlazorArcade.GameLogic;
 
-namespace TetrisWebAssembly.Pages;
+namespace BlazorArcade.Pages;
 public partial class Tetris
 {
     private static double PreviewBoardWidth = 4;

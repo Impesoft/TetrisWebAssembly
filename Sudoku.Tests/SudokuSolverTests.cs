@@ -1,7 +1,7 @@
-﻿using Bunit;
-using TetrisWebAssembly.GameLogic;
-using TetrisWebAssembly.Helpers;
-using TetrisWebAssembly.Pages;
+using Bunit;
+using BlazorArcade.GameLogic;
+using BlazorArcade.Helpers;
+using BlazorArcade.Pages;
 
 namespace Sudoku.Tests;
 

@@ -1,12 +1,12 @@
-﻿using Bunit;
+using Bunit;
 using Xunit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TetrisWebAssembly.Pages;
-using TetrisWebAssembly.GameLogic;
+using BlazorArcade.Pages;
+using BlazorArcade.GameLogic;
 using AngleSharp.Diffing.Extensions;
 using AngleSharp.Css.Values;
 

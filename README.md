@@ -1,6 +1,6 @@
-# TetrisWebAssembly
+# BlazorArcade
 
-TetrisWebAssembly is a Blazor WebAssembly project that implements a Tetris game and additional features like a Sudoku solver. This project is built using .NET 9 and leverages modern web technologies to deliver a rich, interactive experience directly in the browser.
+BlazorArcade is a Blazor WebAssembly project that implements a Tetris game and additional features like a Sudoku solver. This project is built using .NET 9 and leverages modern web technologies to deliver a rich, interactive experience directly in the browser.
 
 ## Features
 - **Tetris Game**: A fully functional Tetris game with responsive controls and dynamic gameplay.
@@ -23,8 +23,8 @@ Before setting up the project, ensure you have the following installed:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-repo/TetrisWebAssembly.git
-   cd TetrisWebAssembly
+   git clone https://github.com/your-repo/BlazorArcade.git
+   cd BlazorArcade
    ```
 
 2. **Restore Dependencies**
@@ -42,21 +42,21 @@ Before setting up the project, ensure you have the following installed:
 4. **Run the Application**
    Start the Blazor WebAssembly application:
    ```bash
-   dotnet run --project TetrisWebAssembly
+   dotnet run --project BlazorArcade
    ```
    This will launch the application and host it locally. Open your browser and navigate to `http://localhost:5000`.
 
 ---
 
 ## Project Structure
-- **`TetrisWebAssembly`**: The main Blazor WebAssembly project containing the Tetris game, Sudoku solver, and UI components.
+- **`BlazorArcade`**: The main Blazor WebAssembly project containing the Tetris game, Sudoku solver, and UI components.
 - **`Sudoku.Tests`**: A test project for validating the Sudoku solver and other logic using xUnit and bUnit.
 
 ### Key Files
-- `TetrisWebAssembly/Pages/Tetris.razor`: The Tetris game page.
-- `TetrisWebAssembly/Pages/SudokuGrid.razor`: The Sudoku solver page.
-- `TetrisWebAssembly/GameLogic`: Contains the core game logic for Tetris and Sudoku.
-- `TetrisWebAssembly/wwwroot`: Static assets like CSS, JavaScript, and service worker files.
+- `BlazorArcade/Pages/Tetris.razor`: The Tetris game page.
+- `BlazorArcade/Pages/SudokuGrid.razor`: The Sudoku solver page.
+- `BlazorArcade/GameLogic`: Contains the core game logic for Tetris and Sudoku.
+- `BlazorArcade/wwwroot`: Static assets like CSS, JavaScript, and service worker files.
 
 ---
 
