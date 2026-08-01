@@ -1243,6 +1243,199 @@ button:hover[b-bxh5ch49o5] {
     letter-spacing: 1px;
     z-index: 1;
 }
+/* /Pages/KingsValley.razor.rz.scp.css */
+.kv-container[b-3czy54dt8j] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at center, #1e0e04 0%, #080401 100%);
+    padding: 20px;
+    font-family: 'Press Start 2P', 'Segoe UI', monospace, sans-serif;
+    color: #ffffff;
+}
+
+.kv-arcade-cabinet[b-3czy54dt8j] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0f0702;
+    border: 4px solid #c68a4c;
+    border-radius: 12px;
+    box-shadow: 0 0 30px rgba(198, 138, 76, 0.4), inset 0 0 15px rgba(0,0,0,0.8);
+    padding: 16px;
+    outline: none;
+    max-width: 860px;
+    width: 100%;
+}
+
+.kv-marquee[b-3czy54dt8j] {
+    text-align: center;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, #3a1c04, #7a4f21, #3a1c04);
+    padding: 8px 24px;
+    border-radius: 8px;
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+    width: 100%;
+}
+
+.marquee-title[b-3czy54dt8j] {
+    font-size: 24px;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px #ff9900;
+}
+
+.marquee-sub[b-3czy54dt8j] {
+    font-size: 11px;
+    color: #00f5d4;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.kv-hud[b-3czy54dt8j] {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background: #140a02;
+    border: 2px solid #7a4f21;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+}
+
+.hud-item[b-3czy54dt8j] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hud-label[b-3czy54dt8j] {
+    font-size: 9px;
+    color: #a88a6d;
+    margin-bottom: 2px;
+}
+
+.hud-value[b-3czy54dt8j] {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.hud-value.gold[b-3czy54dt8j] { color: #ffd700; }
+.hud-value.white[b-3czy54dt8j] { color: #ffffff; }
+.hud-value.cyan[b-3czy54dt8j] { color: #00f5d4; }
+.hud-value.yellow[b-3czy54dt8j] { color: #ffff00; }
+.hud-value.pink[b-3czy54dt8j] { color: #ff007f; }
+.hud-value.red[b-3czy54dt8j] { color: #ff3366; }
+
+.life-icon[b-3czy54dt8j] {
+    font-size: 14px;
+    margin-right: 2px;
+}
+
+.kv-screen[b-3czy54dt8j] {
+    position: relative;
+    border: 3px solid #7a4f21;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+    background: #000;
+}
+
+.kv-svg[b-3czy54dt8j] {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+}
+
+.kv-controls-panel[b-3czy54dt8j] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: #140a02;
+    border-radius: 8px;
+    border: 2px solid #7a4f21;
+}
+
+.dpad-box[b-3czy54dt8j] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dpad-row[b-3czy54dt8j] {
+    display: flex;
+    gap: 20px;
+    margin: 4px 0;
+}
+
+.dpad-btn[b-3czy54dt8j] {
+    width: 44px;
+    height: 44px;
+    background: #3a1c04;
+    border: 2px solid #c68a4c;
+    border-radius: 6px;
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+}
+
+.dpad-btn:active[b-3czy54dt8j] {
+    background: #7a4f21;
+}
+
+.action-box[b-3czy54dt8j] {
+    display: flex;
+    gap: 12px;
+}
+
+.act-btn[b-3czy54dt8j] {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+    cursor: pointer;
+    color: #ffffff;
+    user-select: none;
+    transition: transform 0.1s;
+}
+
+.act-btn:active[b-3czy54dt8j] {
+    transform: scale(0.95);
+}
+
+.act-btn.jump[b-3czy54dt8j] {
+    background: #00f5d4;
+    color: #140a02;
+    border-color: #00b39b;
+}
+
+.act-btn.dig[b-3czy54dt8j] {
+    background: #c68a4c;
+    color: #ffffff;
+    border-color: #ffd700;
+}
+
+.act-btn.throw[b-3czy54dt8j] {
+    background: #ff007f;
+    color: #ffffff;
+    border-color: #ff66b2;
+}
+
+.btn-group:hover rect[b-3czy54dt8j] {
+    opacity: 0.9;
+}
 /* /Pages/Pacman.razor.rz.scp.css */
 .pacman-container[b-n05ekmypqe] {
     display: flex;
