@@ -109,6 +109,21 @@
             <h4 class="game-title">Donkey Kong</h4>
         </div>
 
+        <!-- King's Valley -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/KingsValley"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="50,15 90,85 10,85" fill="#c68a4c" stroke="#ffd700" stroke-width="3" />
+                    <line x1="25" y1="60" x2="75" y2="60" stroke="#7a4f21" stroke-width="2" />
+                    <line x1="38" y1="38" x2="62" y2="38" stroke="#7a4f21" stroke-width="2" />
+                    <polygon points="50,45 60,60 50,75 40,60" fill="#ffd700" stroke="#fff" stroke-width="1.5" />
+                    <circle cx="50" cy="60" r="4" fill="#00f5d4" />
+                </svg>
+            </div>
+            <h4 class="game-title">King's Valley</h4>
+        </div>
+
+
 
         <!-- Chess -->
         <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Chess"))">

@@ -71,6 +71,7 @@ namespace BlazorArcade.Pages
 
         private void HandleKeyDown(KeyboardEventArgs e)
         {
+            if (e.Repeat) return;
             _pressedKeys.Add(e.Key);
         }
 
