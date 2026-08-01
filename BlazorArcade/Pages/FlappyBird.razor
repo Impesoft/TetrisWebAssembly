@@ -1,0 +1,65 @@
+@page "/FlappyBird"
+@using BlazorArcade.GameLogic
+
+<div class="flappybird-container" tabindex="0" @ref="_gameContainer" @onkeydown="HandleKeyDown" @onclick="HandleClick" autofocus>
+    <div class="game-header">
+        <h2>Flappy Bird</h2>
+        <div class="controls">Press SPACE or CLICK to Flap</div>
+        <div class="score-display">Score: @_game.Score</div>
+    </div>
+
+    <div class="game-board" style="width: @(_game.Width)px; height: @(_game.Height)px;">
+        @if (_game.IsGameOver)
+        {
+            <div class="game-over-overlay">
+                <h2>Game Over!</h2>
+                <p>Final Score: @_game.Score</p>
+                <button class="btn btn-primary" @onclick="RestartGame" @onclick:stopPropagation>Try Again</button>
+            </div>
+        }
+        else if (!_game.IsGameStarted)
+        {
+            <div class="game-over-overlay" style="background-color: rgba(0, 0, 0, 0.4);">
+                <h2>Get Ready</h2>
+                <p>Click or Spacebar to Flap</p>
+            </div>
+        }
+
+        <!-- Pipes -->
+        @foreach (var pipe in _game.Pipes)
+        {
+            <!-- Top Pipe -->
+            <div class="pipe pipe-top" style="
+                left: @(pipe.X)px;
+                width: @(pipe.Width)px;
+                height: @(pipe.GapY - pipe.GapHeight / 2)px;
+                top: 0;">
+                <div class="pipe-cap pipe-cap-top"></div>
+            </div>
+
+            <!-- Bottom Pipe -->
+            <div class="pipe pipe-bottom" style="
+                left: @(pipe.X)px;
+                width: @(pipe.Width)px;
+                height: @(_game.Height - (pipe.GapY + pipe.GapHeight / 2))px;
+                bottom: 0;">
+                <div class="pipe-cap pipe-cap-bottom"></div>
+            </div>
+        }
+
+        <!-- Bird -->
+        <div class="bird" style="
+            left: @(_game.Bird.X - _game.Bird.Radius)px; 
+            top: @(_game.Bird.Y - _game.Bird.Radius)px;
+            width: @(_game.Bird.Radius * 2)px;
+            height: @(_game.Bird.Radius * 2)px;
+            transform: rotate(@(GetBirdRotation())deg);">
+            <div class="bird-eye"></div>
+            <div class="bird-wing"></div>
+            <div class="bird-beak"></div>
+        </div>
+        
+        <!-- Ground / Background could go here -->
+        <div class="ground-strip"></div>
+    </div>
+</div>

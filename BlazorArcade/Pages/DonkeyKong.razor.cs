@@ -57,6 +57,18 @@ namespace BlazorArcade.Pages
             _ = GameContainer.FocusAsync();
         }
 
+        private bool _isGameLoopRendering = false;
+
+        protected override bool ShouldRender()
+        {
+            if (_isGameLoopRendering)
+            {
+                _isGameLoopRendering = false;
+                return true;
+            }
+            return false;
+        }
+
         private void GameLoop(object? state)
         {
             bool moveLeft = _pressedKeys.Contains("ArrowLeft") || _pressedKeys.Contains("a") || _pressedKeys.Contains("A") || _touchMoveLeft;
@@ -66,6 +78,7 @@ namespace BlazorArcade.Pages
             bool jump = _pressedKeys.Contains(" ") || _pressedKeys.Contains("Space") || _touchJump;
 
             GameInstance.Update(moveLeft, moveRight, climbUp, climbDown, jump, 0.016);
+            _isGameLoopRendering = true;
             InvokeAsync(StateHasChanged);
         }
 

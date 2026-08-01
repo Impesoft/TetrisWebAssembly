@@ -1,0 +1,180 @@
+.flappybird-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #222;
+    min-height: 100vh;
+    padding-top: 20px;
+    outline: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game-header {
+    text-align: center;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.game-header h2 {
+    margin: 0 0 5px 0;
+    color: #4CAF50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.controls {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.score-display {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.game-board {
+    position: relative;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+    border: 4px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.game-over-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 100;
+}
+
+.game-over-overlay h2 {
+    color: #FF5252;
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.game-over-overlay p {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Pipe Styling */
+.pipe {
+    position: absolute;
+    background: linear-gradient(to right, #54C83B 0%, #74F256 20%, #54C83B 50%, #40A02B 100%);
+    border: 2px solid #2B6916;
+}
+
+.pipe-top {
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+}
+
+.pipe-bottom {
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+}
+
+.pipe-cap {
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    height: 24px;
+    background: linear-gradient(to right, #54C83B 0%, #74F256 20%, #54C83B 50%, #40A02B 100%);
+    border: 2px solid #2B6916;
+    border-radius: 3px;
+}
+
+.pipe-cap-top {
+    bottom: -2px;
+}
+
+.pipe-cap-bottom {
+    top: -2px;
+}
+
+/* Bird Styling */
+.bird {
+    position: absolute;
+    background-color: #F7D038;
+    border-radius: 50%;
+    border: 2px solid #333;
+    transition: transform 0.1s linear;
+    z-index: 50;
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.2);
+}
+
+.bird-eye {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+.bird-eye::after {
+    content: '';
+    position: absolute;
+    right: 1px;
+    top: 2px;
+    width: 3px;
+    height: 3px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.bird-wing {
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 12px;
+    height: 8px;
+    background-color: #FFF;
+    border-radius: 50%;
+    border: 1px solid #333;
+    transform: rotate(-15deg);
+}
+
+.bird-beak {
+    position: absolute;
+    right: -8px;
+    top: 12px;
+    width: 12px;
+    height: 8px;
+    background-color: #F75538;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+/* Ground */
+.ground-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 15px;
+    background: repeating-linear-gradient(
+        45deg,
+        #D2B48C,
+        #D2B48C 10px,
+        #C19A6B 10px,
+        #C19A6B 20px
+    );
+    border-top: 3px solid #73BF2E;
+    z-index: 60;
+}
