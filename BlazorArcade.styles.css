@@ -1,5 +1,210 @@
 @import '_content/Toolbelt.Blazor.PWA.Updater/Toolbelt.Blazor.PWA.Updater.2drl8nn3fe.bundle.scp.css';
 
+/* /Pages/BlockDude.razor.rz.scp.css */
+.blockdude-container[b-q023kh7gyr] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #222;
+    min-height: 100vh;
+    padding-top: 20px;
+    outline: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.game-header[b-q023kh7gyr] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 640px;
+    margin-bottom: 20px;
+}
+
+.game-header h2[b-q023kh7gyr] {
+    margin: 0;
+    color: #4da6ff;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.controls[b-q023kh7gyr] {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.controls span[b-q023kh7gyr] {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+button[b-q023kh7gyr] {
+    background-color: #4da6ff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0 #0066cc;
+    transition: all 0.1s;
+}
+
+button:active[b-q023kh7gyr] {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.menu-btn[b-q023kh7gyr] {
+    background-color: #ff4d4d;
+    box-shadow: 0 4px 0 #cc0000;
+}
+
+.game-board[b-q023kh7gyr] {
+    position: relative;
+    background-color: #1a1a1a;
+    border: 4px solid #444;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    overflow: hidden;
+}
+
+.wall[b-q023kh7gyr] {
+    position: absolute;
+    background-color: #8c8c8c;
+    border: 2px solid #595959;
+    box-sizing: border-box;
+    /* Brick pattern */
+    background-image: 
+        linear-gradient(335deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%),
+        linear-gradient(transparent 50%, rgba(0,0,0,0.1) 50%);
+    background-size: 8px 8px;
+}
+
+.door[b-q023kh7gyr] {
+    position: absolute;
+    background-color: #4d2600;
+    border: 2px solid #331a00;
+    box-sizing: border-box;
+    border-radius: 4px 4px 0 0;
+}
+
+.door[b-q023kh7gyr]::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    background-color: #ffd700;
+    border-radius: 50%;
+}
+
+.block[b-q023kh7gyr] {
+    position: absolute;
+    background-color: #e6b800;
+    border: 2px solid #b38f00;
+    box-sizing: border-box;
+    /* Wood crate pattern */
+    background-image: 
+        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1)), 
+        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+}
+
+.player[b-q023kh7gyr] {
+    position: absolute;
+    /* We don't style the container itself visually, just use it for positioning */
+}
+
+.player-sprite[b-q023kh7gyr] {
+    width: 100%;
+    height: 100%;
+    background-color: #ff9999;
+    border-radius: 4px;
+    border: 2px solid #cc0000;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.player-sprite[b-q023kh7gyr]::before {
+    /* Eye */
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: #000;
+    border-radius: 50%;
+}
+
+.player-sprite[b-q023kh7gyr]::after {
+    /* Headband */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background-color: #4da6ff;
+}
+
+.player.facing-left .player-sprite[b-q023kh7gyr]::before {
+    right: auto;
+    left: 6px;
+}
+
+.player.carrying .player-sprite[b-q023kh7gyr]::before {
+    top: 10px; /* Look up slightly when carrying? Or just leave it */
+}
+
+.carried-block[b-q023kh7gyr] {
+    position: absolute;
+    background-color: #e6b800;
+    border: 2px solid #b38f00;
+    box-sizing: border-box;
+    left: 0;
+    /* Same pattern as .block */
+    background-image: 
+        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1)), 
+        linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.1) 75%, rgba(0,0,0,0.1));
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+}
+
+.level-complete-overlay[b-q023kh7gyr], .game-complete-overlay[b-q023kh7gyr] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #4dff4d;
+    z-index: 10;
+}
+
+.level-complete-overlay h3[b-q023kh7gyr], .game-complete-overlay h2[b-q023kh7gyr] {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.game-complete-overlay p[b-q023kh7gyr] {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.game-complete-overlay button[b-q023kh7gyr], .level-complete-overlay button[b-q023kh7gyr] {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    margin: 5px;
+}
 /* /Pages/BubbleShooter.razor.rz.scp.css */
 #bg[b-q5pmvgjjfc] {
     position: fixed;
@@ -950,6 +1155,187 @@
     cursor: pointer;
     box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
     touch-action: manipulation;
+}
+/* /Pages/FlappyBird.razor.rz.scp.css */
+.flappybird-container[b-khx8rh200k] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #222;
+    min-height: 100vh;
+    padding-top: 20px;
+    outline: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.game-header[b-khx8rh200k] {
+    text-align: center;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.game-header h2[b-khx8rh200k] {
+    margin: 0 0 5px 0;
+    color: #4CAF50;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.controls[b-khx8rh200k] {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.score-display[b-khx8rh200k] {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.game-board[b-khx8rh200k] {
+    position: relative;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+    border: 4px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.game-over-overlay[b-khx8rh200k] {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 100;
+}
+
+.game-over-overlay h2[b-khx8rh200k] {
+    color: #FF5252;
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.game-over-overlay p[b-khx8rh200k] {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Pipe Styling */
+.pipe[b-khx8rh200k] {
+    position: absolute;
+    background: linear-gradient(to right, #54C83B 0%, #74F256 20%, #54C83B 50%, #40A02B 100%);
+    border: 2px solid #2B6916;
+}
+
+.pipe-top[b-khx8rh200k] {
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+}
+
+.pipe-bottom[b-khx8rh200k] {
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+}
+
+.pipe-cap[b-khx8rh200k] {
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    height: 24px;
+    background: linear-gradient(to right, #54C83B 0%, #74F256 20%, #54C83B 50%, #40A02B 100%);
+    border: 2px solid #2B6916;
+    border-radius: 3px;
+}
+
+.pipe-cap-top[b-khx8rh200k] {
+    bottom: -2px;
+}
+
+.pipe-cap-bottom[b-khx8rh200k] {
+    top: -2px;
+}
+
+/* Bird Styling */
+.bird[b-khx8rh200k] {
+    position: absolute;
+    background-color: #F7D038;
+    border-radius: 50%;
+    border: 2px solid #333;
+    transition: transform 0.1s linear;
+    z-index: 50;
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.2);
+}
+
+.bird-eye[b-khx8rh200k] {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+.bird-eye[b-khx8rh200k]::after {
+    content: '';
+    position: absolute;
+    right: 1px;
+    top: 2px;
+    width: 3px;
+    height: 3px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.bird-wing[b-khx8rh200k] {
+    position: absolute;
+    left: 2px;
+    top: 12px;
+    width: 12px;
+    height: 8px;
+    background-color: #FFF;
+    border-radius: 50%;
+    border: 1px solid #333;
+    transform: rotate(-15deg);
+}
+
+.bird-beak[b-khx8rh200k] {
+    position: absolute;
+    right: -8px;
+    top: 12px;
+    width: 12px;
+    height: 8px;
+    background-color: #F75538;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+/* Ground */
+.ground-strip[b-khx8rh200k] {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 15px;
+    background: repeating-linear-gradient(
+        45deg,
+        #D2B48C,
+        #D2B48C 10px,
+        #C19A6B 10px,
+        #C19A6B 20px
+    );
+    border-top: 3px solid #73BF2E;
+    z-index: 60;
 }
 /* /Pages/Game2048.razor.rz.scp.css */
 .game-container-2048[b-bxh5ch49o5] {
