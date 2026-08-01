@@ -44,6 +44,13 @@ namespace BlazorArcade.GameLogic
             double clampedX = Math.Clamp(x, Math.Min(X1, X2), Math.Max(X1, X2));
             return Y1 + (clampedX - X1) * (Y2 - Y1) / (X2 - X1);
         }
+
+        public int GetDownwardDirection()
+        {
+            if (Y2 > Y1 + 2) return 1;  // Slants down to the right (+1)
+            if (Y1 > Y2 + 2) return -1; // Slants down to the left (-1)
+            return -1;                  // Bottom floor: rolls left (-1) towards Oil Drum
+        }
     }
 
     public class DKLadder
@@ -145,6 +152,7 @@ namespace BlazorArcade.GameLogic
         public double Height { get; set; } = 20;
         public int Direction { get; set; } = 1;
         public double Speed { get; set; } = 1.2;
+        public double LifeTime { get; set; } = 15.0; // Lifetime in seconds before despawning
     }
 
     public class DonkeyKongGame
@@ -160,8 +168,8 @@ namespace BlazorArcade.GameLogic
         public List<DKItem> Items { get; private set; } = new List<DKItem>();
         public List<DKScorePopup> ScorePopups { get; private set; } = new List<DKScorePopup>();
 
-        public DKPoint DonkeyKongPos { get; private set; } = new DKPoint(120, 75);
-        public DKPoint PaulinePos { get; private set; } = new DKPoint(380, 25);
+        public DKPoint DonkeyKongPos { get; private set; } = new DKPoint(120, 65);
+        public DKPoint PaulinePos { get; private set; } = new DKPoint(390, 8); // Positioned ON TOP of platform Y=55
 
         public int Score { get; private set; } = 0;
         public int HighScore { get; private set; } = 7600;
@@ -179,7 +187,7 @@ namespace BlazorArcade.GameLogic
         private double _bonusDecrementTimer = 0;
         private Random _random = new Random();
 
-        // DK animation state
+        // DK animation state (0 = chest beat, 1 = grab barrel, 2 = roll barrel)
         public int DKFrame { get; private set; } = 0;
         private double _dkAnimTimer = 0;
 
@@ -265,10 +273,10 @@ namespace BlazorArcade.GameLogic
             Items.Add(new DKItem { X = 520, Y = 445, Type = "Hammer" });
             Items.Add(new DKItem { X = 240, Y = 265, Type = "Hammer" });
 
-            // Spawn initial Intro Blue Barrel thrown by DK at the start of stage to light oil drum
+            // Spawn initial Intro Blue Barrel at DK's hands (X=182, Y=95)
             Barrels.Add(new DKBarrel
             {
-                X = 280,
+                X = 182,
                 Y = 95,
                 Speed = 2.6,
                 Direction = 1,
@@ -287,7 +295,7 @@ namespace BlazorArcade.GameLogic
             IsPaused = !IsPaused;
         }
 
-        public DKGirder? GetGirderBelow(double x, double currentY, double maxDistance = 75)
+        public DKGirder? GetGirderBelow(double x, double currentY, double maxDistance = 35)
         {
             DKGirder? bestGirder = null;
             double minDiff = double.MaxValue;
@@ -334,11 +342,34 @@ namespace BlazorArcade.GameLogic
 
         private void UpdateTimers(double deltaTime)
         {
-            _dkAnimTimer += deltaTime;
-            if (_dkAnimTimer > 0.4)
+            _barrelSpawnTimer += deltaTime;
+
+            if (_barrelSpawnTimer >= _barrelSpawnInterval)
             {
-                _dkAnimTimer = 0;
-                DKFrame = (DKFrame + 1) % 3;
+                _barrelSpawnTimer = 0;
+                SpawnBarrel();
+                DKFrame = 0; // Held barrel vanishes exact moment real barrel spawns!
+            }
+            else
+            {
+                double progress = _barrelSpawnTimer / _barrelSpawnInterval;
+                if (progress > 0.8)
+                {
+                    DKFrame = 2; // Holding & laying barrel onto girder at (182, 95)
+                }
+                else if (progress > 0.55)
+                {
+                    DKFrame = 1; // Reaching left to grab barrel from stack
+                }
+                else
+                {
+                    _dkAnimTimer += deltaTime;
+                    if (_dkAnimTimer > 0.3)
+                    {
+                        _dkAnimTimer = 0;
+                        DKFrame = (DKFrame == 0) ? 3 : 0;
+                    }
+                }
             }
 
             _bonusDecrementTimer += deltaTime;
@@ -357,21 +388,15 @@ namespace BlazorArcade.GameLogic
                     Player.HasHammer = false;
                 }
             }
-
-            _barrelSpawnTimer += deltaTime;
-            if (_barrelSpawnTimer >= _barrelSpawnInterval)
-            {
-                _barrelSpawnTimer = 0;
-                SpawnBarrel();
-            }
         }
 
         private void SpawnBarrel()
         {
             bool isBlue = _random.Next(0, 5) == 0;
+            // Spawn barrel right at DK's hands (X=182, Y=95) when he rolls it!
             Barrels.Add(new DKBarrel
             {
-                X = 280,
+                X = 182,
                 Y = 95,
                 Speed = 2.4 + (Level * 0.3),
                 Direction = 1,
@@ -384,7 +409,7 @@ namespace BlazorArcade.GameLogic
             const double moveSpeed = 3.2;
             const double climbSpeed = 2.2;
             const double gravity = 0.45;
-            const double jumpForce = -8.5; // Reverted jump force to -8.5 as requested
+            const double jumpForce = -7.0;
 
             double playerCenterX = Player.X + Player.Width / 2;
             double playerFootY = Player.Y + Player.Height;
@@ -414,6 +439,7 @@ namespace BlazorArcade.GameLogic
             if (Player.IsClimbing && nearLadder != null)
             {
                 Player.VelocityY = 0;
+
                 if (climbUp && Player.Y > nearLadder.YTop - Player.Height)
                 {
                     Player.Y -= climbSpeed;
@@ -423,8 +449,19 @@ namespace BlazorArcade.GameLogic
                     Player.Y += climbSpeed;
                 }
 
-                // If player reaches top of a FULL ladder, dismount onto upper girder
-                if (nearLadder.IsFullLadder && Player.Y <= nearLadder.YTop - Player.Height)
+                // Dismount conditions
+                if (climbUp && nearLadder.IsFullLadder && Player.Y <= nearLadder.YTop - Player.Height)
+                {
+                    Player.IsClimbing = false;
+                    Player.IsGrounded = true;
+                }
+                else if (climbDown && Player.Y + Player.Height >= nearLadder.YBottom - 4)
+                {
+                    Player.Y = nearLadder.YBottom - Player.Height;
+                    Player.IsClimbing = false;
+                    Player.IsGrounded = true;
+                }
+                else if ((moveLeft || moveRight) && (Player.Y + Player.Height >= nearLadder.YBottom - 10 || Player.Y <= nearLadder.YTop - Player.Height + 10))
                 {
                     Player.IsClimbing = false;
                     Player.IsGrounded = true;
@@ -448,7 +485,7 @@ namespace BlazorArcade.GameLogic
                     Player.VelocityX = 0;
                 }
 
-                // Jumping (Jumping code is evaluated here)
+                // Jumping
                 if (jump && Player.IsGrounded && !Player.HasHammer)
                 {
                     Player.VelocityY = jumpForce;
@@ -469,11 +506,13 @@ namespace BlazorArcade.GameLogic
                 if (Player.X + Player.Width > FieldWidth - 10) Player.X = FieldWidth - 10 - Player.Width;
 
                 // Snap to girder surface
-                DKGirder? g = GetGirderBelow(playerCenterX, Player.Y);
-                if (g != null)
+                double currentFootY = Player.Y + Player.Height;
+                DKGirder? g = GetGirderBelow(playerCenterX, currentFootY - 10, 35);
+
+                if (g != null && Player.VelocityY >= 0)
                 {
                     double targetY = g.GetYAtX(playerCenterX) - Player.Height;
-                    if (Player.Y + Player.Height >= targetY - 4 && Player.VelocityY >= 0)
+                    if (currentFootY >= targetY - 4 && currentFootY <= targetY + 12)
                     {
                         Player.Y = targetY;
                         Player.VelocityY = 0;
@@ -500,6 +539,8 @@ namespace BlazorArcade.GameLogic
                 var b = Barrels[i];
                 b.Rotation += b.Direction * b.Speed * 4;
 
+                double barrelCenterX = b.X + b.Width / 2;
+
                 if (b.IsDescendingLadder)
                 {
                     b.Y += b.Speed * 1.3;
@@ -507,16 +548,22 @@ namespace BlazorArcade.GameLogic
                     {
                         b.Y = b.TargetY;
                         b.IsDescendingLadder = false;
-                        b.Direction = -b.Direction;
+                        
+                        // When finishing ladder descent, set direction to the downward slope direction of the lower girder!
+                        DKGirder? lowerGirder = GetGirderBelow(barrelCenterX, b.Y, 30);
+                        if (lowerGirder != null)
+                        {
+                            b.Direction = lowerGirder.GetDownwardDirection();
+                        }
                     }
                     continue;
                 }
 
                 // Move horizontally
                 b.X += b.Direction * b.Speed;
-                double barrelCenterX = b.X + b.Width / 2;
+                barrelCenterX = b.X + b.Width / 2;
 
-                // Outer Wall Bounce at high girder ends (X <= 25 or X >= 775)
+                // Outer Wall Bounce at high girder ends
                 if (b.X <= 20 && b.Direction == -1)
                 {
                     b.X = 20;
@@ -536,16 +583,18 @@ namespace BlazorArcade.GameLogic
                     b.Y = currentGirder.GetYAtX(barrelCenterX) - b.Height;
                     b.IsFalling = false;
 
-                    // Check full ladder descent (Barrels ONLY roll down full ladders)
+                    // Check full ladder descent (Barrels ONLY roll down full ladders, ~14% chance)
                     DKLadder? ladderBelow = Ladders.FirstOrDefault(l =>
                         l.IsFullLadder &&
                         Math.Abs(l.X - barrelCenterX) < 10 &&
                         Math.Abs(l.YTop - (b.Y + b.Height)) < 8);
 
-                    if (ladderBelow != null && _random.Next(0, 4) == 0 && !b.IsIntroBarrel)
+                    if (ladderBelow != null && _random.Next(0, 7) == 0 && !b.IsIntroBarrel)
                     {
                         b.IsDescendingLadder = true;
                         b.TargetY = ladderBelow.YBottom - b.Height;
+                        // Center barrel perfectly between the two ladder rails!
+                        b.X = ladderBelow.X - b.Width / 2;
                     }
                 }
                 else
@@ -560,7 +609,8 @@ namespace BlazorArcade.GameLogic
                     {
                         b.Y = nextGirder.GetYAtX(barrelCenterX) - b.Height;
                         b.IsFalling = false;
-                        b.Direction = -b.Direction; // Reverse direction on lower girder
+                        // When landing on a lower girder, always roll down its slope!
+                        b.Direction = nextGirder.GetDownwardDirection();
                     }
                 }
 
@@ -568,7 +618,10 @@ namespace BlazorArcade.GameLogic
                 if (b.X <= 65 && b.Y >= 520)
                 {
                     IsOilLit = true;
-                    Fireballs.Add(new DKFireball { X = 70, Y = 535, Direction = 1, Speed = 1.2 });
+                    if (Fireballs.Count < 3)
+                    {
+                        Fireballs.Add(new DKFireball { X = 70, Y = 535, Direction = 1, Speed = 1.2, LifeTime = 16.0 });
+                    }
                     Barrels.RemoveAt(i);
                     continue;
                 }
@@ -583,8 +636,16 @@ namespace BlazorArcade.GameLogic
 
         private void UpdateFireballs(double deltaTime)
         {
-            foreach (var f in Fireballs)
+            for (int i = Fireballs.Count - 1; i >= 0; i--)
             {
+                var f = Fireballs[i];
+                f.LifeTime -= deltaTime;
+                if (f.LifeTime <= 0)
+                {
+                    Fireballs.RemoveAt(i);
+                    continue;
+                }
+
                 f.X += f.Direction * f.Speed;
 
                 double centerX = f.X + f.Width / 2;
