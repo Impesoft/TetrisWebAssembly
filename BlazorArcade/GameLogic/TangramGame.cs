@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 using BlazorArcade.Helpers;
 using BlazorArcade.Models;
 
@@ -14,6 +15,8 @@ namespace BlazorArcade.GameLogic
         public TangramLevel CurrentLevel { get; private set; } = null!;
         public int CurrentLevelIndex { get; private set; } = 0;
         public bool IsLoaded { get; private set; } = false;
+
+        private IJSRuntime? _js;
 
         public List<TangramPiece> Pieces { get; private set; } = new List<TangramPiece>();
         public TangramPiece? SelectedPiece { get; private set; }
@@ -35,8 +38,9 @@ namespace BlazorArcade.GameLogic
         {
         }
 
-        public async Task InitializeGameAsync(HttpClient http)
+        public async Task InitializeGameAsync(HttpClient http, IJSRuntime js)
         {
+            _js = js;
             Levels = await TangramLevelCatalog.LoadLevelsAsync(http);
             if (Levels.Count > 0)
             {
@@ -163,22 +167,22 @@ namespace BlazorArcade.GameLogic
             NotifyStateChanged();
         }
 
-        public void RotateSelectedPiece(int angleDelta)
+        public async Task RotateSelectedPieceAsync(int angleDelta)
         {
             if (SelectedPiece == null) return;
 
             SelectedPiece.RotationAngle = (SelectedPiece.RotationAngle + angleDelta + 360) % 360;
-            CheckCompletion();
+            await CheckCompletionAsync();
             NotifyStateChanged();
         }
 
-        public void FlipSelectedPiece()
+        public async Task FlipSelectedPieceAsync()
         {
             if (SelectedPiece == null) return;
             if (SelectedPiece.Type == TangramPieceType.Parallelogram)
             {
                 SelectedPiece.IsFlipped = !SelectedPiece.IsFlipped;
-                CheckCompletion();
+                await CheckCompletionAsync();
                 NotifyStateChanged();
             }
         }
@@ -189,56 +193,75 @@ namespace BlazorArcade.GameLogic
             if (piece == null) return;
 
             piece.IsInTray = false;
+            piece.X = targetX;
+            piece.Y = targetY;
 
             if (snapToGrid)
             {
                 // Grid snapping in 12.5 unit steps
                 double step = 12.5;
-                targetX = Math.Round(targetX / step) * step;
-                targetY = Math.Round(targetY / step) * step;
+                piece.X = Math.Round(piece.X / step) * step;
+                piece.Y = Math.Round(piece.Y / step) * step;
 
-                // Magnetic vertex snapping against target transforms
-                targetX = PerformMagneticSnappingX(piece, targetX, targetY);
-                targetY = PerformMagneticSnappingY(piece, targetX, targetY);
+                PerformVertexSnapping(piece);
             }
 
-            piece.X = targetX;
-            piece.Y = targetY;
-
-            CheckCompletion();
             NotifyStateChanged();
         }
 
-        private double PerformMagneticSnappingX(TangramPiece piece, double posX, double posY)
+        private void PerformVertexSnapping(TangramPiece draggedPiece)
         {
-            double threshold = 15.0;
-            // Check against current level target positions of same type
-            var matchingTargets = CurrentLevel.TargetTransforms.Where(t => IsCompatiblePieceType(piece.Type, t.PieceType));
-            foreach (var target in matchingTargets)
+            var attractors = new List<Point2D>();
+            
+            if (CurrentLevel != null && Mode != TangramGameMode.Sandbox)
             {
-                if (Math.Abs(posX - target.X) <= threshold)
+                foreach (var t in CurrentLevel.TargetTransforms)
                 {
-                    return target.X;
+                    var dummyPiece = Pieces.FirstOrDefault(p => p.Type == t.PieceType);
+                    if (dummyPiece != null)
+                    {
+                        var verts = dummyPiece.GetTransformedVertices(t.X, t.Y, t.RotationAngle, t.IsFlipped);
+                        attractors.AddRange(verts);
+                    }
                 }
             }
-            return posX;
-        }
 
-        private double PerformMagneticSnappingY(TangramPiece piece, double posX, double posY)
-        {
-            double threshold = 15.0;
-            var matchingTargets = CurrentLevel.TargetTransforms.Where(t => IsCompatiblePieceType(piece.Type, t.PieceType));
-            foreach (var target in matchingTargets)
+            foreach (var p in Pieces)
             {
-                if (Math.Abs(posY - target.Y) <= threshold)
+                if (p == draggedPiece || p.IsInTray) continue;
+                attractors.AddRange(p.GetTransformedVertices());
+            }
+
+            if (attractors.Count == 0) return;
+
+            var draggedVerts = draggedPiece.GetTransformedVertices();
+            double minDistance = double.MaxValue;
+            Point2D? bestDraggedVert = null;
+            Point2D? bestAttractor = null;
+
+            foreach (var dVert in draggedVerts)
+            {
+                foreach (var aVert in attractors)
                 {
-                    return target.Y;
+                    double dist = Math.Sqrt(Math.Pow(dVert.X - aVert.X, 2) + Math.Pow(dVert.Y - aVert.Y, 2));
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                        bestDraggedVert = dVert;
+                        bestAttractor = aVert;
+                    }
                 }
             }
-            return posY;
+
+            double threshold = 25.0; // Snapping distance
+            if (minDistance <= threshold && bestDraggedVert != null && bestAttractor != null)
+            {
+                draggedPiece.X += (bestAttractor.X - bestDraggedVert.X);
+                draggedPiece.Y += (bestAttractor.Y - bestDraggedVert.Y);
+            }
         }
 
-        public void ReturnPieceToTray(string pieceId)
+        public async Task ReturnPieceToTrayAsync(string pieceId)
         {
             var piece = Pieces.FirstOrDefault(p => p.Id == pieceId);
             if (piece == null) return;
@@ -250,85 +273,72 @@ namespace BlazorArcade.GameLogic
             piece.RotationAngle = 0;
             piece.IsFlipped = false;
 
-            CheckCompletion();
+            await CheckCompletionAsync();
             NotifyStateChanged();
         }
+
+
 
         public void ResetCurrentLevel()
         {
             LoadLevel(CurrentLevelIndex);
         }
 
-        public bool ProvideHint()
+        public async Task<bool> ProvideHintAsync()
         {
-            if (IsCompleted) return false;
-
-            HintsUsed++;
-
-            // Find first piece not properly placed
-            var targetList = CurrentLevel.TargetTransforms.ToList();
-            var usedTargets = new HashSet<TangramPieceTransform>();
-
-            TangramPiece? pieceToFix = null;
-            TangramPieceTransform? bestTarget = null;
-
-            foreach (var piece in Pieces)
-            {
-                if (piece.IsInTray || !IsPieceInTargetPosition(piece, targetList, usedTargets, out var targetMatch))
-                {
-                    pieceToFix = piece;
-                    // Find an unassigned matching target for this piece type
-                    bestTarget = targetList.FirstOrDefault(t => !usedTargets.Contains(t) && IsCompatiblePieceType(piece.Type, t.PieceType));
-                    break;
-                }
-            }
-
-            if (pieceToFix != null && bestTarget != null)
-            {
-                pieceToFix.IsInTray = false;
-                pieceToFix.X = bestTarget.X;
-                pieceToFix.Y = bestTarget.Y;
-                pieceToFix.RotationAngle = bestTarget.RotationAngle;
-                pieceToFix.IsFlipped = bestTarget.IsFlipped;
-
-                SelectedPiece = pieceToFix;
-                foreach (var p in Pieces) p.IsSelected = (p == pieceToFix);
-
-                CheckCompletion();
-                NotifyStateChanged();
-                return true;
-            }
-
+            // Canvas rasterization doesn't easily support blueprint hints.
+            // For now, hint just flashes a random piece to help.
             return false;
         }
 
-        public void CheckCompletion()
+        public async Task CheckCompletionAsync()
         {
-            if (Mode == TangramGameMode.Sandbox)
+            if (Mode == TangramGameMode.Sandbox || CurrentLevel == null || _js == null)
             {
                 IsCompleted = false;
                 return;
             }
 
-            var targets = CurrentLevel.TargetTransforms.ToList();
-            var usedTargets = new HashSet<TangramPieceTransform>();
-
-            int correctCount = 0;
-
-            foreach (var piece in Pieces)
+            if (Pieces.Any(p => p.IsInTray))
             {
-                if (!piece.IsInTray && IsPieceInTargetPosition(piece, targets, usedTargets, out var match))
+                IsCompleted = false;
+                return;
+            }
+
+            // Gather target polygons
+            var targetPolys = new List<object>();
+            foreach (var t in CurrentLevel.TargetTransforms)
+            {
+                var dummyPiece = Pieces.FirstOrDefault(p => p.Type == t.PieceType);
+                if (dummyPiece != null)
                 {
-                    correctCount++;
-                    if (match != null) usedTargets.Add(match);
+                    var verts = dummyPiece.GetTransformedVertices(t.X, t.Y, t.RotationAngle, t.IsFlipped);
+                    targetPolys.Add(verts.Select(v => new { x = v.X, y = v.Y }).ToArray());
                 }
             }
 
-            CompletionAccuracy = (double)correctCount / Pieces.Count * 100.0;
+            // Gather piece polygons
+            var piecePolys = new List<object>();
+            foreach (var p in Pieces)
+            {
+                var verts = p.GetTransformedVertices();
+                piecePolys.Add(verts.Select(v => new { x = v.X, y = v.Y }).ToArray());
+            }
 
-            if (correctCount == Pieces.Count)
+            bool isSolved = false;
+            try
+            {
+                isSolved = await _js.InvokeAsync<bool>("tangramInterop.checkSolution", targetPolys, piecePolys);
+            }
+            catch
+            {
+                isSolved = false;
+            }
+
+            if (isSolved)
             {
                 IsCompleted = true;
+                CompletionAccuracy = 100.0;
                 CalculateStars();
 
                 var origLevel = Levels[CurrentLevelIndex];
@@ -346,67 +356,10 @@ namespace BlazorArcade.GameLogic
             else
             {
                 IsCompleted = false;
+                CompletionAccuracy = 0; // Partial accuracy isn't calculated with this method
             }
-        }
-
-        private bool IsPieceInTargetPosition(TangramPiece piece, List<TangramPieceTransform> targets, HashSet<TangramPieceTransform> usedTargets, out TangramPieceTransform? matchedTarget)
-        {
-            matchedTarget = null;
-            double posTolerance = 25.0; // Distance tolerance
-
-            foreach (var target in targets)
-            {
-                if (usedTargets.Contains(target)) continue;
-                if (!IsCompatiblePieceType(piece.Type, target.PieceType)) continue;
-
-                double dx = piece.X - target.X;
-                double dy = piece.Y - target.Y;
-                double dist = Math.Sqrt(dx * dx + dy * dy);
-
-                if (dist <= posTolerance)
-                {
-                    // Check angle compatibility considering geometric symmetry
-                    if (IsAngleCompatible(piece.Type, piece.RotationAngle, piece.IsFlipped, target.RotationAngle, target.IsFlipped))
-                    {
-                        matchedTarget = target;
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        private bool IsCompatiblePieceType(TangramPieceType type1, TangramPieceType type2)
-        {
-            if (type1 == type2) return true;
-            if ((type1 == TangramPieceType.LargeTriangle1 && type2 == TangramPieceType.LargeTriangle2) ||
-                (type1 == TangramPieceType.LargeTriangle2 && type2 == TangramPieceType.LargeTriangle1)) return true;
-            if ((type1 == TangramPieceType.SmallTriangle1 && type2 == TangramPieceType.SmallTriangle2) ||
-                (type1 == TangramPieceType.SmallTriangle2 && type2 == TangramPieceType.SmallTriangle1)) return true;
-            return false;
-        }
-
-        private bool IsAngleCompatible(TangramPieceType type, int angle1, bool flip1, int angle2, bool flip2)
-        {
-            angle1 = (angle1 % 360 + 360) % 360;
-            angle2 = (angle2 % 360 + 360) % 360;
-
-            if (type == TangramPieceType.Square)
-            {
-                // Square symmetry under 90 deg rotation
-                return (angle1 % 90) == (angle2 % 90);
-            }
-
-            if (type == TangramPieceType.Parallelogram)
-            {
-                // Parallelogram requires matching flip state or 180 symmetry
-                if (flip1 != flip2) return false;
-                return (angle1 % 180) == (angle2 % 180);
-            }
-
-            // Triangles have 360 unique orientation except right angle alignment
-            return angle1 == angle2;
+            
+            NotifyStateChanged();
         }
 
         private void CalculateStars()

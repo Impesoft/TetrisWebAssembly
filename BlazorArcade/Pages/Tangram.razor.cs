@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using BlazorArcade.GameLogic;
 using BlazorArcade.Models;
 
@@ -14,6 +15,7 @@ namespace BlazorArcade.Pages
     {
         [Inject] public NavigationManager Navigation { get; set; } = null!;
         [Inject] public HttpClient Http { get; set; } = null!;
+        [Inject] public IJSRuntime JS { get; set; } = null!;
 
         public TangramGame Game { get; private set; } = new TangramGame();
 
@@ -32,7 +34,7 @@ namespace BlazorArcade.Pages
         protected override async Task OnInitializedAsync()
         {
             Game.OnStateChanged += HandleStateChanged;
-            await Game.InitializeGameAsync(Http);
+            await Game.InitializeGameAsync(Http, JS);
             StartTimer();
         }
 
@@ -84,7 +86,7 @@ namespace BlazorArcade.Pages
             Game.MovePiece(_draggedPieceId, newX, newY, snapToGrid: false);
         }
 
-        public void OnPointerUp(PointerEventArgs e)
+        public async Task OnPointerUp(PointerEventArgs e)
         {
             if (_isDragging && !string.IsNullOrEmpty(_draggedPieceId))
             {
@@ -93,6 +95,9 @@ namespace BlazorArcade.Pages
                 {
                     // Apply magnetic snapping on drop
                     Game.MovePiece(piece.Id, piece.X, piece.Y, snapToGrid: true);
+                    
+                    // Only check completion when dropping a piece, to avoid lag
+                    await Game.CheckCompletionAsync();
                 }
             }
 
@@ -110,19 +115,19 @@ namespace BlazorArcade.Pages
         #endregion
 
         #region Controls & Actions
-        public void RotateLeft() => Game.RotateSelectedPiece(-45);
-        public void RotateRight() => Game.RotateSelectedPiece(45);
-        public void FlipPiece() => Game.FlipSelectedPiece();
+        public async Task RotateLeft() => await Game.RotateSelectedPieceAsync(-45);
+        public async Task RotateRight() => await Game.RotateSelectedPieceAsync(45);
+        public async Task FlipPiece() => await Game.FlipSelectedPieceAsync();
 
-        public void ReturnSelectedToTray()
+        public async Task ReturnSelectedToTray()
         {
             if (Game.SelectedPiece != null)
             {
-                Game.ReturnPieceToTray(Game.SelectedPiece.Id);
+                await Game.ReturnPieceToTrayAsync(Game.SelectedPiece.Id);
             }
         }
 
-        public void UseHint() => Game.ProvideHint();
+        public async Task UseHint() => await Game.ProvideHintAsync();
         public void ResetLevel() => Game.ResetCurrentLevel();
 
         public void NextLevel()
@@ -185,30 +190,30 @@ namespace BlazorArcade.Pages
             Navigation.NavigateTo("/");
         }
 
-        public void OnKeyDown(KeyboardEventArgs e)
+        public async Task OnKeyDown(KeyboardEventArgs e)
         {
             switch (e.Key.ToLower())
             {
                 case "q":
                 case "arrowleft":
-                    RotateLeft();
+                    await RotateLeft();
                     break;
                 case "e":
                 case "arrowright":
-                    RotateRight();
+                    await RotateRight();
                     break;
                 case "f":
                 case " ":
-                    FlipPiece();
+                    await FlipPiece();
                     break;
                 case "r":
                     ResetLevel();
                     break;
                 case "h":
-                    UseHint();
+                    await UseHint();
                     break;
                 case "t":
-                    ReturnSelectedToTray();
+                    await ReturnSelectedToTray();
                     break;
             }
         }
