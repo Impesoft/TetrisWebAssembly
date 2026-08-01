@@ -94,6 +94,22 @@
             <h4 class="game-title">Platformer</h4>
         </div>
 
+        <!-- Donkey Kong -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/DonkeyKong"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="10" y1="80" x2="90" y2="70" stroke="#ff0055" stroke-width="6" />
+                    <line x1="10" y1="45" x2="90" y2="55" stroke="#ff0055" stroke-width="6" />
+                    <line x1="75" y1="52" x2="75" y2="73" stroke="#00ffff" stroke-width="3" />
+                    <circle cx="35" cy="40" r="10" fill="#dd6600" stroke="#fff" stroke-width="2" />
+                    <rect x="50" y="55" width="12" height="15" fill="#ff0000" rx="2" />
+                    <circle cx="56" cy="50" r="5" fill="#ffccaa" />
+                </svg>
+            </div>
+            <h4 class="game-title">Donkey Kong</h4>
+        </div>
+
+
         <!-- Chess -->
         <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Chess"))">
             <div class="game-icon">
@@ -344,6 +360,52 @@
                 </svg>
             </div>
             <h4 class="game-title">Connect 4</h4>
+        </div>
+
+        <!-- Bubble Shooter -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/BubbleShooter"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Top Bubbles -->
+                    <circle cx="30" cy="25" r="14" fill="#ff3366" stroke="#fff" stroke-width="2" />
+                    <circle cx="26" cy="21" r="4" fill="#fff" opacity="0.6" />
+                    
+                    <circle cx="60" cy="25" r="14" fill="#33ccff" stroke="#fff" stroke-width="2" />
+                    <circle cx="56" cy="21" r="4" fill="#fff" opacity="0.6" />
+                    
+                    <circle cx="45" cy="48" r="14" fill="#ff3366" stroke="#fff" stroke-width="2" />
+                    <circle cx="41" cy="44" r="4" fill="#fff" opacity="0.6" />
+
+                    <!-- Aim Dotted Line -->
+                    <line x1="50" y1="88" x2="48" y2="64" stroke="#00ffff" stroke-width="3" stroke-dasharray="3 3" />
+                    
+                    <!-- Launcher Cannon & Firing Bubble -->
+                    <circle cx="50" cy="88" r="12" fill="#ffff33" stroke="#fff" stroke-width="2" />
+                    <circle cx="47" cy="85" r="3" fill="#fff" opacity="0.6" />
+                </svg>
+            </div>
+            <h4 class="game-title">Bubble Shooter</h4>
+        </div>
+
+        <!-- Eggerland -->
+        <div class="game-tile" @onclick="@(() => _nav.NavigateTo("/Eggerland"))">
+            <div class="game-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Heart Frame Background -->
+                    <rect x="15" y="15" width="70" height="70" rx="12" fill="#ffb703" stroke="#fb8500" stroke-width="4" />
+                    <!-- Lolo Blue Hero -->
+                    <circle cx="50" cy="50" r="24" fill="#0077b6" stroke="#ffffff" stroke-width="3" />
+                    <ellipse cx="42" cy="45" rx="5" ry="8" fill="#ffffff" />
+                    <ellipse cx="58" cy="45" rx="5" ry="8" fill="#ffffff" />
+                    <circle cx="42" cy="47" r="2.5" fill="#000000" />
+                    <circle cx="58" cy="47" r="2.5" fill="#000000" />
+                    <ellipse cx="38" cy="70" rx="8" ry="4" fill="#ffb703" />
+                    <ellipse cx="62" cy="70" rx="8" ry="4" fill="#ffb703" />
+                    <!-- Egg Shot Sparkle -->
+                    <circle cx="75" cy="25" r="8" fill="#00f5d4" stroke="#fff" stroke-width="2" />
+                </svg>
+            </div>
+            <h4 class="game-title">Eggerland</h4>
         </div>
 
     </div>

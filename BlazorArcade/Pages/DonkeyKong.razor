@@ -1,0 +1,301 @@
+@page "/DonkeyKong"
+@namespace BlazorArcade.Pages
+
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<div class="top-controls">
+    <button class="arcade-btn" @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+    <button class="arcade-btn" @onclick="RestartStage">Restart</button>
+    <button class="arcade-btn" @onclick="GameInstance.TogglePause">@(GameInstance.IsPaused ? "Resume" : "Pause")</button>
+</div>
+
+<div class="game-container-dk" tabindex="0"
+     @onkeydown="HandleKeyDown"
+     @onkeyup="HandleKeyUp"
+     @ref="GameContainer">
+
+    <!-- Arcade Header HUD -->
+    <div class="dk-hud">
+        <div class="hud-item">
+            <span class="hud-label">HIGH SCORE</span>
+            <span class="hud-value yellow">@GameInstance.HighScore.ToString("D6")</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">SCORE</span>
+            <span class="hud-value cyan">@GameInstance.Score.ToString("D6")</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">BONUS</span>
+            <span class="hud-value red">@GameInstance.BonusTimer</span>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">LIVES</span>
+            <div class="lives-container">
+                @for (int i = 0; i < GameInstance.Lives; i++)
+                {
+                    <span class="life-icon">🏃</span>
+                }
+            </div>
+        </div>
+        <div class="hud-item">
+            <span class="hud-label">STAGE</span>
+            <span class="hud-value white">@GameInstance.Level</span>
+        </div>
+    </div>
+
+    <!-- Main SVG Playfield -->
+    <div class="svg-stage-container">
+        <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet" class="dk-svg">
+            <defs>
+                <linearGradient id="girderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#ff0055" />
+                    <stop offset="100%" stop-color="#ff3388" />
+                </linearGradient>
+                <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#ff0055" flood-opacity="0.8" />
+                </filter>
+                <filter id="hammerGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ffff00" flood-opacity="0.9" />
+                </filter>
+            </defs>
+
+            <!-- Playfield Background -->
+            <rect width="800" height="600" fill="#0b0b14" rx="10" />
+
+            <!-- Girders (Steel Beams) -->
+            @foreach (var g in GameInstance.Girders)
+            {
+                <g filter="url(#neonGlow)">
+                    <!-- Main beam stroke -->
+                    <line x1="@g.X1" y1="@g.Y1" x2="@g.X2" y2="@g.Y2" stroke="url(#girderGrad)" stroke-width="12" stroke-linecap="square" />
+                    <!-- Beam detail line -->
+                    <line x1="@g.X1" y1="@(g.Y1-4)" x2="@g.X2" y2="@(g.Y2-4)" stroke="#ff99bb" stroke-width="2" />
+                    <!-- Cross lattice dashes -->
+                    <line x1="@g.X1" y1="@g.Y1" x2="@g.X2" y2="@g.Y2" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 8" opacity="0.4" />
+                </g>
+            }
+
+            <!-- Ladders -->
+            @foreach (var l in GameInstance.Ladders)
+            {
+                <g stroke="@(l.IsFullLadder ? "#00ffff" : "#ffcc00")" stroke-width="2">
+                    <!-- Left Rail -->
+                    <line x1="@(l.X - 10)" y1="@l.YTop" x2="@(l.X - 10)" y2="@l.YBottom" />
+                    <!-- Right Rail -->
+                    <line x1="@(l.X + 10)" y1="@l.YTop" x2="@(l.X + 10)" y2="@l.YBottom" />
+                    <!-- Rungs -->
+                    @for (double r = l.YTop + 6; r <= l.YBottom - 6; r += 12)
+                    {
+                        <line x1="@(l.X - 10)" y1="@r" x2="@(l.X + 10)" y2="@r" stroke-width="2" />
+                    }
+                </g>
+            }
+
+            <!-- Oil Drum (Bottom Left) -->
+            <g transform="translate(30, 520)">
+                <rect x="0" y="0" width="35" height="40" fill="#336699" stroke="#66aacc" stroke-width="2" rx="4" />
+                <text x="5" y="24" fill="#ffffff" font-size="10" font-weight="bold">OIL</text>
+                @if (GameInstance.IsOilLit)
+                {
+                    <!-- Animated Flame -->
+                    <polygon points="10,0 17,-15 25,0 20,-25 12,-10" fill="#ff6600">
+                        <animate attributeName="opacity" values="0.8;1;0.7;1" dur="0.3s" repeatCount="indefinite" />
+                    </polygon>
+                    <polygon points="12,0 17,-10 22,0" fill="#ffff00">
+                        <animate attributeName="opacity" values="1;0.6;1" dur="0.2s" repeatCount="indefinite" />
+                    </polygon>
+                }
+            </g>
+
+            <!-- Pauline (Princess at top platform) -->
+            <g transform="translate(@GameInstance.PaulinePos.X, @GameInstance.PaulinePos.Y)">
+                <!-- Dress -->
+                <polygon points="10,25 0,50 24,50" fill="#ff33aa" />
+                <!-- Hair & Head -->
+                <circle cx="12" cy="16" r="8" fill="#ffccaa" />
+                <circle cx="12" cy="12" r="9" fill="#ffaa00" />
+                <!-- Help speech bubble -->
+                <rect x="25" y="-10" width="45" height="20" fill="#ffffff" rx="5" />
+                <text x="32" y="4" fill="#ff0044" font-size="10" font-weight="bold">HELP!</text>
+            </g>
+
+            <!-- Donkey Kong (Gorilla boss) -->
+            <g transform="translate(@GameInstance.DonkeyKongPos.X, @GameInstance.DonkeyKongPos.Y)">
+                <!-- Body -->
+                <ellipse cx="25" cy="25" rx="22" ry="20" fill="#7a3d11" stroke="#4a2205" stroke-width="2" />
+                <ellipse cx="25" cy="28" rx="14" ry="12" fill="#d99b66" />
+                <!-- Head -->
+                <circle cx="25" cy="8" r="12" fill="#7a3d11" />
+                <circle cx="25" cy="10" r="8" fill="#d99b66" />
+                <!-- Eyes -->
+                <circle cx="21" cy="8" r="2" fill="#ffffff" />
+                <circle cx="29" cy="8" r="2" fill="#ffffff" />
+                <circle cx="21" cy="8" r="1" fill="#000000" />
+                <circle cx="29" cy="8" r="1" fill="#000000" />
+                <!-- Arms (Animation changes on DKFrame) -->
+                @if (GameInstance.DKFrame == 0)
+                {
+                    <path d="M 5 20 Q -10 10 0 35" stroke="#7a3d11" stroke-width="8" fill="none" stroke-linecap="round" />
+                    <path d="M 45 20 Q 60 10 50 35" stroke="#7a3d11" stroke-width="8" fill="none" stroke-linecap="round" />
+                }
+                else
+                {
+                    <path d="M 5 20 Q -5 -5 15 5" stroke="#7a3d11" stroke-width="8" fill="none" stroke-linecap="round" />
+                    <path d="M 45 20 Q 55 -5 35 5" stroke="#7a3d11" stroke-width="8" fill="none" stroke-linecap="round" />
+                }
+            </g>
+
+            <!-- Barrel Stack beside DK -->
+            <g transform="translate(65, 80)">
+                <rect x="0" y="0" width="22" height="32" fill="#cc6600" stroke="#ff9933" stroke-width="2" rx="3" />
+                <line x1="0" y1="10" x2="22" y2="10" stroke="#000" stroke-width="2" />
+                <line x1="0" y1="22" x2="22" y2="22" stroke="#000" stroke-width="2" />
+                <rect x="25" y="10" width="22" height="22" fill="#cc6600" stroke="#ff9933" stroke-width="2" rx="3" />
+            </g>
+
+            <!-- Items (Hammers) -->
+            @foreach (var item in GameInstance.Items)
+            {
+                @if (!item.IsCollected)
+                {
+                    <g transform="translate(@item.X, @item.Y)" filter="url(#hammerGlow)">
+                        <!-- Handle -->
+                        <line x1="10" y1="20" x2="10" y2="5" stroke="#cc8800" stroke-width="4" />
+                        <!-- Head -->
+                        <rect x="2" y="0" width="16" height="8" fill="#ffff00" stroke="#ffffff" stroke-width="1" rx="2" />
+                    </g>
+                }
+            }
+
+            <!-- Rolling Barrels -->
+            @foreach (var b in GameInstance.Barrels)
+            {
+                <g transform="translate(@b.X, @b.Y) rotate(@b.Rotation, 10, 10)">
+                    <circle cx="10" cy="10" r="10" fill="@(b.IsBlue ? "#3388ff" : "#dd6600")" stroke="#ffffff" stroke-width="1.5" />
+                    <line x1="2" y1="10" x2="18" y2="10" stroke="#331100" stroke-width="2" />
+                    <line x1="10" y1="2" x2="10" y2="18" stroke="#331100" stroke-width="2" />
+                </g>
+            }
+
+            <!-- Fireballs -->
+            @foreach (var f in GameInstance.Fireballs)
+            {
+                <g transform="translate(@f.X, @f.Y)">
+                    <circle cx="10" cy="10" r="9" fill="#ff3300">
+                        <animate attributeName="r" values="8;10;8" dur="0.2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="10" cy="10" r="5" fill="#ffff00" />
+                    <!-- Flame eyes -->
+                    <circle cx="7" cy="8" r="1.5" fill="#000" />
+                    <circle cx="13" cy="8" r="1.5" fill="#000" />
+                </g>
+            }
+
+            <!-- Jumpman (Player) -->
+            @if (!GameInstance.Player.IsDead)
+            {
+                <g transform="translate(@GameInstance.Player.X, @GameInstance.Player.Y)">
+                    <!-- Hammer effect when powered up -->
+                    @if (GameInstance.Player.HasHammer)
+                    {
+                        <g filter="url(#hammerGlow)">
+                            @if ((GameInstance.Player.HammerFrame / 4) % 2 == 0)
+                            {
+                                <line x1="12" y1="14" x2="12" y2="-12" stroke="#ffcc00" stroke-width="5" />
+                                <rect x="2" y="-20" width="20" height="10" fill="#ffff00" stroke="#ffffff" stroke-width="2" rx="2" />
+                            }
+                            else
+                            {
+                                <line x1="12" y1="14" x2="30" y2="14" stroke="#ffcc00" stroke-width="5" />
+                                <rect x="26" y="4" width="10" height="20" fill="#ffff00" stroke="#ffffff" stroke-width="2" rx="2" />
+                            }
+                        </g>
+                    }
+
+                    <!-- Overalls Body -->
+                    <rect x="4" y="10" width="16" height="14" fill="#0066ff" rx="3" />
+                    <!-- Red Shirt -->
+                    <rect x="2" y="8" width="20" height="6" fill="#ff0000" rx="2" />
+                    <!-- Head & Cap -->
+                    <circle cx="12" cy="6" r="6" fill="#ffccaa" />
+                    <!-- Red Cap -->
+                    <path d="M 4 5 Q 12 -2 22 5 Z" fill="#ff0000" />
+                    <!-- Mustache & Eyes -->
+                    @if (GameInstance.Player.FacingLeft)
+                    {
+                        <circle cx="8" cy="5" r="1" fill="#000" />
+                        <rect x="4" y="7" width="8" height="3" fill="#442200" rx="1" />
+                    }
+                    else
+                    {
+                        <circle cx="16" cy="5" r="1" fill="#000" />
+                        <rect x="12" y="7" width="8" height="3" fill="#442200" rx="1" />
+                    }
+
+                    <!-- Feet -->
+                    <rect x="3" y="24" width="7" height="4" fill="#663300" rx="1" />
+                    <rect x="14" y="24" width="7" height="4" fill="#663300" rx="1" />
+                </g>
+            }
+
+            <!-- Floating Score Popups -->
+            @foreach (var pop in GameInstance.ScorePopups)
+            {
+                <g>
+                    <text x="@pop.X" y="@pop.Y" fill="#ffff00" font-weight="bold" font-size="14" text-anchor="middle" filter="drop-shadow(0px 0px 2px #000)">
+                        +@pop.Points
+                    </text>
+                </g>
+            }
+        </svg>
+
+        <!-- Overlays -->
+        @if (GameInstance.IsGameOver)
+        {
+            <div class="overlay-modal game-over-modal">
+                <h2>GAME OVER</h2>
+                <p>Donkey Kong won this round!</p>
+                <button class="modal-btn" @onclick="StartGame">PLAY AGAIN</button>
+            </div>
+        }
+        else if (GameInstance.IsGameWon)
+        {
+            <div class="overlay-modal game-win-modal">
+                <h2>STAGE CLEARED!</h2>
+                <p>You saved Pauline! Bonus score: +@GameInstance.BonusTimer</p>
+                <button class="modal-btn" @onclick="RestartStage">NEXT STAGE</button>
+            </div>
+        }
+        else if (GameInstance.IsPaused)
+        {
+            <div class="overlay-modal pause-modal">
+                <h2>PAUSED</h2>
+                <button class="modal-btn" @onclick="GameInstance.TogglePause">RESUME</button>
+            </div>
+        }
+    </div>
+
+    <!-- Instructions & Touch D-Pad Controls -->
+    <div class="controls-panel">
+        <div class="desktop-instructions">
+            <span><strong>Walk:</strong> ← / → or A / D</span>
+            <span><strong>Climb:</strong> ↑ / ↓ or W / S</span>
+            <span><strong>Jump:</strong> Space or Up Arrow</span>
+        </div>
+
+        <!-- Touch Controls for Mobile/Tablet -->
+        <div class="mobile-dpad">
+            <div class="dpad-group">
+                <button class="dpad-btn up" @touchstart="() => SetClimbUp(true)" @touchend="() => SetClimbUp(false)">▲</button>
+                <div class="dpad-middle">
+                    <button class="dpad-btn left" @touchstart="() => SetMoveLeft(true)" @touchend="() => SetMoveLeft(false)">◀</button>
+                    <button class="dpad-btn right" @touchstart="() => SetMoveRight(true)" @touchend="() => SetMoveRight(false)">▶</button>
+                </div>
+                <button class="dpad-btn down" @touchstart="() => SetClimbDown(true)" @touchend="() => SetClimbDown(false)">▼</button>
+            </div>
+            <button class="jump-btn" @touchstart="() => SetJump(true)" @touchend="() => SetJump(false)">JUMP</button>
+        </div>
+    </div>
+</div>
