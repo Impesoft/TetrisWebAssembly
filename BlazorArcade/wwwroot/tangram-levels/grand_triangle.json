@@ -1,0 +1,60 @@
+{
+  "Id": 2,
+  "Name": "Grand Triangle",
+  "Category": "Geometry",
+  "Difficulty": "Easy",
+  "TargetTransforms": [
+    {
+      "PieceType": 0,
+      "X": 533.3333333333334,
+      "Y": 373.33333333333337,
+      "RotationAngle": 180,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 1,
+      "X": 533.3333333333334,
+      "Y": 506.6666666666667,
+      "RotationAngle": 90,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 2,
+      "X": 400,
+      "Y": 373.33333333333337,
+      "RotationAngle": 225,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 5,
+      "X": 450,
+      "Y": 290,
+      "RotationAngle": 0,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 3,
+      "X": 533.3333333333334,
+      "Y": 273.3333333333333,
+      "RotationAngle": 0,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 6,
+      "X": 300,
+      "Y": 290,
+      "RotationAngle": 0,
+      "IsFlipped": false
+    },
+    {
+      "PieceType": 4,
+      "X": 366.6666666666667,
+      "Y": 273.3333333333333,
+      "RotationAngle": 90,
+      "IsFlipped": false
+    }
+  ],
+  "IsCustom": false,
+  "BestTimeSeconds": 0,
+  "Stars": 0
+}

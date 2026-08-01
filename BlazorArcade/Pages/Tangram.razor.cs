@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using BlazorArcade.GameLogic;
@@ -11,6 +13,7 @@ namespace BlazorArcade.Pages
     public partial class Tangram : ComponentBase, IDisposable
     {
         [Inject] public NavigationManager Navigation { get; set; } = null!;
+        [Inject] public HttpClient Http { get; set; } = null!;
 
         public TangramGame Game { get; private set; } = new TangramGame();
 
@@ -26,9 +29,10 @@ namespace BlazorArcade.Pages
         public bool ShowVictoryModal => Game.IsCompleted && Game.Mode != TangramGameMode.Sandbox;
         public bool ShowLevelSelectModal { get; set; } = false;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             Game.OnStateChanged += HandleStateChanged;
+            await Game.InitializeGameAsync(Http);
             StartTimer();
         }
 

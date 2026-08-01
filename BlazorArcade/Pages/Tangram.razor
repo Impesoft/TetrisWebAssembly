@@ -51,6 +51,15 @@
     </div>
 
     <!-- Mode Selector & Theme Toggles -->
+    @if (!Game.IsLoaded)
+    {
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading perfect shapes...</p>
+        </div>
+    }
+    else
+    {
     <div class="mode-bar">
         <button class="mode-btn @(Game.Mode == TangramGameMode.Silhouette ? "active" : "")" @onclick="() => SelectMode(TangramGameMode.Silhouette)">
             🌑 Silhouette
@@ -211,5 +220,6 @@
                 </div>
             </div>
         </div>
+    }
     }
 </div>

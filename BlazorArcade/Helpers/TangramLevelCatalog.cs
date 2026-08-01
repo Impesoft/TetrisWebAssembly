@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using BlazorArcade.Models;
 
 namespace BlazorArcade.Helpers
@@ -63,108 +67,36 @@ namespace BlazorArcade.Helpers
             };
         }
 
-        private static List<TangramLevel>? _cachedLevels;
-
-        public static List<TangramLevel> GetLevels()
+        public static async Task<List<TangramLevel>> LoadLevelsAsync(HttpClient http)
         {
-            if (_cachedLevels != null) return _cachedLevels;
-
             var levels = new List<TangramLevel>();
-            int levelId = 1;
-
-            double CX = 400;
-            double CY = 240;
-
-            // 1. PERFECT CLASSIC SQUARE (Mathematically exact, Zero Overlap)
-            var blueprintSquare = new List<TangramPieceTransform>
+            try
             {
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle1, X = CX - 200.0/3.0, Y = CY - 200.0/3.0, RotationAngle = 180, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle2, X = CX + 200.0/3.0, Y = CY - 200.0/3.0, RotationAngle = 270, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.MediumTriangle, X = CX, Y = CY + 400.0/3.0, RotationAngle = 225, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Square, X = CX + 50, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle1, X = CX + 400.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Parallelogram, X = CX - 100, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle2, X = CX - 100.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 90, IsFlipped = false }
-            };
-
-            // 2. PERFECT GRAND TRIANGLE (Mathematically exact, Zero Overlap)
-            var blueprintTriangle = new List<TangramPieceTransform>
-            {
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle1, X = CX + 400.0/3.0, Y = CY + 400.0/3.0, RotationAngle = 180, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle2, X = CX + 400.0/3.0, Y = CY + 800.0/3.0, RotationAngle = 90, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.MediumTriangle, X = CX, Y = CY + 400.0/3.0, RotationAngle = 225, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Square, X = CX + 50, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle1, X = CX + 400.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Parallelogram, X = CX - 100, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle2, X = CX - 100.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 90, IsFlipped = false }
-            };
-
-            // 3. PERFECT PARALLELOGRAM (Mathematically exact)
-            var blueprintParallelogram = new List<TangramPieceTransform>
-            {
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle1, X = CX - 400.0/3.0, Y = CY + 400.0/3.0, RotationAngle = 270, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.LargeTriangle2, X = CX - 800.0/3.0, Y = CY + 400.0/3.0, RotationAngle = 180, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.MediumTriangle, X = CX, Y = CY + 400.0/3.0, RotationAngle = 225, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Square, X = CX + 50, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle1, X = CX + 400.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.Parallelogram, X = CX - 100, Y = CY + 50, RotationAngle = 0, IsFlipped = false },
-                new TangramPieceTransform { PieceType = TangramPieceType.SmallTriangle2, X = CX - 100.0/3.0, Y = CY + 100.0/3.0, RotationAngle = 90, IsFlipped = false }
-            };
-
-            levels.Add(new TangramLevel { Id = levelId++, Name = "Classic Square", Category = "Geometry", Difficulty = "Easy", TargetTransforms = blueprintSquare });
-            levels.Add(new TangramLevel { Id = levelId++, Name = "Grand Triangle", Category = "Geometry", Difficulty = "Easy", TargetTransforms = blueprintTriangle });
-            levels.Add(new TangramLevel { Id = levelId++, Name = "Grand Parallelogram", Category = "Geometry", Difficulty = "Medium", TargetTransforms = blueprintParallelogram });
-
-            string[] geoNames = { "Diamond", "Tilted Triangle", "Slanted Parallelogram" };
-            var baseBlueprints = new[] { blueprintSquare, blueprintTriangle, blueprintParallelogram };
-
-            for (int i = 0; i < geoNames.Length; i++)
-            {
-                levels.Add(CreateDerivedLevel(levelId++, geoNames[i], "Geometry", "Medium", baseBlueprints[i], 45));
-                levels.Add(CreateDerivedLevel(levelId++, geoNames[i] + " II", "Geometry", "Hard", baseBlueprints[i], 135));
-            }
-
-            _cachedLevels = levels;
-            return levels;
-        }
-
-        private static TangramLevel CreateDerivedLevel(int id, string name, string category, string difficulty, List<TangramPieceTransform> baseBlueprint, int rotationDelta)
-        {
-            double CX = 400;
-            double CY = 240;
-            double rad = rotationDelta * Math.PI / 180.0;
-            double cos = Math.Cos(rad);
-            double sin = Math.Sin(rad);
-
-            var derivedTransforms = new List<TangramPieceTransform>();
-            foreach (var t in baseBlueprint)
-            {
-                double relX = t.X - CX;
-                double relY = t.Y - CY;
-
-                double rx = relX * cos - relY * sin;
-                double ry = relX * sin + relY * cos;
-
-                int newAngle = (t.RotationAngle + rotationDelta + 360) % 360;
-
-                derivedTransforms.Add(new TangramPieceTransform
+                var manifest = await http.GetFromJsonAsync<List<string>>("tangram-levels/manifest.json");
+                if (manifest != null)
                 {
-                    PieceType = t.PieceType,
-                    X = CX + rx,
-                    Y = CY + ry,
-                    RotationAngle = newAngle,
-                    IsFlipped = t.IsFlipped
-                });
+                    foreach (var file in manifest)
+                    {
+                        try
+                        {
+                            var level = await http.GetFromJsonAsync<TangramLevel>($"tangram-levels/{file}");
+                            if (level != null)
+                            {
+                                levels.Add(level);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to load level {file}: {ex.Message}");
+                        }
+                    }
+                }
             }
-
-            return new TangramLevel
+            catch (Exception ex)
             {
-                Id = id,
-                Name = name,
-                Category = category,
-                Difficulty = difficulty,
-                TargetTransforms = derivedTransforms
-            };
+                Console.WriteLine($"Failed to load manifest: {ex.Message}");
+            }
+            return levels;
         }
     }
 }

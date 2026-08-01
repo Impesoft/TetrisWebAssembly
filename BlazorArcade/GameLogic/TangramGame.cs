@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using BlazorArcade.Helpers;
 using BlazorArcade.Models;
 
@@ -11,6 +13,7 @@ namespace BlazorArcade.GameLogic
         public List<TangramLevel> Levels { get; private set; } = new List<TangramLevel>();
         public TangramLevel CurrentLevel { get; private set; } = null!;
         public int CurrentLevelIndex { get; private set; } = 0;
+        public bool IsLoaded { get; private set; } = false;
 
         public List<TangramPiece> Pieces { get; private set; } = new List<TangramPiece>();
         public TangramPiece? SelectedPiece { get; private set; }
@@ -30,13 +33,17 @@ namespace BlazorArcade.GameLogic
 
         public TangramGame()
         {
-            InitializeGame();
         }
 
-        public void InitializeGame()
+        public async Task InitializeGameAsync(HttpClient http)
         {
-            Levels = TangramLevelCatalog.GetLevels();
-            LoadLevel(0);
+            Levels = await TangramLevelCatalog.LoadLevelsAsync(http);
+            if (Levels.Count > 0)
+            {
+                LoadLevel(0);
+            }
+            IsLoaded = true;
+            NotifyStateChanged();
         }
 
         public void LoadLevel(int levelIndex)
