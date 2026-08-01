@@ -1,0 +1,215 @@
+@page "/Tangram"
+@using BlazorArcade.Models
+
+<div class="tangram-page theme-@Game.Theme.ToString().ToLower()" @onkeydown="OnKeyDown" tabindex="0">
+
+    <!-- Top Navigation & Status Bar -->
+    <div class="top-bar">
+        <div class="bar-section">
+            <button class="btn-arcade" @onclick="GoHome">
+                <span>◀ Arcade</span>
+            </button>
+            <h2 class="game-title">TANGRAM MASTER</h2>
+        </div>
+
+        <div class="bar-section">
+            <select class="selector-select" @onchange="SelectCategory">
+                <option value="All">All Categories (110)</option>
+                <option value="Geometry">Geometry (20)</option>
+                <option value="Animals">Animals (25)</option>
+                <option value="Objects">Objects & Architecture (25)</option>
+                <option value="People">People & Action (20)</option>
+                <option value="Alphabet & Digits">Alphabet & Digits (20)</option>
+            </select>
+
+            <button class="btn-arcade" @onclick="PreviousLevel" disabled="@(Game.CurrentLevelIndex == 0)">◀</button>
+            <div class="level-indicator">
+                #@(Game.CurrentLevel.Id): @Game.CurrentLevel.Name
+            </div>
+            <button class="btn-arcade" @onclick="NextLevel" disabled="@(Game.CurrentLevelIndex == Game.Levels.Count - 1)">▶</button>
+        </div>
+
+        <div class="bar-section">
+            <div class="stat-badge" title="Elapsed Time">
+                ⏱️ @TimeSpan.FromSeconds(Game.ElapsedSeconds).ToString(@"mm\:ss")
+            </div>
+
+            @if (Game.Mode != TangramGameMode.Sandbox)
+            {
+                <div class="stat-badge" title="Target Accuracy">
+                    🎯 @Game.CompletionAccuracy.ToString("F0")%
+                </div>
+                <button class="btn-arcade" @onclick="UseHint" title="Reveal Next Piece (H)">
+                    💡 Hint (@Game.HintsUsed)
+                </button>
+            }
+
+            <button class="btn-arcade" @onclick="ResetLevel" title="Reset Level (R)">
+                🔄 Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Mode Selector & Theme Toggles -->
+    <div class="mode-bar">
+        <button class="mode-btn @(Game.Mode == TangramGameMode.Silhouette ? "active" : "")" @onclick="() => SelectMode(TangramGameMode.Silhouette)">
+            🌑 Silhouette
+        </button>
+        <button class="mode-btn @(Game.Mode == TangramGameMode.Guided ? "active" : "")" @onclick="() => SelectMode(TangramGameMode.Guided)">
+            📐 Guided Lines
+        </button>
+        <button class="mode-btn @(Game.Mode == TangramGameMode.ColorMatch ? "active" : "")" @onclick="() => SelectMode(TangramGameMode.ColorMatch)">
+            🎨 Color Match
+        </button>
+        <button class="mode-btn @(Game.Mode == TangramGameMode.Sandbox ? "active" : "")" @onclick="() => SelectMode(TangramGameMode.Sandbox)">
+            🛠️ Sandbox Creator
+        </button>
+
+        <span style="margin: 0 8px; color: rgba(255,255,255,0.3);">|</span>
+
+        <button class="mode-btn @(Game.Theme == TangramTheme.Neon ? "active" : "")" @onclick="() => SelectTheme(TangramTheme.Neon)">
+            ✨ Neon
+        </button>
+        <button class="mode-btn @(Game.Theme == TangramTheme.Wood ? "active" : "")" @onclick="() => SelectTheme(TangramTheme.Wood)">
+            🪵 Wood
+        </button>
+        <button class="mode-btn @(Game.Theme == TangramTheme.Zen ? "active" : "")" @onclick="() => SelectTheme(TangramTheme.Zen)">
+            🍵 Zen
+        </button>
+    </div>
+
+    <!-- Main Interactive SVG Board -->
+    <div class="board-container">
+        <svg class="tangram-svg" viewBox="0 0 1100 750"
+             @onpointermove="OnPointerMove"
+             @onpointerup="OnPointerUp"
+             @onclick="OnBoardClick">
+
+            <!-- Grid Guidelines -->
+            <defs>
+                <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+                    <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="1100" height="750" fill="url(#grid)" />
+
+            <!-- Tray Separator Line (Vertical) -->
+            <line x1="850" y1="20" x2="850" y2="730" stroke="rgba(255, 255, 255, 0.15)" stroke-width="2" stroke-dasharray="8 6" />
+            <text x="870" y="40" fill="rgba(255, 255, 255, 0.4)" font-size="14" font-weight="600">📥 PIECE TRAY</text>
+
+            <!-- Target Silhouette Layer -->
+            @if (Game.Mode != TangramGameMode.Sandbox && Game.CurrentLevel != null)
+            {
+                <g class="target-layer">
+                    @foreach (var target in Game.CurrentLevel.TargetTransforms)
+                    {
+                        var dummyPiece = Game.Pieces.FirstOrDefault(p => p.Type == target.PieceType);
+                        if (dummyPiece != null)
+                        {
+                            string points = dummyPiece.GetSvgPolygonPoints(target.X, target.Y, target.RotationAngle, target.IsFlipped);
+
+                            if (Game.Mode == TangramGameMode.Silhouette)
+                            {
+                                <polygon points="@points" class="target-silhouette" />
+                            }
+                            else if (Game.Mode == TangramGameMode.Guided)
+                            {
+                                <polygon points="@points" class="target-guided" />
+                            }
+                            else if (Game.Mode == TangramGameMode.ColorMatch)
+                            {
+                                <polygon points="@points" fill="@dummyPiece.Color" opacity="0.3" stroke="#ffffff" stroke-width="1.5" />
+                            }
+                        }
+                    }
+                </g>
+            }
+
+            <!-- User Placed & Tray Tans Layer -->
+            <g class="pieces-layer">
+                @foreach (var piece in Game.Pieces)
+                {
+                    string points = piece.GetSvgPolygonPoints();
+                    bool isSelected = piece.IsSelected;
+                    string cssClass = $"svg-piece {(isSelected ? "selected" : "")}";
+
+                    <polygon points="@points"
+                             fill="@piece.Color"
+                             class="@cssClass"
+                             @onpointerdown="(e) => OnPointerDown(e, piece)" />
+                }
+            </g>
+
+            <!-- Active Piece Selector Ring -->
+            @if (Game.SelectedPiece != null)
+            {
+                <circle cx="@Game.SelectedPiece.X" cy="@Game.SelectedPiece.Y" r="45"
+                        fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="5 4" opacity="0.8" />
+            }
+        </svg>
+
+        <!-- Floating Piece Controls Dock -->
+        @if (Game.SelectedPiece != null)
+        {
+            <div class="control-dock">
+                <button class="dock-btn" @onclick="RotateLeft" title="Rotate Left 45° (Q)">↺</button>
+                <button class="dock-btn" @onclick="RotateRight" title="Rotate Right 45° (E)">↻</button>
+                @if (Game.SelectedPiece.Type == TangramPieceType.Parallelogram)
+                {
+                    <button class="dock-btn" @onclick="FlipPiece" title="Flip Parallelogram (F)">↔</button>
+                }
+                <button class="dock-btn" @onclick="ReturnSelectedToTray" title="Return to Tray (T)">📥</button>
+            </div>
+        }
+    </div>
+
+    <!-- Sandbox Toolbar -->
+    @if (Game.Mode == TangramGameMode.Sandbox)
+    {
+        <div class="sandbox-bar">
+            <input type="text" class="sandbox-input" placeholder="Enter custom shape name..." @bind="CustomShapeName" />
+            <button class="btn-arcade active" @onclick="SaveCustomLevel">
+                💾 Save as Custom Puzzle
+            </button>
+        </div>
+    }
+
+    <!-- Keyboard Shortcuts Bar -->
+    <div class="help-toast">
+        <span><span class="kbd">Q</span> / <span class="kbd">E</span> Rotate 45°</span>
+        <span><span class="kbd">F</span> Flip Parallelogram</span>
+        <span><span class="kbd">H</span> Hint</span>
+        <span><span class="kbd">R</span> Reset</span>
+        <span><span class="kbd">T</span> Return to Tray</span>
+    </div>
+
+    <!-- Victory Overlay Modal -->
+    @if (ShowVictoryModal)
+    {
+        <div class="modal-overlay">
+            <div class="modal-card">
+                <h1 style="font-size: 2.2rem; margin-bottom: 5px; color: #00e5ff;">PUZZLE SOLVED!</h1>
+                <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 15px;">
+                    Great job! You mastered <strong>@(Game.CurrentLevel?.Name ?? "the Puzzle")</strong>.
+                </p>
+
+                <div class="stars-container">
+                    <span class="star @(Game.StarsEarned >= 1 ? "filled" : "")">★</span>
+                    <span class="star @(Game.StarsEarned >= 2 ? "filled" : "")">★</span>
+                    <span class="star @(Game.StarsEarned >= 3 ? "filled" : "")">★</span>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left;">
+                    <div>⏱️ <strong>Time:</strong> @TimeSpan.FromSeconds(Game.ElapsedSeconds).ToString(@"mm\:ss")</div>
+                    <div>💡 <strong>Hints Used:</strong> @Game.HintsUsed</div>
+                    <div>🎯 <strong>Accuracy:</strong> 100% Perfect Fit</div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="btn-arcade" @onclick="ResetLevel">🔄 Play Again</button>
+                    <button class="btn-arcade active" @onclick="NextLevel">Next Puzzle ▶</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
