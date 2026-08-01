@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "Dgin/FFv",
+  "version": "YijqTe6u",
   "assets": [
     {
       "hash": "sha256-j+nfZFZaUeDmUbwZddIPtr+mAQJj66wRTyNv9hARImw=",
@@ -18,8 +18,8 @@ self.assetsManifest = {
       "url": "_content/Toolbelt.Blazor.PWA.Updater/Toolbelt.Blazor.PWA.Updater.2drl8nn3fe.bundle.scp.css"
     },
     {
-      "hash": "sha256-u8fu6OmJ8u7gX6QI05FzpS5dAVik96fLsceN9lEJLmA=",
-      "url": "_framework/BlazorArcade.97kkpfsut5.wasm"
+      "hash": "sha256-4fB2mVblD6kDGbxrXjKZCIfQWt1NMIqCABmnwqZhVes=",
+      "url": "_framework/BlazorArcade.hkk79ttaz4.wasm"
     },
     {
       "hash": "sha256-h5dswxgcv3htHnD3+CJjR8xh0Lvkyv3SKLqZ1ygQ294=",
@@ -166,8 +166,8 @@ self.assetsManifest = {
       "url": "_framework/System.Private.Uri.i8mqnwuuk1.wasm"
     },
     {
-      "hash": "sha256-IRGjTt1HkvePPEp5MzONnBz7VjDAsmrcS0tC6K3Vf7g=",
-      "url": "_framework/System.Runtime.7y5zeitrcr.wasm"
+      "hash": "sha256-5jdFuHQjlmHpnTQcW+ccVkX6M2SMxgWwmscIaTcmlqA=",
+      "url": "_framework/System.Runtime.2i1iww50ao.wasm"
     },
     {
       "hash": "sha256-+bwV4CDb3Bf2JAEpCnjwAlzWBcVyN2XSNStSXXfxDXM=",
@@ -218,7 +218,7 @@ self.assetsManifest = {
       "url": "_framework/blazor.webassembly.js"
     },
     {
-      "hash": "sha256-30OlXC11L1vnWoW9uZnCVX1ovF9eeH0G4FzaD7QcoBo=",
+      "hash": "sha256-kyQPKaywlSAWrsOZI2B3ysjArPqkobX8VElBMAxmW+I=",
       "url": "_framework/dotnet.js"
     },
     {
@@ -248,6 +248,10 @@ self.assetsManifest = {
     {
       "hash": "sha256-HWlQxcOzB+Zxz3Wcbeh84TOqXCNdsdEnNlriYz6Qs2E=",
       "url": "css/app.css"
+    },
+    {
+      "hash": "sha256-WWa7ljV4098W+T+G66gxGICsaGDVa5P43SJH19a/3rk=",
+      "url": "favicon.ico"
     },
     {
       "hash": "sha256-DbpQaq68ZSb5IoPosBErM1QWBfsbTxpJqhU0REi6wP4=",
@@ -310,7 +314,7 @@ self.assetsManifest = {
       "url": "index.html"
     },
     {
-      "hash": "sha256-hR+bPkUFBGQJtfnJP0ps1XiWDr2IKhduDRVRRZXebIU=",
+      "hash": "sha256-tITRTwEdXQp4z8E35XWb5kGO72b3lG0QYxP/lKNZ+3s=",
       "url": "js/site.js"
     },
     {
