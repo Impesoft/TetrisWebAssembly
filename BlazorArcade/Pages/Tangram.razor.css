@@ -223,9 +223,13 @@
 
 .target-silhouette {
     fill: #090b14;
-    stroke: #00e5ff;
-    stroke-width: 2px;
-    filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.5));
+    stroke: #090b14; /* Matches fill to seamlessly hide internal gaps */
+    stroke-width: 1.5px;
+}
+
+.target-layer-silhouette {
+    /* Casts a glowing outline around the entire merged shape group */
+    filter: drop-shadow(0 0 3px #00e5ff) drop-shadow(0 0 10px rgba(0, 229, 255, 0.6));
 }
 
 .target-guided {

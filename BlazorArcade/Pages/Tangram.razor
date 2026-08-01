@@ -109,7 +109,7 @@
             <!-- Target Silhouette Layer -->
             @if (Game.Mode != TangramGameMode.Sandbox && Game.CurrentLevel != null)
             {
-                <g class="target-layer">
+                <g class="target-layer @(Game.Mode == TangramGameMode.Silhouette ? "target-layer-silhouette" : "")">
                     @foreach (var target in Game.CurrentLevel.TargetTransforms)
                     {
                         var dummyPiece = Game.Pieces.FirstOrDefault(p => p.Type == target.PieceType);
