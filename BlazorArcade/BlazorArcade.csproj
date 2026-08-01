@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -7,23 +7,7 @@
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\css\BGBokeh.mp4" />
-    <Content Remove="wwwroot\css\BGParticles.mp4" />
-    <Content Remove="wwwroot\css\BGTunnel.mp4" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\css\BGBokeh.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wwwroot\css\BGParticles.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="wwwroot\css\BGTunnel.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ChessDotNet" Version="1.0.0" />

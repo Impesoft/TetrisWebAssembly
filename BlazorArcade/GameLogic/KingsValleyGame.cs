@@ -190,8 +190,8 @@ namespace BlazorArcade.GameLogic
                 for (int r = 3; r <= 6; r++) Grid[r, 16] = 3;
 
                 // Stairs
-                Grid[10, 5] = 5; Grid[9, 6] = 5; Grid[8, 7] = 5;
-                Grid[6, 13] = 4; Grid[5, 12] = 4; Grid[4, 11] = 4;
+                Grid[10, 5] = 5; Grid[9, 6] = 5; Grid[8, 7] = 5; Grid[7, 8] = 5;
+                Grid[6, 13] = 4; Grid[5, 12] = 4; Grid[4, 11] = 4; Grid[3, 10] = 4;
 
                 ExitDoorPos = new KVPoint(15 * TileSize, 2 * TileSize - 8);
                 Grid[2, 15] = 9;
@@ -222,8 +222,8 @@ namespace BlazorArcade.GameLogic
                 for (int r = 7; r <= 10; r++) Grid[r, 3] = 3;
                 for (int r = 3; r <= 6; r++) Grid[r, 17] = 3;
 
-                Grid[10, 14] = 4; Grid[9, 13] = 4; Grid[8, 12] = 4;
-                Grid[6, 7] = 5; Grid[5, 8] = 5; Grid[4, 9] = 5;
+                Grid[10, 14] = 4; Grid[9, 13] = 4; Grid[8, 12] = 4; Grid[7, 11] = 4;
+                Grid[6, 7] = 5; Grid[5, 8] = 5; Grid[4, 9] = 5; Grid[3, 10] = 5;
 
                 ExitDoorPos = new KVPoint(10 * TileSize, 2 * TileSize - 8);
                 Grid[2, 10] = 9;
@@ -257,8 +257,8 @@ namespace BlazorArcade.GameLogic
                 for (int r = 7; r <= 10; r++) Grid[r, 18] = 3;
                 for (int r = 3; r <= 6; r++) Grid[r, 2] = 3;
 
-                Grid[10, 4] = 5; Grid[9, 5] = 5; Grid[8, 6] = 5;
-                Grid[6, 15] = 4; Grid[5, 14] = 4; Grid[4, 13] = 4;
+                Grid[10, 4] = 5; Grid[9, 5] = 5; Grid[8, 6] = 5; Grid[7, 7] = 5;
+                Grid[6, 15] = 4; Grid[5, 14] = 4; Grid[4, 13] = 4; Grid[3, 12] = 4;
 
                 ExitDoorPos = new KVPoint(4 * TileSize, 2 * TileSize - 8);
                 Grid[2, 4] = 9;
@@ -546,7 +546,8 @@ namespace BlazorArcade.GameLogic
             {
                 bool isFloorSolid = Grid[rowFoot, colLeft] == 1 || Grid[rowFoot, colLeft] == 2 ||
                                     Grid[rowFoot, colRight] == 1 || Grid[rowFoot, colRight] == 2 ||
-                                    ((Grid[rowFoot, colLeft] == 3 || Grid[rowFoot, colRight] == 3) && !Player.IsClimbingLadder && !moveDown);
+                                    ((Grid[rowFoot, colLeft] == 3 || Grid[rowFoot, colRight] == 3) && !Player.IsClimbingLadder && !moveDown) ||
+                                    ((Grid[rowFoot, colLeft] == 4 || Grid[rowFoot, colRight] == 4 || Grid[rowFoot, colLeft] == 5 || Grid[rowFoot, colRight] == 5) && !moveDown);
 
                 if (isFloorSolid)
                 {

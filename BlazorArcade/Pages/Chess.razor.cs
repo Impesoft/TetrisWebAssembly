@@ -26,7 +26,7 @@ namespace BlazorArcade.Pages
         {
             Game = new ChessGame();
             SelectedPosition = null;
-            ValidMoves.Clear();
+            ValidMoves?.Clear();
             _isAiThinking = false;
         }
 
@@ -67,7 +67,7 @@ namespace BlazorArcade.Pages
             {
                 Game.MakeMove(move, true);
                 SelectedPosition = null;
-                ValidMoves.Clear();
+                ValidMoves?.Clear();
                 
                 if (PlayAgainstComputer && Game.WhoseTurn == Player.Black && !Game.IsCheckmated(Player.Black) && !Game.IsStalemated(Player.Black))
                 {
@@ -98,9 +98,10 @@ namespace BlazorArcade.Pages
                 else
                 {
                     SelectedPosition = null;
-                    ValidMoves.Clear();
+                    ValidMoves?.Clear();
                 }
             }
         }
     }
 }
+

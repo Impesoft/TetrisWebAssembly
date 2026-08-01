@@ -13,6 +13,7 @@ namespace BlazorArcade.Pages
         public NavigationManager Nav { get; set; }
 
         private ElementReference _gameContainer;
+        public bool IsGameStarted { get; set; } = false;
         private BlockDudeGame _game;
         private Timer _timer;
         private DateTime _lastUpdateTime;

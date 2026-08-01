@@ -12,6 +12,7 @@ namespace BlazorArcade.Pages
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
         
+        public bool IsGameStarted { get; set; } = false;
         public Game2048Logic GameInstance { get; set; } = new Game2048Logic();
         private ElementReference GameContainer;
         

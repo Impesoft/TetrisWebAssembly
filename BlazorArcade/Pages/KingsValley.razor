@@ -7,7 +7,7 @@
 
 <div class="top-controls">
     <button class="arcade-btn" @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
-    <button class="arcade-btn" @onclick="RestartStage">Restart</button>
+    <button class="arcade-btn" @onclick="StartGame">Start / Restart</button>
     <button class="arcade-btn" @onclick="GameInstance.TogglePause">@(GameInstance.IsPaused ? "Resume" : "Pause")</button>
 </div>
 
@@ -274,12 +274,20 @@
         <!-- Controls Bar -->
         <div class="kv-controls-panel">
             <div class="dpad-box">
-                <button class="dpad-btn up" @onmousedown="() => SetMoveUp(true)" @onmouseup="() => SetMoveUp(false)">▲</button>
+                <button class="dpad-btn up" @onmousedown="() => SetMoveUp(true)" @onmouseup="() => SetMoveUp(false)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="12,4 20,20 4,20" /></svg>
+                </button>
                 <div class="dpad-row">
-                    <button class="dpad-btn left" @onmousedown="() => SetMoveLeft(true)" @onmouseup="() => SetMoveLeft(false)">◄</button>
-                    <button class="dpad-btn right" @onmousedown="() => SetMoveRight(true)" @onmouseup="() => SetMoveRight(false)">►</button>
+                    <button class="dpad-btn left" @onmousedown="() => SetMoveLeft(true)" @onmouseup="() => SetMoveLeft(false)">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="4,12 20,4 20,20" /></svg>
+                    </button>
+                    <button class="dpad-btn right" @onmousedown="() => SetMoveRight(true)" @onmouseup="() => SetMoveRight(false)">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="20,12 4,20 4,4" /></svg>
+                    </button>
                 </div>
-                <button class="dpad-btn down" @onmousedown="() => SetMoveDown(true)" @onmouseup="() => SetMoveDown(false)">▼</button>
+                <button class="dpad-btn down" @onmousedown="() => SetMoveDown(true)" @onmouseup="() => SetMoveDown(false)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="12,20 4,4 20,4" /></svg>
+                </button>
             </div>
 
             <div class="action-box">
@@ -290,3 +298,4 @@
         </div>
     </div>
 </div>
+

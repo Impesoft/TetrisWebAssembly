@@ -136,7 +136,7 @@
 
             <!-- User Placed & Tray Tans Layer -->
             <g class="pieces-layer">
-                @foreach (var piece in Game.Pieces)
+                @foreach (var piece in Game.Pieces.Where(p => !p.IsSelected))
                 {
                     string points = piece.GetSvgPolygonPoints();
                     bool isSelected = piece.IsSelected;
@@ -147,7 +147,7 @@
                              class="@cssClass"
                              @onpointerdown="(e) => OnPointerDown(e, piece)" />
                 }
-            </g>
+            @if (Game.SelectedPiece != null) { string points = Game.SelectedPiece.GetSvgPolygonPoints(); <polygon points="@points" fill="@Game.SelectedPiece.Color" class="svg-piece selected" @onpointerdown="(e) => OnPointerDown(e, Game.SelectedPiece)" /> }`n            </g>
 
             <!-- Active Piece Selector Ring -->
             @if (Game.SelectedPiece != null)
@@ -223,3 +223,5 @@
     }
     }
 </div>
+
+

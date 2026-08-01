@@ -1,4 +1,4 @@
-﻿@page "/Breakout"
+@page "/Breakout"
 @using System.Globalization
 @inject NavigationManager _nav
 <video muted loop id="bg">
@@ -10,7 +10,7 @@
 
     @if (IsPaused)
     {
-        <button @onclick="StartGame">Start</button>
+        <button @onclick="StartGame">Start / Restart</button>
     }
     else
     {

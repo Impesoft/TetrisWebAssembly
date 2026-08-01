@@ -158,3 +158,4 @@ namespace BlazorArcade.Pages
         }
     }
 }
+

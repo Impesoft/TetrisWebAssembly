@@ -31,7 +31,7 @@ namespace BlazorArcade.Pages
         {
             if (firstRender)
             {
-                StartGame();
+                // StartGame();
                 await GameContainer.FocusAsync();
             }
         }
@@ -110,3 +110,4 @@ namespace BlazorArcade.Pages
         }
     }
 }
+

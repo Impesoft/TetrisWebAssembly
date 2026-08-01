@@ -16,6 +16,14 @@
      @ontouchstart="HandleTouchStart" 
      @ontouchend="HandleTouchEnd" 
      @ref="GameContainer">
+@if (!IsGameStarted)
+{
+    <div class="game-over-overlay" style="z-index: 1000; position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h2 style="color: white; margin-bottom: 20px; font-family: 'Press Start 2P', monospace;">2048</h2>
+        <button class="btn btn-primary" style="padding: 10px 20px; font-size: 1.2rem; cursor: pointer;" @onclick="() => IsGameStarted = true">Start Game</button>
+    </div>
+}
+
     
     <div class="header">
         <h1 class="title">2048</h1>
@@ -69,3 +77,4 @@
         </div>
     </div>
 </div>
+

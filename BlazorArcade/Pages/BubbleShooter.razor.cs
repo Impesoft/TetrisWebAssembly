@@ -778,3 +778,4 @@ namespace BlazorArcade.Pages
 
     public record struct PointD(double X, double Y);
 }
+

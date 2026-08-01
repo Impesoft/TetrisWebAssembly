@@ -10,6 +10,7 @@ namespace BlazorArcade.Pages
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
         
+        public bool IsGameStarted { get; set; } = false;
         public Connect4Logic GameInstance { get; set; } = new Connect4Logic();
         private Connect4AI _ai = new Connect4AI(2);
         private ElementReference GameContainer;

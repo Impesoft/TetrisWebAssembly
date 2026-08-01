@@ -7,7 +7,7 @@
 
 <div class="top-controls">
     <button class="arcade-btn" @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
-    <button class="arcade-btn" @onclick="RestartStage">Restart</button>
+    <button class="arcade-btn" @onclick="StartGame">Start / Restart</button>
     <button class="arcade-btn" @onclick="GameInstance.TogglePause">@(GameInstance.IsPaused ? "Resume" : "Pause")</button>
 </div>
 
@@ -337,18 +337,26 @@
             <div class="dpad-group">
                 <button class="dpad-btn up"
                         @onmousedown="() => SetClimbUp(true)" @onmouseup="() => SetClimbUp(false)"
-                        @ontouchstart="() => SetClimbUp(true)" @ontouchend="() => SetClimbUp(false)">▲</button>
+                        @ontouchstart="() => SetClimbUp(true)" @ontouchend="() => SetClimbUp(false)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="12,4 20,20 4,20" /></svg>
+                </button>
                 <div class="dpad-middle">
                     <button class="dpad-btn left"
                             @onmousedown="() => SetMoveLeft(true)" @onmouseup="() => SetMoveLeft(false)"
-                            @ontouchstart="() => SetMoveLeft(true)" @ontouchend="() => SetMoveLeft(false)">◀</button>
+                            @ontouchstart="() => SetMoveLeft(true)" @ontouchend="() => SetMoveLeft(false)">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="4,12 20,4 20,20" /></svg>
+                    </button>
                     <button class="dpad-btn right"
                             @onmousedown="() => SetMoveRight(true)" @onmouseup="() => SetMoveRight(false)"
-                            @ontouchstart="() => SetMoveRight(true)" @ontouchend="() => SetMoveRight(false)">▶</button>
+                            @ontouchstart="() => SetMoveRight(true)" @ontouchend="() => SetMoveRight(false)">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="20,12 4,20 4,4" /></svg>
+                    </button>
                 </div>
                 <button class="dpad-btn down"
                         @onmousedown="() => SetClimbDown(true)" @onmouseup="() => SetClimbDown(false)"
-                        @ontouchstart="() => SetClimbDown(true)" @ontouchend="() => SetClimbDown(false)">▼</button>
+                        @ontouchstart="() => SetClimbDown(true)" @ontouchend="() => SetClimbDown(false)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><polygon points="12,20 4,4 20,4" /></svg>
+                </button>
             </div>
             <button class="jump-btn"
                     @onmousedown="() => SetJump(true)" @onmouseup="() => SetJump(false)"

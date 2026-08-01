@@ -26,7 +26,7 @@ namespace BlazorArcade.Pages
         protected override void OnInitialized()
         {
             _lastUpdateTime = DateTime.Now;
-            _timer = new Timer(GameLoop, null, 0, 16); // ~60fps
+            // _timer = new Timer(GameLoop, null, 0, 16); // ~60fps
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -76,12 +76,14 @@ namespace BlazorArcade.Pages
             }
             else
             {
+                if (_timer == null) _timer = new Timer(GameLoop, null, 0, 16);
                 _game.Flap();
             }
         }
 
         private void RestartGame()
         {
+            if (_timer == null) _timer = new Timer(GameLoop, null, 0, 16);
             _game.Reset();
             _lastUpdateTime = DateTime.Now;
             _ = _gameContainer.FocusAsync();
@@ -107,3 +109,6 @@ namespace BlazorArcade.Pages
         }
     }
 }
+
+
+
