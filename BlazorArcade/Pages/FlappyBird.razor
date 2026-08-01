@@ -4,7 +4,10 @@
 <div class="flappybird-container" tabindex="0" @ref="_gameContainer" @onkeydown="HandleKeyDown" @onclick="HandleClick" autofocus>
     <div class="game-header">
         <h2>Flappy Bird</h2>
-        <div class="controls">Press SPACE or CLICK to Flap</div>
+        <div class="controls">
+            <span>Press SPACE or CLICK to Flap</span>
+            <button class="menu-btn" style="margin-left: 15px; padding: 5px 10px; border-radius: 5px; border: none; background: #fff; cursor: pointer;" @onclick="GoHome">Back to Menu</button>
+        </div>
         <div class="score-display">Score: @_game.Score</div>
     </div>
 

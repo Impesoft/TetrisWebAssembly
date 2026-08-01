@@ -371,3 +371,34 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
     font-family: monospace;
 }
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .help-toast {
+        display: none !important;
+    }
+    
+    .board-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .control-dock {
+        position: static;
+        transform: none;
+        width: 100%;
+        justify-content: center;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        padding: 10px 0 20px 0;
+        animation: none;
+    }
+    
+    .dock-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        background: rgba(255, 255, 255, 0.15);
+    }
+}

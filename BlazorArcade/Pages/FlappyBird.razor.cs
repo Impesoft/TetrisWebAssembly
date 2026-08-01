@@ -9,11 +9,19 @@ namespace BlazorArcade.Pages
 {
     public partial class FlappyBird : IDisposable
     {
+        [Inject]
+        public NavigationManager Nav { get; set; }
+
         private ElementReference _gameContainer;
         private FlappyBirdGame _game = new();
         private Timer _timer;
         private DateTime _lastUpdateTime;
         private bool _isDisposed;
+
+        private void GoHome()
+        {
+            Nav.NavigateTo("/");
+        }
 
         protected override void OnInitialized()
         {
