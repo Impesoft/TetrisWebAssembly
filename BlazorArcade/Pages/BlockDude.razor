@@ -1,0 +1,73 @@
+@page "/BlockDude"
+@using BlazorArcade.GameLogic
+
+<div class="blockdude-container" tabindex="0" @ref="_gameContainer" @onkeydown="HandleKeyDown" autofocus>
+    <div class="game-header">
+        <h2>Block Dude</h2>
+        <div class="controls">
+            <span>Level: @(_game.CurrentLevel + 1)</span>
+            <button @onclick="ResetLevel">Restart (R)</button>
+            <button class="menu-btn" @onclick="GoHome">Back to Menu</button>
+        </div>
+    </div>
+
+    @if (_game.GameComplete)
+    {
+        <div class="game-complete-overlay">
+            <h2>Congratulations!</h2>
+            <p>You beat all levels!</p>
+            <button @onclick="RestartGame">Play Again</button>
+            <button @onclick="GoHome">Menu</button>
+        </div>
+    }
+    else
+    {
+        <div class="game-board" style="width: @(_game.Width * TileSize)px; height: @(_game.Height * TileSize)px;">
+            @if (_game.Map != null)
+            {
+                @for (int y = 0; y < _game.Height; y++)
+                {
+                    @for (int x = 0; x < _game.Width; x++)
+                    {
+                        if (_game.Map[x, y] == 1)
+                        {
+                            <div class="wall" style="left: @(x * TileSize)px; top: @(y * TileSize)px; width: @(TileSize)px; height: @(TileSize)px;"></div>
+                        }
+                        else if (_game.Map[x, y] == 3)
+                        {
+                            <div class="door" style="left: @(x * TileSize)px; top: @(y * TileSize)px; width: @(TileSize)px; height: @(TileSize)px;"></div>
+                        }
+                    }
+                }
+            }
+
+            @if (_game.Blocks != null)
+            {
+                @foreach (var block in _game.Blocks)
+                {
+                    <div class="block" @key="block.Id" style="left: @(block.RenderX * TileSize)px; top: @(block.RenderY * TileSize)px; width: @(TileSize)px; height: @(TileSize)px;"></div>
+                }
+            }
+
+            @if (_game.Player != null)
+            {
+                <div class="player @(_game.Player.FacingLeft ? "facing-left" : "") @(_game.Player.IsCarryingBlock ? "carrying" : "")" 
+                     style="left: @(_game.Player.RenderX * TileSize)px; top: @(_game.Player.RenderY * TileSize)px; width: @(TileSize)px; height: @(TileSize)px;">
+                    <div class="player-sprite"></div>
+                    @if (_game.Player.IsCarryingBlock)
+                    {
+                        <div class="carried-block" style="width: @(TileSize)px; height: @(TileSize)px; top: -@(TileSize)px;"></div>
+                    }
+                </div>
+            }
+
+            @if (_game.LevelComplete)
+            {
+                <div class="level-complete-overlay">
+                    <h3>Level Complete!</h3>
+                    <button @onclick="NextLevel">Next Level (Space)</button>
+                </div>
+            }
+        </div>
+    }
+</div>
