@@ -27,18 +27,19 @@ namespace BlazorArcade.Pages
         private bool _touchLeft;
         private bool _touchRight;
         private bool _touchShoot;
+        public bool IsGameStarted { get; set; } = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                // StartGame();
                 await GameContainer.FocusAsync();
             }
         }
 
         public void StartGame()
         {
+            IsGameStarted = true;
             GameInstance.LoadLevel(0);
             _pressedKeys.Clear();
 
@@ -99,8 +100,13 @@ namespace BlazorArcade.Pages
 
         public void RestartStage()
         {
+            IsGameStarted = true;
             GameInstance.RestartLevel();
             _pressedKeys.Clear();
+            if (GameTimer == null)
+            {
+                GameTimer = new Timer(GameLoop, null, 0, 16);
+            }
             _ = GameContainer.FocusAsync();
         }
 
@@ -114,8 +120,13 @@ namespace BlazorArcade.Pages
         {
             if (int.TryParse(e.Value?.ToString(), out int levelIndex))
             {
+                IsGameStarted = true;
                 GameInstance.LoadLevel(levelIndex);
                 _pressedKeys.Clear();
+                if (GameTimer == null)
+                {
+                    GameTimer = new Timer(GameLoop, null, 0, 16);
+                }
                 _ = GameContainer.FocusAsync();
             }
         }

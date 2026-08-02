@@ -35,7 +35,14 @@
         <div class="stat-item"><span class="stat-label">LIVES</span> <span class="stat-val">🥚 @GameInstance.Lives</span></div>
     </div>
 
-    @if (GameInstance.IsGameOver)
+    @if (!IsGameStarted)
+    {
+        <div class="start-overlay" @onclick="StartGame">
+            <h1>EGGERLAND</h1>
+            <p>Click to Start</p>
+        </div>
+    }
+    else if (GameInstance.IsGameOver)
     {
         <div class="game-message">
             <h2>Game Over!</h2>
