@@ -100,3 +100,5 @@ window.tangramInterop = {
         return redPixels < 50;
     }
 };
+
+window.tangramInterop.getSvgScale = function() { let svg = document.querySelector('.tangram-svg'); return svg ? 1100.0 / svg.getBoundingClientRect().width : 1.0; };
