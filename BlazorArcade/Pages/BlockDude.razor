@@ -6,7 +6,7 @@
 {
     <div class="game-over-overlay" style="z-index: 1000; position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <h2 style="color: white; margin-bottom: 20px; font-family: 'Press Start 2P', monospace;">Block Dude</h2>
-        <button class="btn btn-primary" style="padding: 10px 20px; font-size: 1.2rem; cursor: pointer;" @onclick="() => IsGameStarted = true">Start Game</button>
+        <button class="btn btn-primary" style="padding: 10px 20px; font-size: 1.2rem; cursor: pointer;" @onclick="StartGame">Start Game</button>
     </div>
 }
 
@@ -76,6 +76,16 @@
                     <button @onclick="NextLevel">Next Level (Space)</button>
                 </div>
             }
+        </div>
+    }
+
+    <!-- Mobile Touch Controls -->
+    @if (IsGameStarted && !_game.GameComplete)
+    {
+        <div class="mobile-controls" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; width: 100%; max-width: 400px; z-index: 10;">
+            <button style="padding: 15px 30px; font-size: 1.5rem; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 10px;" @onpointerdown="TouchLeft" @onclick:preventDefault>◀</button>
+            <button style="padding: 15px 30px; font-size: 1.5rem; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 10px;" @onpointerdown="TouchRight" @onclick:preventDefault>▶</button>
+            <button style="padding: 15px 30px; font-size: 1.5rem; background: rgba(255,255,255,0.2); border: 2px solid white; border-radius: 10px;" @onpointerdown="TouchUp" @onclick:preventDefault>⬆ Action</button>
         </div>
     }
 </div>

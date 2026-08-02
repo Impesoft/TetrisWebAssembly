@@ -86,25 +86,40 @@ namespace BlazorArcade.Pages
             }
         }
 
-        private void ResetLevel()
+        public async Task StartGame()
+        {
+            IsGameStarted = true;
+            await Task.Delay(50);
+            await _gameContainer.FocusAsync();
+        }
+
+        private async Task ResetLevel()
         {
             _game.ResetLevel();
+            await _gameContainer.FocusAsync();
         }
 
-        private void NextLevel()
+        private async Task NextLevel()
         {
             _game.NextLevel();
+            await _gameContainer.FocusAsync();
         }
 
-        private void RestartGame()
+        private async Task RestartGame()
         {
             _game.LoadLevel(0);
+            await _gameContainer.FocusAsync();
         }
 
         private void GoHome()
         {
             Nav.NavigateTo("/");
         }
+
+        // Touch Control Handlers
+        public void TouchLeft() { _game.MoveLeft(); }
+        public void TouchRight() { _game.MoveRight(); }
+        public void TouchUp() { _game.Action(); } // Action is pick up / drop block
 
         public void Dispose()
         {
