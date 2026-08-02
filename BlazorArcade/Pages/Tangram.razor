@@ -24,7 +24,7 @@
 
             <button class="btn-arcade" @onclick="PreviousLevel" disabled="@(Game.CurrentLevelIndex == 0)">◀</button>
             <div class="level-indicator">
-                #@(Game.CurrentLevel.Id): @Game.CurrentLevel.Name
+                @(Game.CurrentLevel != null ? $"#{Game.CurrentLevel.Id}: {Game.CurrentLevel.Name}" : "Loading...")
             </div>
             <button class="btn-arcade" @onclick="NextLevel" disabled="@(Game.CurrentLevelIndex == Game.Levels.Count - 1)">▶</button>
         </div>

@@ -23,6 +23,7 @@ namespace BlazorArcade.Pages
         private bool _isDragging = false;
         private string? _draggedPieceId = null;
         private double _dragStartX = 0;
+        private double _scale = 1.0;
         private double _dragStartY = 0;
         private double _pieceOriginX = 0;
         private double _pieceOriginY = 0;
@@ -57,14 +58,15 @@ namespace BlazorArcade.Pages
         }
 
         #region Pointer & Drag Handlers
-        public void OnPointerDown(PointerEventArgs e, TangramPiece piece)
+        public async Task OnPointerDown(PointerEventArgs e, TangramPiece piece)
         {
             Game.SelectPiece(piece.Id);
             _isDragging = true;
             _draggedPieceId = piece.Id;
 
-            _dragStartX = e.OffsetX;
-            _dragStartY = e.OffsetY;
+            _dragStartX = e.ClientX;
+            _dragStartY = e.ClientY;
+            try { _scale = await JS.InvokeAsync<double>("window.tangramInterop.getSvgScale"); } catch { }
             _pieceOriginX = piece.X;
             _pieceOriginY = piece.Y;
         }
@@ -73,8 +75,8 @@ namespace BlazorArcade.Pages
         {
             if (!_isDragging || string.IsNullOrEmpty(_draggedPieceId)) return;
 
-            double deltaX = e.OffsetX - _dragStartX;
-            double deltaY = e.OffsetY - _dragStartY;
+            double deltaX = (e.ClientX - _dragStartX) * _scale;
+            double deltaY = (e.ClientY - _dragStartY) * _scale;
 
             double newX = _pieceOriginX + deltaX;
             double newY = _pieceOriginY + deltaY;
@@ -229,3 +231,4 @@ namespace BlazorArcade.Pages
         }
     }
 }
+
