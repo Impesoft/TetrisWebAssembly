@@ -354,13 +354,13 @@
     <!-- On-screen D-Pad & Control Buttons for Touch/Mobile -->
     <div class="touch-controls">
         <div class="dpad">
-            <button class="dbtn up" @ontouchstart="@(() => SetTouchDir("up", true))" @ontouchend="@(() => SetTouchDir("up", false))">▲</button>
-            <button class="dbtn left" @ontouchstart="@(() => SetTouchDir("left", true))" @ontouchend="@(() => SetTouchDir("left", false))">◀</button>
-            <button class="dbtn right" @ontouchstart="@(() => SetTouchDir("right", true))" @ontouchend="@(() => SetTouchDir("right", false))">▶</button>
-            <button class="dbtn down" @ontouchstart="@(() => SetTouchDir("down", true))" @ontouchend="@(() => SetTouchDir("down", false))">▼</button>
+            <button class="dbtn up" @onpointerdown="@(() => SetTouchDir("up", true))" @onpointerup="@(() => SetTouchDir("up", false))" @onpointerout="@(() => SetTouchDir("up", false))">▲</button>
+            <button class="dbtn left" @onpointerdown="@(() => SetTouchDir("left", true))" @onpointerup="@(() => SetTouchDir("left", false))" @onpointerout="@(() => SetTouchDir("left", false))">◀</button>
+            <button class="dbtn right" @onpointerdown="@(() => SetTouchDir("right", true))" @onpointerup="@(() => SetTouchDir("right", false))" @onpointerout="@(() => SetTouchDir("right", false))">▶</button>
+            <button class="dbtn down" @onpointerdown="@(() => SetTouchDir("down", true))" @onpointerup="@(() => SetTouchDir("down", false))" @onpointerout="@(() => SetTouchDir("down", false))">▼</button>
         </div>
         <div class="action-btns">
-            <button class="action-btn shoot" @ontouchstart="@(() => SetTouchDir("shoot", true))" @ontouchend="@(() => SetTouchDir("shoot", false))">⚡ SHOOT</button>
+            <button class="action-btn shoot" @onpointerdown="@(() => SetTouchDir("shoot", true))" @onpointerup="@(() => SetTouchDir("shoot", false))" @onpointerout="@(() => SetTouchDir("shoot", false))">⚡ SHOOT</button>
         </div>
     </div>
 
