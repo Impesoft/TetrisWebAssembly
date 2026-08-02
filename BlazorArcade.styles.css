@@ -1156,6 +1156,36 @@ button:active[b-q023kh7gyr] {
     box-shadow: 0 0 15px rgba(255, 183, 3, 0.6);
     touch-action: manipulation;
 }
+
+.start-overlay[b-fp57l092uh] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(13, 27, 42, 0.95);
+    border: 3px solid #00f5d4;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 30px rgba(0, 245, 212, 0.8);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.start-overlay:hover[b-fp57l092uh] {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+.start-overlay h1[b-fp57l092uh] {
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #00f5d4;
+}
+.start-overlay p[b-fp57l092uh] {
+    color: #90e0ef;
+    margin: 0;
+    font-weight: bold;
+}
 /* /Pages/FlappyBird.razor.rz.scp.css */
 .flappybird-container[b-khx8rh200k] {
     display: flex;
