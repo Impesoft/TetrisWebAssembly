@@ -237,6 +237,8 @@ namespace BlazorArcade.GameLogic
         public int Score { get; set; } = 0;
         public int Lives { get; set; } = 3;
         public int HeartsRemaining { get; set; } = 0;
+        public double ShootCooldown { get; set; } = 0;
+        
         public bool IsChestOpen { get; set; } = false;
         public bool IsJewelCollected { get; set; } = false;
         public bool IsExitOpen { get; set; } = false;
@@ -689,9 +691,15 @@ namespace BlazorArcade.GameLogic
             UpdatePlayerMovement(inputUp, inputDown, inputLeft, inputRight, dt);
 
             // 2. Player Action: Shoot Magic Egg Shot
-            if (inputShoot && Player.Shots > 0 && !Player.IsMoving)
+            if (ShootCooldown > 0)
+            {
+                ShootCooldown -= dt;
+            }
+
+            if (inputShoot && Player.Shots > 0 && !Player.IsMoving && ShootCooldown <= 0)
             {
                 ShootMagicShot();
+                ShootCooldown = 0.5; // Half second cooldown between shots
             }
 
             // 3. Update Projectile Shots (Magic Shots & Fireballs)
