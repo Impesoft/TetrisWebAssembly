@@ -1,0 +1,112 @@
+@page "/BlockBlast"
+@namespace BlazorArcade.Pages
+
+<video muted loop id="bg">
+    <source src="./css/BGTunnel.mp4" type="video/mp4" />
+</video>
+
+<div class="controls">
+    <button class="nav-button" @onclick="@(() => _nav.NavigateTo("/"))">Home</button>
+    <button class="nav-button" @onclick="StartGame">Restart</button>
+</div>
+
+<div class="game-container-blockblast">
+    @if (!IsGameStarted)
+    {
+        <div class="game-over-overlay">
+            <h2 class="title-text">Block Blast</h2>
+            <button class="btn-start" @onclick="StartGame">Start Game</button>
+        </div>
+    }
+
+    <div class="header">
+        <h1 class="title">Block Blast</h1>
+        <div class="score-container">
+            <div class="score-box">
+                <div class="score-label">BEST</div>
+                <div class="score-value high-score">@HighScore</div>
+            </div>
+            <div class="score-box">
+                <div class="score-label">SCORE</div>
+                <div class="score-value">@Score</div>
+            </div>
+        </div>
+    </div>
+
+    @if (ComboStreak > 1)
+    {
+        <div class="streak-badge">
+            <span class="streak-icon">🔥</span> STREAK x@ComboStreak!
+        </div>
+    }
+
+    <div class="game-board-wrapper" @onmouseleave="ClearHover">
+        @if (ShowFloatingMessage)
+        {
+            <div class="floating-popup">
+                <div class="floating-main">@FloatingMessage</div>
+                <div class="floating-sub">@FloatingSubMessage</div>
+            </div>
+        }
+
+        @if (IsGameOver)
+        {
+            <div class="game-message game-over">
+                <p>No more moves!</p>
+                <p class="final-score">Final Score: @Score</p>
+                <div class="lower">
+                    <button class="retry-button" @onclick="StartGame">Try again</button>
+                </div>
+            </div>
+        }
+
+        <div class="grid-container" style="--grid-size: @GridSize">
+            @for (int r = 0; r < GridSize; r++)
+            {
+                for (int c = 0; c < GridSize; c++)
+                {
+                    int row = r;
+                    int col = c;
+                    int val = Grid[row, col];
+                    
+                    <div class="grid-cell @GetPreviewCellClass(row, col) @(val > 0 ? "filled" : "")" 
+                         @onmouseenter="() => HandleCellHover(row, col)"
+                         @onclick="() => HandleCellClick(row, col)">
+                        @if (val > 0)
+                        {
+                            <div class="block-fill @GetCellClass(val)"></div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="shape-tray">
+        @foreach (var shape in AvailableShapes)
+        {
+            <div class="tray-shape @(SelectedShape == shape ? "selected" : "")" @onclick="() => SelectShape(shape)">
+                @{
+                    int rows = shape.Matrix.GetLength(0);
+                    int cols = shape.Matrix.GetLength(1);
+                }
+                <div class="shape-preview" style="--shape-rows: @rows; --shape-cols: @cols;">
+                    @for (int r = 0; r < rows; r++)
+                    {
+                        for (int c = 0; c < cols; c++)
+                        {
+                            if (shape.Matrix[r, c] == 1)
+                            {
+                                <div class="shape-block @shape.ColorClass"></div>
+                            }
+                            else
+                            {
+                                <div class="shape-block-empty"></div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

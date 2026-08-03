@@ -10,8 +10,7 @@
         </div>
         <div class="score-display">Score: @_game.Score</div>
     </div>
-
-    <div class="game-board" style="width: @(_game.Width)px; height: @(_game.Height)px;">
+    <div class="game-board">
         @if (_game.IsGameOver)
         {
             <div class="game-over-overlay">
@@ -33,18 +32,18 @@
         {
             <!-- Top Pipe -->
             <div class="pipe pipe-top" style="
-                left: @(pipe.X)px;
-                width: @(pipe.Width)px;
-                height: @(pipe.GapY - pipe.GapHeight / 2)px;
+                left: @(ToPctX(pipe.X));
+                width: @(ToPctX(pipe.Width));
+                height: @(ToPctY(pipe.GapY - pipe.GapHeight / 2));
                 top: 0;">
                 <div class="pipe-cap pipe-cap-top"></div>
             </div>
 
             <!-- Bottom Pipe -->
             <div class="pipe pipe-bottom" style="
-                left: @(pipe.X)px;
-                width: @(pipe.Width)px;
-                height: @(_game.Height - (pipe.GapY + pipe.GapHeight / 2))px;
+                left: @(ToPctX(pipe.X));
+                width: @(ToPctX(pipe.Width));
+                height: @(ToPctY(_game.Height - (pipe.GapY + pipe.GapHeight / 2)));
                 bottom: 0;">
                 <div class="pipe-cap pipe-cap-bottom"></div>
             </div>
@@ -52,10 +51,10 @@
 
         <!-- Bird -->
         <div class="bird" style="
-            left: @(_game.Bird.X - _game.Bird.Radius)px; 
-            top: @(_game.Bird.Y - _game.Bird.Radius)px;
-            width: @(_game.Bird.Radius * 2)px;
-            height: @(_game.Bird.Radius * 2)px;
+            left: @(ToPctX(_game.Bird.X - _game.Bird.Radius)); 
+            top: @(ToPctY(_game.Bird.Y - _game.Bird.Radius));
+            width: @(ToPctX(_game.Bird.Radius * 2));
+            height: @(ToPctY(_game.Bird.Radius * 2));
             transform: rotate(@(GetBirdRotation())deg);">
             <div class="bird-eye"></div>
             <div class="bird-wing"></div>

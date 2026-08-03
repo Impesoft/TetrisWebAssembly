@@ -107,6 +107,9 @@ namespace BlazorArcade.Pages
             _isDisposed = true;
             _timer?.Dispose();
         }
+
+        private string ToPctX(double x) => (x * 100.0 / _game.Width).ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + "%";
+        private string ToPctY(double y) => (y * 100.0 / _game.Height).ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + "%";
     }
 }
 
