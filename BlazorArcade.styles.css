@@ -1993,7 +1993,6 @@ button:hover[b-bxh5ch49o5] {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     background: radial-gradient(circle at center, #1e0e04 0%, #080401 100%);
     padding: 20px;
     font-family: 'Press Start 2P', 'Segoe UI', monospace, sans-serif;
