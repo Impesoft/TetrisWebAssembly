@@ -102,3 +102,77 @@ window.tangramInterop = {
 };
 
 window.tangramInterop.getSvgScale = function() { let svg = document.querySelector('.tangram-svg'); return svg ? 1100.0 / svg.getBoundingClientRect().width : 1.0; };
+
+window.blockBlastAudio = {
+    playPlace: function() {
+        if (!window.audioContext) return;
+        if (window.audioContext.state === 'suspended') window.audioContext.resume();
+        let osc = window.audioContext.createOscillator();
+        let gain = window.audioContext.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, window.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, window.audioContext.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, window.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, window.audioContext.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(window.audioContext.destination);
+        osc.start();
+        osc.stop(window.audioContext.currentTime + 0.08);
+    },
+    playBlast: function() {
+        if (!window.audioContext) return;
+        if (window.audioContext.state === 'suspended') window.audioContext.resume();
+        let osc = window.audioContext.createOscillator();
+        let gain = window.audioContext.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, window.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, window.audioContext.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.25, window.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, window.audioContext.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(window.audioContext.destination);
+        osc.start();
+        osc.stop(window.audioContext.currentTime + 0.25);
+    },
+    playCombo: function(streak) {
+        if (!window.audioContext) return;
+        if (window.audioContext.state === 'suspended') window.audioContext.resume();
+        let baseFreq = 500 + (streak * 100);
+        let osc = window.audioContext.createOscillator();
+        let gain = window.audioContext.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(baseFreq, window.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, window.audioContext.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, window.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, window.audioContext.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(window.audioContext.destination);
+        osc.start();
+        osc.stop(window.audioContext.currentTime + 0.3);
+    },
+    playGameOver: function() {
+        if (!window.audioContext) return;
+        if (window.audioContext.state === 'suspended') window.audioContext.resume();
+        let osc = window.audioContext.createOscillator();
+        let gain = window.audioContext.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(400, window.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, window.audioContext.currentTime + 0.6);
+        gain.gain.setValueAtTime(0.2, window.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, window.audioContext.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(window.audioContext.destination);
+        osc.start();
+        osc.stop(window.audioContext.currentTime + 0.6);
+    }
+};
+
+window.blockBlastStorage = {
+    getHighScore: function() {
+        return parseInt(localStorage.getItem('blockblast_highscore') || '0', 10);
+    },
+    saveHighScore: function(score) {
+        localStorage.setItem('blockblast_highscore', score.toString());
+    }
+};
+

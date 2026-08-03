@@ -1,8 +1,8 @@
 self.assetsManifest = {
-  "version": "nVOrrix8",
+  "version": "u/bmofDl",
   "assets": [
     {
-      "hash": "sha256-GWRVzXHmcxMdJ5yXc8Ue0KahJlRs/Uh0kRJF1RHTPiw=",
+      "hash": "sha256-pKG62raj73/+SJW0o37kLDr+h1AzMMwxfBuUrhcmT+4=",
       "url": "BlazorArcade.styles.css"
     },
     {
@@ -18,16 +18,16 @@ self.assetsManifest = {
       "url": "_content/Toolbelt.Blazor.PWA.Updater/Toolbelt.Blazor.PWA.Updater.2drl8nn3fe.bundle.scp.css"
     },
     {
-      "hash": "sha256-CgxQava6MmuMcvePhRTajQaETNkDHIqRzeczkQDYUBU=",
-      "url": "_framework/BlazorArcade.64u629padh.wasm"
+      "hash": "sha256-IqgmXbk8jZy/96K28nppoCH5UEU2HzuJ8lb1oNWGeKc=",
+      "url": "_framework/BlazorArcade.uoq7ta7j6x.wasm"
     },
     {
       "hash": "sha256-h5dswxgcv3htHnD3+CJjR8xh0Lvkyv3SKLqZ1ygQ294=",
       "url": "_framework/ChessDotNet.ns4tubzbq7.wasm"
     },
     {
-      "hash": "sha256-qDHaiuRYtyKKRNcbvxTrqL8aHsiPK0Ar4CN/s0XVrAY=",
-      "url": "_framework/Microsoft.AspNetCore.Components.Web.kpcg2iydyr.wasm"
+      "hash": "sha256-Oz9JPgRYTPTevUlg3VZ+xnRK6Jv6Gcqe3pxe0db7Dkk=",
+      "url": "_framework/Microsoft.AspNetCore.Components.Web.1xicuy38gh.wasm"
     },
     {
       "hash": "sha256-RdLxNtwVEEzrd/AZeNTWb/BRPaNeo0PwTTPVH3uUodg=",
@@ -158,8 +158,8 @@ self.assetsManifest = {
       "url": "_framework/System.ObjectModel.71xt2g2ecm.wasm"
     },
     {
-      "hash": "sha256-NtWxnL44gp6QFO3xNHrwkxZDPs8DFGS21pEXakXEnLQ=",
-      "url": "_framework/System.Private.CoreLib.yaw93z1f1o.wasm"
+      "hash": "sha256-gRvbfs/tp5wi5SY+maybqzD1F3M5ZGarDRhzj+HfJHE=",
+      "url": "_framework/System.Private.CoreLib.lbe8lrejmp.wasm"
     },
     {
       "hash": "sha256-Ekqc+Py2D+9/vYjmEV1PCIZix5oCgBSYXuSMES2edzY=",
@@ -218,7 +218,7 @@ self.assetsManifest = {
       "url": "_framework/blazor.webassembly.js"
     },
     {
-      "hash": "sha256-JXpAPa4fAKDsGwxWtKeRezKyYN4FySaTxtKsaqsIbIk=",
+      "hash": "sha256-91WMSe5NALhaS3DI1By+ZSPvDkjDClCyDfUn9mzkC5c=",
       "url": "_framework/dotnet.js"
     },
     {
@@ -326,7 +326,7 @@ self.assetsManifest = {
       "url": "index.html"
     },
     {
-      "hash": "sha256-GoyaVj0RNg2fh3BcyOmHnLHSPMlsEKh1dZ2DtGbrf8o=",
+      "hash": "sha256-deIPxx96i5lxaY/Mv6vdM0iYaKttD8Jnck7VXNwpPB8=",
       "url": "js/site.js"
     },
     {
