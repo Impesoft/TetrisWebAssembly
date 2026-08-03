@@ -14,8 +14,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 640px;
+    width: 100%;
+    max-width: 640px;
     margin-bottom: 20px;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .game-header h2 {
