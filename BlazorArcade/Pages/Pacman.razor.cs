@@ -152,6 +152,11 @@ namespace BlazorArcade.Pages
             }
         }
 
+        public void TouchUp() => GameInstance.SetNextDirection(Direction.Up);
+        public void TouchDown() => GameInstance.SetNextDirection(Direction.Down);
+        public void TouchLeft() => GameInstance.SetNextDirection(Direction.Left);
+        public void TouchRight() => GameInstance.SetNextDirection(Direction.Right);
+
         public void Dispose()
         {
             GameTimer?.Dispose();
