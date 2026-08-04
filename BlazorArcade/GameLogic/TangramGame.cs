@@ -29,6 +29,9 @@ namespace BlazorArcade.GameLogic
         public int HintsUsed { get; set; } = 0;
         public int StarsEarned { get; set; } = 0;
         public double CompletionAccuracy { get; private set; } = 0.0;
+        public int RotationsUsed { get; set; } = 0;
+        public int MinimumRotations { get; private set; } = 0;
+        public int Score { get; private set; } = 0;
 
         public string SelectedCategory { get; set; } = "All";
 
@@ -73,10 +76,13 @@ namespace BlazorArcade.GameLogic
             ElapsedSeconds = 0;
             HintsUsed = 0;
             StarsEarned = 0;
+            Score = 0;
+            RotationsUsed = 0;
             CompletionAccuracy = 0.0;
             SelectedPiece = null;
 
             CenterTargetShape();
+            CalculateMinimumRotations();
 
             // Reset pieces into tray layout
             Pieces = TangramLevelCatalog.CreateStandardTans();
@@ -127,6 +133,28 @@ namespace BlazorArcade.GameLogic
             }
         }
 
+        private void CalculateMinimumRotations()
+        {
+            if (CurrentLevel == null) return;
+            int totalMin = 0;
+            foreach (var target in CurrentLevel.TargetTransforms)
+            {
+                int mod = 360;
+                if (target.PieceType == TangramPieceType.Square) mod = 90;
+                if (target.PieceType == TangramPieceType.Parallelogram) mod = 180;
+                
+                int diff = Math.Abs(target.RotationAngle) % mod;
+                int steps1 = diff / 45;
+                int steps2 = (mod - diff) / 45;
+                
+                int rotCost = Math.Min(steps1, steps2);
+                int flipCost = (target.PieceType == TangramPieceType.Parallelogram && target.IsFlipped) ? 1 : 0;
+                
+                totalMin += rotCost + flipCost;
+            }
+            MinimumRotations = totalMin;
+        }
+
         public void ArrangePiecesInTray()
         {
             double trayX = 975;
@@ -172,6 +200,7 @@ namespace BlazorArcade.GameLogic
             if (SelectedPiece == null) return;
 
             SelectedPiece.RotationAngle = (SelectedPiece.RotationAngle + angleDelta + 360) % 360;
+            RotationsUsed++;
             await CheckCompletionAsync();
             NotifyStateChanged();
         }
@@ -182,6 +211,7 @@ namespace BlazorArcade.GameLogic
             if (SelectedPiece.Type == TangramPieceType.Parallelogram)
             {
                 SelectedPiece.IsFlipped = !SelectedPiece.IsFlipped;
+                RotationsUsed++;
                 await CheckCompletionAsync();
                 NotifyStateChanged();
             }
@@ -339,7 +369,7 @@ namespace BlazorArcade.GameLogic
             {
                 IsCompleted = true;
                 CompletionAccuracy = 100.0;
-                CalculateStars();
+                CalculateStarsAndScore();
 
                 var origLevel = Levels[CurrentLevelIndex];
                 if (origLevel.Stars < StarsEarned)
@@ -362,13 +392,22 @@ namespace BlazorArcade.GameLogic
             NotifyStateChanged();
         }
 
-        private void CalculateStars()
+        private void CalculateStarsAndScore()
         {
-            if (HintsUsed == 0 && ElapsedSeconds <= 90)
+            int baseScore = 5000;
+            int timeBonus = Math.Max(0, 3000 - (ElapsedSeconds * 20));
+            int extraRotations = Math.Max(0, RotationsUsed - MinimumRotations);
+            int rotationBonus = Math.Max(0, 2000 - (extraRotations * 50));
+            
+            if (HintsUsed > 0) baseScore -= 1000;
+            
+            Score = baseScore + timeBonus + rotationBonus;
+
+            if (HintsUsed == 0 && ElapsedSeconds <= 60 && extraRotations <= 2)
             {
                 StarsEarned = 3;
             }
-            else if (HintsUsed <= 1 && ElapsedSeconds <= 180)
+            else if (HintsUsed <= 1 && ElapsedSeconds <= 120 && extraRotations <= 8)
             {
                 StarsEarned = 2;
             }

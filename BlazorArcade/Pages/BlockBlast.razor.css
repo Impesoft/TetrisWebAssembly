@@ -140,7 +140,7 @@
     overflow: hidden;
 }
 
-.grid-cell:hover {
+.grid-cell:not(.preview-valid):not(.preview-invalid):hover {
     background: rgba(255, 255, 255, 0.12);
 }
 

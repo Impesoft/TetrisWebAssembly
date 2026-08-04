@@ -36,6 +36,9 @@
 
             @if (Game.Mode != TangramGameMode.Sandbox)
             {
+                <div class="stat-badge" title="Rotations Used (vs Ideal)">
+                    🔄 @Game.RotationsUsed / @Game.MinimumRotations
+                </div>
                 <div class="stat-badge" title="Target Accuracy">
                     🎯 @Game.CompletionAccuracy.ToString("F0")%
                 </div>
@@ -209,8 +212,12 @@
                 </div>
 
                 <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left;">
+                    <div style="font-size: 1.4rem; font-weight: bold; color: #ffeb3b; margin-bottom: 8px; text-align: center;">
+                        🏆 Score: @Game.Score.ToString("N0")
+                    </div>
                     <div>⏱️ <strong>Time:</strong> @TimeSpan.FromSeconds(Game.ElapsedSeconds).ToString(@"mm\:ss")</div>
                     <div>💡 <strong>Hints Used:</strong> @Game.HintsUsed</div>
+                    <div>🔄 <strong>Rotations:</strong> @Game.RotationsUsed (Ideal: @Game.MinimumRotations)</div>
                     <div>🎯 <strong>Accuracy:</strong> 100% Perfect Fit</div>
                 </div>
 

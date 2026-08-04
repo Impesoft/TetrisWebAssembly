@@ -88,29 +88,265 @@ namespace BlazorArcade.Pages
         }
 
         /// <summary>
-        /// Authentic Block Blast feature: Starts with 5 to 8 pre-placed random blocks on the board
-        /// so the board is NEVER empty at game start.
+        /// Authentic Block Blast feature: Starts with an organic-looking board of 8-16 blocks
+        /// that looks like it's the result of previous placements.
         /// </summary>
         private void GenerateStarterBoard()
         {
-            int starterCount = _random.Next(5, 9); // 5 to 8 starter blocks
-            int placed = 0;
-            int attempts = 0;
+            var allShapes = BlockShape.GetAllShapes();
+            bool validBoard = false;
+            int maxAttempts = 1000;
+            int attempt = 0;
 
-            while (placed < starterCount && attempts < 100)
+            while (!validBoard && attempt < maxAttempts)
             {
-                attempts++;
-                int r = _random.Next(0, GridSize);
-                int c = _random.Next(0, GridSize);
-
-                // Avoid blocking entire rows/cols right at start
-                if (Grid[r, c] == 0)
+                attempt++;
+                int[,] tempGrid = new int[GridSize, GridSize];
+                
+                // Try to place 3 to 6 shapes to simulate previous moves
+                int shapesToPlace = _random.Next(3, 7);
+                
+                for (int i = 0; i < shapesToPlace; i++)
                 {
-                    int colorId = _random.Next(1, 11);
-                    Grid[r, c] = colorId;
-                    placed++;
+                    var shape = allShapes[_random.Next(allShapes.Count)];
+                    var validPositions = new List<(int r, int c)>();
+                    
+                    for (int r = 0; r < GridSize; r++)
+                    {
+                        for (int c = 0; c < GridSize; c++)
+                        {
+                            if (CanPlaceShapeOnGrid(shape, r, c, tempGrid))
+                            {
+                                validPositions.Add((r, c));
+                            }
+                        }
+                    }
+                    
+                    if (validPositions.Count > 0)
+                    {
+                        // Weight positions by adjacency to create clumps instead of random noise
+                        var weightedPositions = new List<(int r, int c, int weight)>();
+                        foreach (var pos in validPositions)
+                        {
+                            int adjacencyScore = 1;
+                            adjacencyScore += GetAdjacencyScore(shape, pos.r, pos.c, tempGrid);
+                            weightedPositions.Add((pos.r, pos.c, adjacencyScore));
+                        }
+
+                        int totalWeight = weightedPositions.Sum(x => x.weight);
+                        int randomValue = _random.Next(totalWeight);
+                        int currentSum = 0;
+                        var selectedPos = weightedPositions.First();
+
+                        foreach (var wPos in weightedPositions)
+                        {
+                            currentSum += wPos.weight;
+                            if (randomValue < currentSum)
+                            {
+                                selectedPos = wPos;
+                                break;
+                            }
+                        }
+
+                        PlaceShapeOnGrid(shape, selectedPos.r, selectedPos.c, tempGrid);
+                    }
+                }
+                
+                ClearCompletedLinesOnGrid(tempGrid);
+                
+                int placedCells = 0;
+                for (int r = 0; r < GridSize; r++)
+                    for (int c = 0; c < GridSize; c++)
+                        if (tempGrid[r, c] > 0) placedCells++;
+                        
+                // Check if board meets the good opening criteria
+                if (placedCells >= 8 && placedCells <= 16)
+                {
+                    if (HasEmpty3x3(tempGrid) && !HasIsolatedHoles(tempGrid))
+                    {
+                        // Prefer boards with almost complete lines, relax after 100 attempts
+                        if (HasAlmostCompleteLine(tempGrid) || attempt > 100)
+                        {
+                            for (int r = 0; r < GridSize; r++)
+                                for (int c = 0; c < GridSize; c++)
+                                    Grid[r, c] = tempGrid[r, c];
+                            validBoard = true;
+                        }
+                    }
                 }
             }
+
+            // Fallback for safety
+            if (!validBoard)
+            {
+                Grid = new int[GridSize, GridSize];
+                Grid[GridSize - 1, 0] = _random.Next(1, 11);
+                Grid[GridSize - 1, 1] = _random.Next(1, 11);
+                Grid[GridSize - 2, 0] = _random.Next(1, 11);
+                Grid[GridSize - 2, 1] = _random.Next(1, 11);
+                Grid[GridSize - 3, 0] = _random.Next(1, 11);
+            }
+        }
+
+        private bool CanPlaceShapeOnGrid(BlockShape shape, int r, int c, int[,] grid)
+        {
+            int rows = shape.Matrix.GetLength(0);
+            int cols = shape.Matrix.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (shape.Matrix[i, j] == 1)
+                    {
+                        int targetR = r + i;
+                        int targetC = c + j;
+                        if (targetR < 0 || targetR >= GridSize || targetC < 0 || targetC >= GridSize) return false;
+                        if (grid[targetR, targetC] > 0) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private int GetAdjacencyScore(BlockShape shape, int r, int c, int[,] grid)
+        {
+            int score = 0;
+            int rows = shape.Matrix.GetLength(0);
+            int cols = shape.Matrix.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (shape.Matrix[i, j] == 1)
+                    {
+                        int targetR = r + i;
+                        int targetC = c + j;
+                        
+                        if (targetR > 0 && grid[targetR - 1, targetC] > 0) score += 5;
+                        if (targetR < GridSize - 1 && grid[targetR + 1, targetC] > 0) score += 5;
+                        if (targetC > 0 && grid[targetR, targetC - 1] > 0) score += 5;
+                        if (targetC < GridSize - 1 && grid[targetR, targetC + 1] > 0) score += 5;
+                        
+                        if (targetR == 0 || targetR == GridSize - 1) score += 2;
+                        if (targetC == 0 || targetC == GridSize - 1) score += 2;
+                    }
+                }
+            }
+            return score;
+        }
+
+        private void PlaceShapeOnGrid(BlockShape shape, int r, int c, int[,] grid)
+        {
+            int rows = shape.Matrix.GetLength(0);
+            int cols = shape.Matrix.GetLength(1);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (shape.Matrix[i, j] == 1)
+                    {
+                        grid[r + i, c + j] = shape.ColorId;
+                    }
+                }
+            }
+        }
+
+        private void ClearCompletedLinesOnGrid(int[,] grid)
+        {
+            List<int> rowsToClear = new List<int>();
+            List<int> colsToClear = new List<int>();
+
+            for (int r = 0; r < GridSize; r++)
+            {
+                bool fullRow = true;
+                for (int c = 0; c < GridSize; c++)
+                {
+                    if (grid[r, c] == 0) { fullRow = false; break; }
+                }
+                if (fullRow) rowsToClear.Add(r);
+            }
+
+            for (int c = 0; c < GridSize; c++)
+            {
+                bool fullCol = true;
+                for (int r = 0; r < GridSize; r++)
+                {
+                    if (grid[r, c] == 0) { fullCol = false; break; }
+                }
+                if (fullCol) colsToClear.Add(c);
+            }
+
+            foreach (int r in rowsToClear)
+                for (int c = 0; c < GridSize; c++) grid[r, c] = 0;
+
+            foreach (int c in colsToClear)
+                for (int r = 0; r < GridSize; r++) grid[r, c] = 0;
+        }
+
+        private bool HasEmpty3x3(int[,] grid)
+        {
+            for (int r = 0; r <= GridSize - 3; r++)
+            {
+                for (int c = 0; c <= GridSize - 3; c++)
+                {
+                    bool empty = true;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        for (int j = 0; j < 3; j++)
+                        {
+                            if (grid[r + i, c + j] > 0)
+                            {
+                                empty = false;
+                                break;
+                            }
+                        }
+                        if (!empty) break;
+                    }
+                    if (empty) return true;
+                }
+            }
+            return false;
+        }
+
+        private bool HasIsolatedHoles(int[,] grid)
+        {
+            for (int r = 0; r < GridSize; r++)
+            {
+                for (int c = 0; c < GridSize; c++)
+                {
+                    if (grid[r, c] == 0)
+                    {
+                        bool top = r == 0 || grid[r - 1, c] > 0;
+                        bool bottom = r == GridSize - 1 || grid[r + 1, c] > 0;
+                        bool left = c == 0 || grid[r, c - 1] > 0;
+                        bool right = c == GridSize - 1 || grid[r, c + 1] > 0;
+                        if (top && bottom && left && right) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool HasAlmostCompleteLine(int[,] grid)
+        {
+            for (int r = 0; r < GridSize; r++)
+            {
+                int count = 0;
+                for (int c = 0; c < GridSize; c++)
+                    if (grid[r, c] > 0) count++;
+                if (count == GridSize - 1 || count == GridSize - 2) return true;
+            }
+            for (int c = 0; c < GridSize; c++)
+            {
+                int count = 0;
+                for (int r = 0; r < GridSize; r++)
+                    if (grid[r, c] > 0) count++;
+                if (count == GridSize - 1 || count == GridSize - 2) return true;
+            }
+            return false;
         }
 
         private void GenerateShapes()
