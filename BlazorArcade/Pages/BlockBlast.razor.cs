@@ -765,6 +765,7 @@ namespace BlazorArcade.Pages
                 6 => "shape-cyan",
                 7 => "shape-orange",
                 8 => "shape-pink",
+                9 => "shape-teal",
                 10 => "shape-lime",
                 11 => "shape-blue", // Tetris L
                 12 => "shape-orange", // Tetris J
