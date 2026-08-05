@@ -350,22 +350,108 @@ namespace BlazorArcade.Pages
             return false;
         }
 
+        private int _dfsNodesExplored = 0;
+        private const int MaxDfsNodes = 5000;
+
         private void GenerateShapes()
         {
             AvailableShapes.Clear();
             var allShapes = BlockShape.GetAllShapes();
+            
+            BlockShape[] chosenShapes = new BlockShape[3];
+            bool foundValidSet = false;
+            
+            // Try up to 50 times to find a set of 3 shapes that can be fully played
+            for (int attempt = 0; attempt < 50; attempt++)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    chosenShapes[i] = allShapes[_random.Next(allShapes.Count)];
+                }
+                
+                if (CanPlayAllShapes(chosenShapes, Grid))
+                {
+                    foundValidSet = true;
+                    break;
+                }
+            }
+            
+            if (!foundValidSet)
+            {
+                // Fallback: provide 1x1 blocks so the game can potentially continue or naturally end
+                chosenShapes[0] = allShapes[0];
+                chosenShapes[1] = allShapes[0];
+                chosenShapes[2] = allShapes[0];
+            }
+            
             for (int i = 0; i < 3; i++)
             {
-                var shapeTemplate = allShapes[_random.Next(allShapes.Count)];
                 AvailableShapes.Add(new BlockShape
                 {
                     Id = Guid.NewGuid().GetHashCode(),
-                    Matrix = shapeTemplate.Matrix,
-                    ColorClass = shapeTemplate.ColorClass,
-                    ColorId = shapeTemplate.ColorId
+                    Matrix = chosenShapes[i].Matrix,
+                    ColorClass = chosenShapes[i].ColorClass,
+                    ColorId = chosenShapes[i].ColorId
                 });
             }
             CheckGameOver();
+        }
+
+        private bool CanPlayAllShapes(BlockShape[] shapes, int[,] initialGrid)
+        {
+            _dfsNodesExplored = 0;
+            int[][] permutations = new int[][]
+            {
+                new int[] { 0, 1, 2 },
+                new int[] { 0, 2, 1 },
+                new int[] { 1, 0, 2 },
+                new int[] { 1, 2, 0 },
+                new int[] { 2, 0, 1 },
+                new int[] { 2, 1, 0 }
+            };
+            
+            foreach (var perm in permutations)
+            {
+                if (CanPlayPermutation(shapes, perm, 0, initialGrid))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CanPlayPermutation(BlockShape[] shapes, int[] perm, int shapeIndex, int[,] currentGrid)
+        {
+            if (shapeIndex >= shapes.Length) return true;
+            if (_dfsNodesExplored > MaxDfsNodes) return false; // Fail safe to avoid lag
+            
+            BlockShape shape = shapes[perm[shapeIndex]];
+            
+            for (int r = 0; r < GridSize; r++)
+            {
+                for (int c = 0; c < GridSize; c++)
+                {
+                    if (CanPlaceShapeOnGrid(shape, r, c, currentGrid))
+                    {
+                        _dfsNodesExplored++;
+                        
+                        // Clone grid to test placement
+                        int[,] nextGrid = new int[GridSize, GridSize];
+                        for (int i = 0; i < GridSize; i++)
+                            for (int j = 0; j < GridSize; j++)
+                                nextGrid[i, j] = currentGrid[i, j];
+                                
+                        PlaceShapeOnGrid(shape, r, c, nextGrid);
+                        ClearCompletedLinesOnGrid(nextGrid);
+                        
+                        if (CanPlayPermutation(shapes, perm, shapeIndex + 1, nextGrid))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public void SelectShape(BlockShape shape)
@@ -666,8 +752,11 @@ namespace BlazorArcade.Pages
                 6 => "shape-cyan",
                 7 => "shape-orange",
                 8 => "shape-pink",
-                9 => "shape-teal",
                 10 => "shape-lime",
+                11 => "shape-blue", // Tetris L
+                12 => "shape-orange", // Tetris J
+                13 => "shape-green", // Tetris S
+                14 => "shape-red", // Tetris Z
                 _ => ""
             };
         }
@@ -725,7 +814,31 @@ namespace BlazorArcade.Pages
                 new BlockShape { Matrix = new int[,] { {1,1,1}, {0,1,0} }, ColorClass = "shape-lime", ColorId = 10 },
                 new BlockShape { Matrix = new int[,] { {0,1,0}, {1,1,1} }, ColorClass = "shape-lime", ColorId = 10 },
                 new BlockShape { Matrix = new int[,] { {1,0}, {1,1}, {1,0} }, ColorClass = "shape-lime", ColorId = 10 },
-                new BlockShape { Matrix = new int[,] { {0,1}, {1,1}, {0,1} }, ColorClass = "shape-lime", ColorId = 10 }
+                new BlockShape { Matrix = new int[,] { {0,1}, {1,1}, {0,1} }, ColorClass = "shape-lime", ColorId = 10 },
+
+                // Standard Tetris L (3x2)
+                new BlockShape { Matrix = new int[,] { {1,0}, {1,0}, {1,1} }, ColorClass = "shape-blue", ColorId = 11 },
+                new BlockShape { Matrix = new int[,] { {1,1,1}, {1,0,0} }, ColorClass = "shape-blue", ColorId = 11 },
+                new BlockShape { Matrix = new int[,] { {1,1}, {0,1}, {0,1} }, ColorClass = "shape-blue", ColorId = 11 },
+                new BlockShape { Matrix = new int[,] { {0,0,1}, {1,1,1} }, ColorClass = "shape-blue", ColorId = 11 },
+
+                // Standard Tetris J (3x2)
+                new BlockShape { Matrix = new int[,] { {0,1}, {0,1}, {1,1} }, ColorClass = "shape-orange", ColorId = 12 },
+                new BlockShape { Matrix = new int[,] { {1,0,0}, {1,1,1} }, ColorClass = "shape-orange", ColorId = 12 },
+                new BlockShape { Matrix = new int[,] { {1,1}, {1,0}, {1,0} }, ColorClass = "shape-orange", ColorId = 12 },
+                new BlockShape { Matrix = new int[,] { {1,1,1}, {0,0,1} }, ColorClass = "shape-orange", ColorId = 12 },
+
+                // Standard Tetris S
+                new BlockShape { Matrix = new int[,] { {0,1,1}, {1,1,0} }, ColorClass = "shape-green", ColorId = 13 },
+                new BlockShape { Matrix = new int[,] { {1,0}, {1,1}, {0,1} }, ColorClass = "shape-green", ColorId = 13 },
+
+                // Standard Tetris Z
+                new BlockShape { Matrix = new int[,] { {1,1,0}, {0,1,1} }, ColorClass = "shape-red", ColorId = 14 },
+                new BlockShape { Matrix = new int[,] { {0,1}, {1,1}, {1,0} }, ColorClass = "shape-red", ColorId = 14 },
+
+                // Diagonal domino (2 blocks)
+                new BlockShape { Matrix = new int[,] { {1,0}, {0,1} }, ColorClass = "shape-pink", ColorId = 8 },
+                new BlockShape { Matrix = new int[,] { {0,1}, {1,0} }, ColorClass = "shape-pink", ColorId = 8 }
             };
         }
     }
