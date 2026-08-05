@@ -35,6 +35,7 @@ namespace BlazorArcade.Pages
         public string FloatingMessage { get; set; } = "";
         public string FloatingSubMessage { get; set; } = "";
         public bool ShowFloatingMessage { get; set; } = false;
+        private int _floatingAnimationId = 0;
 
         private Random _random = new Random();
 
@@ -483,7 +484,7 @@ namespace BlazorArcade.Pages
                     }
                 }
             }
-            Score += blocksPlaced;
+            Score += blocksPlaced * 23;
             return blocksPlaced;
         }
 
@@ -541,8 +542,9 @@ namespace BlazorArcade.Pages
                 int streakBonus = (ComboStreak > 1) ? (ComboStreak * 50) : 0;
                 int multiLineBonus = (linesCleared > 1) ? (linesCleared * 100) : 0;
                 int totalTurnScore = baseScore + streakBonus + multiLineBonus;
+                int pointsGained = totalTurnScore * 25;
 
-                Score += totalTurnScore;
+                Score += pointsGained;
 
                 // Sound & visual feedback
                 try
@@ -576,19 +578,42 @@ namespace BlazorArcade.Pages
                     FloatingMessage = "LINE CLEAR!";
                 }
 
-                FloatingSubMessage = $"+{totalTurnScore}";
                 ShowFloatingMessage = true;
-
-                _ = Task.Delay(1200).ContinueWith(_ =>
-                {
-                    ShowFloatingMessage = false;
-                    InvokeAsync(StateHasChanged);
-                });
+                _ = AnimateFloatingScore(pointsGained);
 
                 return true;
             }
 
             return false;
+        }
+
+        private async Task AnimateFloatingScore(int totalGained)
+        {
+            int currentId = ++_floatingAnimationId;
+            int steps = 20;
+            int delayPerStep = 30; // 600ms total animation time
+            
+            for (int i = 1; i <= steps; i++)
+            {
+                if (_floatingAnimationId != currentId) return;
+                int currentDisplay = (int)(totalGained * (i / (double)steps));
+                FloatingSubMessage = $"+{currentDisplay}";
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(delayPerStep);
+            }
+            
+            if (_floatingAnimationId != currentId) return;
+            FloatingSubMessage = $"+{totalGained}";
+            await InvokeAsync(StateHasChanged);
+            
+            // Show the result a little longer
+            await Task.Delay(2000);
+            
+            if (_floatingAnimationId == currentId)
+            {
+                ShowFloatingMessage = false;
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         private void CheckGameOver()
