@@ -482,13 +482,24 @@ namespace BlazorArcade.Pages
             HoverCol = null;
         }
 
+        private (int r, int c) GetTopLeftFromCenter(BlockShape shape, int centerR, int centerC)
+        {
+            int rows = shape.Matrix.GetLength(0);
+            int cols = shape.Matrix.GetLength(1);
+            int topR = centerR - (rows / 2);
+            int topC = centerC - (cols / 2);
+            return (topR, topC);
+        }
+
         public async Task HandleCellClick(int r, int c)
         {
             if (IsGameOver || SelectedShape == null) return;
 
-            if (CanPlaceShape(SelectedShape, r, c))
+            var (topR, topC) = GetTopLeftFromCenter(SelectedShape, r, c);
+
+            if (CanPlaceShape(SelectedShape, topR, topC))
             {
-                int blocksCount = PlaceShape(SelectedShape, r, c);
+                int blocksCount = PlaceShape(SelectedShape, topR, topC);
                 AvailableShapes.Remove(SelectedShape);
                 SelectedShape = null;
                 HoverRow = null;
@@ -725,15 +736,17 @@ namespace BlazorArcade.Pages
         {
             if (SelectedShape == null || HoverRow == null || HoverCol == null) return "";
 
-            int sr = r - HoverRow.Value;
-            int sc = c - HoverCol.Value;
+            var (topR, topC) = GetTopLeftFromCenter(SelectedShape, HoverRow.Value, HoverCol.Value);
+
+            int sr = r - topR;
+            int sc = c - topC;
 
             if (sr >= 0 && sr < SelectedShape.Matrix.GetLength(0) &&
                 sc >= 0 && sc < SelectedShape.Matrix.GetLength(1))
             {
                 if (SelectedShape.Matrix[sr, sc] == 1)
                 {
-                    bool isValid = CanPlaceShape(SelectedShape, HoverRow.Value, HoverCol.Value);
+                    bool isValid = CanPlaceShape(SelectedShape, topR, topC);
                     return isValid ? $"preview-valid {SelectedShape.ColorClass}" : "preview-invalid";
                 }
             }
