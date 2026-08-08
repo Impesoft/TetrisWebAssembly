@@ -15,7 +15,7 @@
         var appBase = document.createElement('base');
         appBase.href = "/BlazorArcade/";
         console.log("window.location.href: " + window.location.href);
-        if (window.location.href.indexOf("localhost") > -1 || window.location.href.indexOf("games.impesoft.org") > -1)
+        if (window.location.href.indexOf("localhost") > -1 || window.location.href.indexOf("games.impesoft.org") > -1 || window.location.href.indexOf("devtunnels.ms") > -1)
         {
             appBase.href = "/";
         }

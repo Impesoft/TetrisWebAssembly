@@ -70,6 +70,7 @@
                     int val = Grid[row, col];
                     
                     <div class="grid-cell @GetPreviewCellClass(row, col) @(val > 0 ? "filled" : "")" 
+                         data-row="@row" data-col="@col"
                          @onmouseenter="() => HandleCellHover(row, col)"
                          @onclick="() => HandleCellClick(row, col)">
                         @if (val > 0)
@@ -85,7 +86,9 @@
     <div class="shape-tray">
         @foreach (var shape in AvailableShapes)
         {
-            <div class="tray-shape @(SelectedShape == shape ? "selected" : "")" @onclick="() => SelectShape(shape)">
+            <div class="tray-shape @(SelectedShape == shape ? "selected" : "")" 
+                 data-shape-id="@shape.Id"
+                 @onclick="() => SelectShape(shape)">
                 @{
                     int rows = shape.Matrix.GetLength(0);
                     int cols = shape.Matrix.GetLength(1);

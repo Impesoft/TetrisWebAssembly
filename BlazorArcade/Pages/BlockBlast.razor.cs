@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace BlazorArcade.Pages
 {
-    public partial class BlockBlast : ComponentBase
+    public partial class BlockBlast : ComponentBase, IAsyncDisposable
     {
+        private DotNetObjectReference<BlockBlast>? _objRef;
+
         [Inject]
         private NavigationManager _nav { get; set; } = default!;
 
@@ -43,6 +45,25 @@ namespace BlazorArcade.Pages
         {
             await LoadHighScore();
             StartGame();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _objRef = DotNetObjectReference.Create(this);
+                try {
+                    await JSRuntime.InvokeVoidAsync("blockBlastInteraction.init", _objRef);
+                } catch { }
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            try {
+                await JSRuntime.InvokeVoidAsync("blockBlastInteraction.cleanup");
+            } catch { }
+            _objRef?.Dispose();
         }
 
         private async Task LoadHighScore()
@@ -480,6 +501,59 @@ namespace BlazorArcade.Pages
         {
             HoverRow = null;
             HoverCol = null;
+        }
+
+        [JSInvokable]
+        public void OnShapeDragStart(int shapeId)
+        {
+            var shape = AvailableShapes.FirstOrDefault(s => s.Id == shapeId);
+            if (shape != null)
+            {
+                SelectShape(shape);
+                StateHasChanged();
+            }
+        }
+
+        [JSInvokable]
+        public void OnShapeHover(int row, int col)
+        {
+            if (row == -1 || col == -1)
+            {
+                ClearHover();
+            }
+            else
+            {
+                HandleCellHover(row, col);
+            }
+            StateHasChanged();
+        }
+
+        [JSInvokable]
+        public async Task OnShapeDrop(int row, int col)
+        {
+            if (SelectedShape != null && !IsGameOver)
+            {
+                var (topR, topC) = GetTopLeftFromCenter(SelectedShape, row, col);
+
+                if (CanPlaceShape(SelectedShape, topR, topC))
+                {
+                    await HandleCellClick(row, col);
+                }
+                else
+                {
+                    SelectedShape = null;
+                    ClearHover();
+                }
+            }
+            StateHasChanged();
+        }
+
+        [JSInvokable]
+        public void OnShapeDragCancel()
+        {
+            SelectedShape = null;
+            ClearHover();
+            StateHasChanged();
         }
 
         private (int r, int c) GetTopLeftFromCenter(BlockShape shape, int centerR, int centerC)

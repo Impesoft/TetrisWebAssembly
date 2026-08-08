@@ -176,3 +176,154 @@ window.blockBlastStorage = {
     }
 };
 
+window.blockBlastInteraction = {
+    dotNetHelper: null,
+    isDragging: false,
+    dragShapeId: null,
+    dragClone: null,
+    lastRow: -1,
+    lastCol: -1,
+
+    init: function(helper) {
+        this.dotNetHelper = helper;
+        
+        this.pointerDownHandler = this.onPointerDown.bind(this);
+        this.pointerMoveHandler = this.onPointerMove.bind(this);
+        this.pointerUpHandler = this.onPointerUp.bind(this);
+        
+        document.addEventListener('pointerdown', this.pointerDownHandler, { passive: false });
+        document.addEventListener('pointermove', this.pointerMoveHandler, { passive: false });
+        document.addEventListener('pointerup', this.pointerUpHandler);
+        document.addEventListener('pointercancel', this.pointerUpHandler);
+    },
+
+    cleanup: function() {
+        document.removeEventListener('pointerdown', this.pointerDownHandler);
+        document.removeEventListener('pointermove', this.pointerMoveHandler);
+        document.removeEventListener('pointerup', this.pointerUpHandler);
+        document.removeEventListener('pointercancel', this.pointerUpHandler);
+        this.dotNetHelper = null;
+    },
+
+    onPointerDown: function(e) {
+        let trayShape = e.target.closest('.tray-shape');
+        if (trayShape) {
+            let shapeId = parseInt(trayShape.getAttribute('data-shape-id'));
+            if (!isNaN(shapeId)) {
+                this.startDrag(e, trayShape, shapeId);
+            }
+        }
+    },
+
+    startDrag: function(e, shapeElement, shapeId) {
+        if (this.isDragging) return;
+        
+        this.isDragging = true;
+        this.dragShapeId = shapeId;
+        
+        if (this.dotNetHelper) {
+            this.dotNetHelper.invokeMethodAsync('OnShapeDragStart', shapeId);
+        }
+
+        this.dragClone = shapeElement.cloneNode(true);
+        this.dragClone.classList.add('blockblast-drag-clone');
+        this.dragClone.style.position = 'fixed';
+        this.dragClone.style.pointerEvents = 'none';
+        this.dragClone.style.zIndex = '9999';
+        
+        let isTouch = e.pointerType === 'touch';
+        let yOffset = isTouch ? 60 : 0; 
+
+        this.updateClonePosition(e.clientX, e.clientY - yOffset);
+        document.body.appendChild(this.dragClone);
+    },
+
+    onPointerMove: function(e) {
+        if (!this.isDragging || !this.dragClone) return;
+        
+        let isTouch = e.pointerType === 'touch';
+        let yOffset = isTouch ? 60 : 0;
+
+        let targetY = e.clientY - yOffset;
+        this.updateClonePosition(e.clientX, targetY);
+
+        let grid = document.querySelector('.grid-container');
+        let r = -1;
+        let c = -1;
+
+        if (grid) {
+            let rect = grid.getBoundingClientRect();
+            // Check if we are within the general bounds of the grid
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                targetY >= rect.top && targetY <= rect.bottom) {
+                
+                let gridSizeStr = grid.style.getPropertyValue('--grid-size');
+                let gridSize = gridSizeStr ? parseInt(gridSizeStr) : 8;
+                
+                // Divide the entire grid rect into equal cells, naturally splitting the gaps in half!
+                let cellTotalWidth = rect.width / gridSize;
+                let cellTotalHeight = rect.height / gridSize;
+                
+                c = Math.floor((e.clientX - rect.left) / cellTotalWidth);
+                r = Math.floor((targetY - rect.top) / cellTotalHeight);
+                
+                c = Math.max(0, Math.min(gridSize - 1, c));
+                r = Math.max(0, Math.min(gridSize - 1, r));
+            }
+        }
+
+        if (r !== -1 && c !== -1) {
+            if (r !== this.lastRow || c !== this.lastCol) {
+                this.lastRow = r;
+                this.lastCol = c;
+                if (this.dotNetHelper) {
+                    this.dotNetHelper.invokeMethodAsync('OnShapeHover', r, c);
+                }
+            }
+        } else {
+            if (this.lastRow !== -1) {
+                this.lastRow = -1;
+                this.lastCol = -1;
+                if (this.dotNetHelper) {
+                    this.dotNetHelper.invokeMethodAsync('OnShapeHover', -1, -1);
+                }
+            }
+        }
+    },
+
+    onPointerUp: function(e) {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        if (this.dragClone && this.dragClone.parentNode) {
+            this.dragClone.parentNode.removeChild(this.dragClone);
+        }
+        this.dragClone = null;
+        
+        let r = this.lastRow;
+        let c = this.lastCol;
+        
+        this.lastRow = -1;
+        this.lastCol = -1;
+
+        if (this.dotNetHelper) {
+            if (r !== -1 && c !== -1) {
+                this.dotNetHelper.invokeMethodAsync('OnShapeDrop', r, c);
+            } else {
+                this.dotNetHelper.invokeMethodAsync('OnShapeDragCancel');
+            }
+        }
+    },
+
+    updateClonePosition: function(x, y) {
+        if (this.dragClone) {
+            let rect = this.dragClone.getBoundingClientRect();
+            // Try to use the original rect width/height if it hasn't rendered yet
+            let w = rect.width || 100;
+            let h = rect.height || 100;
+            this.dragClone.style.left = (x - w/2) + 'px';
+            this.dragClone.style.top = (y - h/2) + 'px';
+        }
+    }
+};
+
