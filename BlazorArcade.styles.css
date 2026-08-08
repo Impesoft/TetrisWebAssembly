@@ -6,8 +6,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: 100vh;
-    padding-top: 40px;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    touch-action: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
     font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: white;
     position: relative;
@@ -164,8 +169,9 @@
 }
 
 .preview-valid[b-9hu9c0oaa2] {
-    opacity: 0.75;
+    opacity: 1;
     transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.25) !important;
 }
 
 .preview-invalid[b-9hu9c0oaa2] {
@@ -301,8 +307,13 @@
 .controls[b-9hu9c0oaa2] {
     display: flex;
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: -5px;
+    right: 0;
+    width: 100%;
+    justify-content: end;
+    padding: 10px;
+    margin-top: 0;
+    box-sizing: border-box;
     z-index: 100;
 }
 
@@ -311,13 +322,58 @@
         grid-template-columns: repeat(var(--grid-size), 35px);
         grid-template-rows: repeat(var(--grid-size), 35px);
     }
-    .shape-block[b-9hu9c0oaa2] {
-        width: 20px;
-        height: 20px;
+    .shape-tray[b-9hu9c0oaa2] {
+        gap: 10px;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    .tray-shape[b-9hu9c0oaa2] {
+        min-width: 0;
+        min-height: 70px;
+        flex: 1;
+        padding: 6px;
+    }
+    .shape-block[b-9hu9c0oaa2], .shape-block-empty[b-9hu9c0oaa2] {
+        width: 16px;
+        height: 16px;
     }
     .shape-preview[b-9hu9c0oaa2] {
-        grid-template-columns: repeat(var(--shape-cols), 20px);
-        grid-template-rows: repeat(var(--shape-rows), 20px);
+        grid-template-columns: repeat(var(--shape-cols), 16px);
+        grid-template-rows: repeat(var(--shape-rows), 16px);
+        gap: 2px;
+    }
+}
+
+.blockblast-drag-clone[b-9hu9c0oaa2] {
+    opacity: 0.9;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.blockblast-drag-clone .shape-preview[b-9hu9c0oaa2] {
+    grid-template-columns: repeat(var(--shape-cols), 40px) !important;
+    grid-template-rows: repeat(var(--shape-rows), 40px) !important;
+    gap: 4px !important;
+}
+
+.blockblast-drag-clone .shape-block[b-9hu9c0oaa2],
+.blockblast-drag-clone .shape-block-empty[b-9hu9c0oaa2] {
+    width: 40px !important;
+    height: 40px !important;
+}
+
+@media (max-width: 600px) {
+    .blockblast-drag-clone .shape-preview[b-9hu9c0oaa2] {
+        grid-template-columns: repeat(var(--shape-cols), 35px) !important;
+        grid-template-rows: repeat(var(--shape-rows), 35px) !important;
+        gap: 4px !important;
+    }
+    .blockblast-drag-clone .shape-block[b-9hu9c0oaa2],
+    .blockblast-drag-clone .shape-block-empty[b-9hu9c0oaa2] {
+        width: 35px !important;
+        height: 35px !important;
     }
 }
 /* /Pages/BlockDude.razor.rz.scp.css */
